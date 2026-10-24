@@ -60,6 +60,7 @@ struct CalendarView: View {
                 }
             }
         }
+        .background(SwipeMonitor { shift($0) })
         .task(id: month) { await events.load(month: month, calendar: cal) }
     }
 
