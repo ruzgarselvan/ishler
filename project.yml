@@ -27,6 +27,8 @@ targets:
         CFBundleName: ishler
         CFBundleDisplayName: ishler
         CFBundleLocalizations: [en, tr]
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false
         LSUIElement: true
         NSHumanReadableCopyright: ""
@@ -62,6 +64,8 @@ targets:
         CFBundleName: ishler
         CFBundleDisplayName: ishler
         CFBundleLocalizations: [en, tr]
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
         ITSAppUsesNonExemptEncryption: false
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
