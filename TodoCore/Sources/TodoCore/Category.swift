@@ -37,15 +37,11 @@ public struct TodoCategory: Codable, Identifiable, Equatable, Sendable {
     }
 }
 
-/// Which spellings of a category shortcut are accepted at the end of a note.
+/// Whether "(x)" is accepted at the end of a note as well as the bare shortcut "x".
 public struct ShortcutOptions: Codable, Equatable, Sendable {
-    public var letters: Bool
-    public var digits: Bool
     public var parentheses: Bool
 
-    public init(letters: Bool = true, digits: Bool = true, parentheses: Bool = true) {
-        self.letters = letters
-        self.digits = digits
+    public init(parentheses: Bool = true) {
         self.parentheses = parentheses
     }
 }

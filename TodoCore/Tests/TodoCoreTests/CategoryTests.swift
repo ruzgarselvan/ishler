@@ -26,11 +26,17 @@ import Foundation
         #expect(parse("Mert logo (x)").categoryID == work.id)
         #expect(parse("Mert logo (x)").action == "logo")
     }
-    @Test func togglesDisableForms() {
-        #expect(parse("Mert logo x", options: .init(letters: false)).categoryID == nil)
-        #expect(parse("Mert logo 1", options: .init(digits: false)).categoryID == nil)
-        #expect(parse("Mert logo (x)", options: .init(parentheses: false)).categoryID == nil)
-        #expect(parse("Mert logo (x)", options: .init(parentheses: false)).action == "logo (x)")
+    @Test func parenthesesToggleOnlyAffectsParenthesizedForm() {
+        let off = ShortcutOptions(parentheses: false)
+        #expect(parse("Mert logo (x)", options: off).categoryID == nil)
+        #expect(parse("Mert logo (x)", options: off).action == "logo (x)")
+        #expect(parse("Mert logo x", options: off).categoryID == work.id)
+        #expect(parse("Mert logo 1", options: off).categoryID == home.id)
+    }
+    @Test func shortcutCanBeAnyLetterOrDigit() {
+        let c = TodoCategory(name: "Okul", shortcut: "7", colorHex: "#007AFF")
+        let e = EntryParser(knownPeople: [], calendar: istanbul, categories: [c]).parse("Mert ödev 7", now: now)
+        #expect(e.categoryID == c.id)
     }
     @Test func onlyTrailingTokenCounts() {
         #expect(parse("x Mert logo").categoryID == nil)

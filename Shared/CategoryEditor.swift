@@ -75,11 +75,9 @@ struct CategoryEditor: View {
             if !store.categories.isEmpty {
                 Text("Zil açık olan kategorilerin işleri için teslim hatırlatması gelir.")
                     .font(.system(size: compact ? 11 : 13)).foregroundStyle(.secondary)
-                Text("Notun sonuna kısayolu yaz: \"logo teslimi x\"")
+                Text("Notun sonuna kısayolu yaz: \"logo teslimi x\". Kısayol harf ya da rakam olabilir.")
                     .font(.system(size: compact ? 11 : 13)).foregroundStyle(.secondary)
-                Toggle("Harf kısayolu (x)", isOn: $store.shortcuts.letters)
-                Toggle("Rakam kısayolu (1)", isOn: $store.shortcuts.digits)
-                Toggle("Parantezli yazım ((x), (1))", isOn: $store.shortcuts.parentheses)
+                Toggle("Parantezli yazımı da kabul et: (x)", isOn: $store.shortcuts.parentheses)
             }
         }
         .font(.system(size: compact ? 12 : 17))

@@ -77,7 +77,7 @@ public struct EntryParser: Sendable {
         )
     }
 
-    /// "x" / "1" need their own toggle; the parenthesized spelling "(x)" / "(1)" has one shared toggle.
+    /// The bare shortcut ("x", "1") is always accepted; the parenthesized spelling "(x)" has its own toggle.
     private func matchShortcut(_ token: String) -> TodoCategory? {
         let t = fold(token)
         if t.count > 2, t.hasPrefix("("), t.hasSuffix(")") {
@@ -85,10 +85,7 @@ public struct EntryParser: Sendable {
             let inner = String(t.dropFirst().dropLast())
             return categories.first { !$0.shortcut.isEmpty && fold($0.shortcut) == inner }
         }
-        return categories.first { c in
-            guard !c.shortcut.isEmpty, fold(c.shortcut) == t else { return false }
-            return c.shortcut.allSatisfy(\.isNumber) ? shortcuts.digits : shortcuts.letters
-        }
+        return categories.first { !$0.shortcut.isEmpty && fold($0.shortcut) == t }
     }
 
     private func detectDate(in text: String, now: Date) -> (date: Date, text: String)? {
