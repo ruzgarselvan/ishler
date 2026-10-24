@@ -62,6 +62,17 @@ final class AppModel {
         Task { await reschedule() }
     }
 
+    func update(_ item: TodoItem, person: String?, action: String, dueDate: Date?) -> Bool {
+        let ok = store.update(item, person: person, action: action, dueDate: dueDate)
+        if ok { Task { await reschedule() } }
+        return ok
+    }
+
+    func delete(_ item: TodoItem) {
+        store.delete(item)
+        Task { await reschedule() }
+    }
+
     func reopen(_ item: TodoItem) {
         store.reopen(item)
         Task { await reschedule() }

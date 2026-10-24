@@ -52,4 +52,21 @@ import Foundation
         s.delete(item)
         #expect(s.openItems().isEmpty && s.archivedItems().isEmpty)
     }
+    @Test func updateChangesFields() throws {
+        let s = try store()
+        let item = s.add(ParsedEntry(person: "Tugba", action: "hocayi ara 24 kasim"))!
+        let ok = s.update(item, person: " Tuğba ", action: "hocayı ara", dueDate: date(2026, 11, 24))
+        #expect(ok)
+        #expect(item.person == "Tuğba")
+        #expect(item.action == "hocayı ara")
+        #expect(item.dueDate == date(2026, 11, 24))
+    }
+    @Test func updateRejectsEmptyActionAndClearsBlankPerson() throws {
+        let s = try store()
+        let item = s.add(ParsedEntry(person: "X", action: "ara"))!
+        #expect(!s.update(item, person: "X", action: "  ", dueDate: nil))
+        #expect(item.action == "ara")
+        #expect(s.update(item, person: "  ", action: "ara", dueDate: nil))
+        #expect(item.person == nil)
+    }
 }

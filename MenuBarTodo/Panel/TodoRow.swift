@@ -6,6 +6,7 @@ struct TodoRow: View {
     let now: Date
     let calendar: Calendar
     let onDone: () -> Void
+    let onEdit: () -> Void
 
     var body: some View {
         let due = DueLabel(item: item, now: now, calendar: calendar)
@@ -15,13 +16,18 @@ struct TodoRow: View {
             }
             .buttonStyle(.plain)
             .help("Yapıldı")
-            label
-                .font(.system(size: 13))
-                .lineLimit(1)
-                .frame(maxWidth: .infinity, alignment: .leading)
-            Text(due.text)
-                .font(.system(size: 11))
-                .foregroundStyle(due.isOverdue ? Color.red : Color.secondary)
+            HStack(spacing: 9) {
+                label
+                    .font(.system(size: 13))
+                    .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                Text(due.text)
+                    .font(.system(size: 11))
+                    .foregroundStyle(due.isOverdue ? Color.red : Color.secondary)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture(perform: onEdit)
+            .help("Düzenle")
         }
         .padding(.vertical, 4)
     }

@@ -5,6 +5,7 @@ import TodoCore
 struct TodayScreen: View {
     @Environment(AppModel.self) private var model
     @Query private var items: [TodoItem]
+    @State private var editing: TodoItem?
 
     var body: some View {
         let now = Date()
@@ -15,7 +16,7 @@ struct TodayScreen: View {
                 ForEach(groups, id: \.0) { bucket, rows in
                     Section(bucketTitle(bucket)) {
                         ForEach(rows) { item in
-                            PhoneRow(item: item, now: now, calendar: model.calendar) { model.markDone(item) }
+                            PhoneRow(item: item, now: now, calendar: model.calendar, onDone: { model.markDone(item) }, onEdit: { editing = item })
                                 .swipeActions(edge: .trailing) {
                                     Button("Yapıldı", systemImage: "checkmark") { model.markDone(item) }.tint(.green)
                                 }
@@ -30,6 +31,7 @@ struct TodayScreen: View {
             }
             .navigationTitle("İşler")
             .safeAreaInset(edge: .bottom) { PhoneEntryField() }
+            .sheet(item: $editing) { EditSheet(item: $0) }
         }
     }
 }
@@ -39,6 +41,7 @@ struct PhoneRow: View {
     let now: Date
     let calendar: Calendar
     let onDone: () -> Void
+    let onEdit: () -> Void
 
     var body: some View {
         let due = DueLabel(item: item, now: now, calendar: calendar)
@@ -47,8 +50,12 @@ struct PhoneRow: View {
                 Image(systemName: "circle").font(.title3).foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
-            itemLabel(item).frame(maxWidth: .infinity, alignment: .leading)
-            Text(due.text).font(.subheadline).foregroundStyle(due.isOverdue ? Color.red : Color.secondary)
+            HStack {
+                itemLabel(item).frame(maxWidth: .infinity, alignment: .leading)
+                Text(due.text).font(.subheadline).foregroundStyle(due.isOverdue ? Color.red : Color.secondary)
+            }
+            .contentShape(Rectangle())
+            .onTapGesture(perform: onEdit)
         }
     }
 }

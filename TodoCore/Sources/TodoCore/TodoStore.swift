@@ -39,6 +39,19 @@ public final class TodoStore {
         try? context.save()
     }
 
+    /// Returns false (and changes nothing) when `action` is blank.
+    @discardableResult
+    public func update(_ item: TodoItem, person: String?, action: String, dueDate: Date?) -> Bool {
+        let action = action.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !action.isEmpty else { return false }
+        let person = person?.trimmingCharacters(in: .whitespacesAndNewlines)
+        item.person = (person?.isEmpty ?? true) ? nil : person
+        item.action = action
+        item.dueDate = dueDate
+        try? context.save()
+        return true
+    }
+
     public func delete(_ item: TodoItem) {
         context.delete(item)
         try? context.save()

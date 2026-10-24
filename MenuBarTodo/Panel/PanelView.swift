@@ -7,7 +7,7 @@ struct PanelView: View {
     @Query private var items: [TodoItem]
     @State private var screen: Screen = .list
 
-    enum Screen { case list, archive, settings }
+    enum Screen { case list, archive, settings, edit(TodoItem) }
 
     var body: some View {
         Group {
@@ -15,6 +15,7 @@ struct PanelView: View {
             case .list: list
             case .archive: ArchiveView { screen = .list }
             case .settings: SettingsView { screen = .list }
+            case .edit(let item): EditView(item: item) { screen = .list }
             }
         }
         .padding(10)
@@ -38,7 +39,7 @@ struct PanelView: View {
                                 .foregroundStyle(.secondary)
                                 .padding(.top, 8).padding(.bottom, 1)
                             ForEach(rows) { item in
-                                TodoRow(item: item, now: now, calendar: model.calendar) { model.markDone(item) }
+                                TodoRow(item: item, now: now, calendar: model.calendar, onDone: { model.markDone(item) }, onEdit: { screen = .edit(item) })
                             }
                         }
                     }
