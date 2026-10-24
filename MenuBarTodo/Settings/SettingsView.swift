@@ -21,16 +21,16 @@ struct SettingsView: View {
                         .pickerStyle(.segmented).labelsHidden().controlSize(.small)
                     }
 
+                    section("Kategoriler", footnote: nil) {
+                        CategoryEditor(store: store, compact: true)
+                    }
+
                     section("Hatırlatıcı", footnote: footnote(store)) {
                         Picker("", selection: $store.settings.eveningDaysBefore) {
                             Text("Yok").tag(0)
                             ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }
                         }
                         .pickerStyle(.segmented).labelsHidden().controlSize(.small)
-                    }
-
-                    section("Kategoriler", footnote: nil) {
-                        CategoryEditor(store: store, compact: true)
                     }
 
                     section("Genel", footnote: nil) {

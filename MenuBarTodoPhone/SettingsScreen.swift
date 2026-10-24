@@ -17,6 +17,8 @@ struct SettingsScreen: View {
                     .pickerStyle(.segmented)
                 } header: { Text("Liste") } footer: { Text("Gecikmiş ve tarihsiz işler her zaman görünür.") }
 
+                Section("Kategoriler") { CategoryEditor(store: store) }
+
                 Section {
                     Picker("Gün", selection: $store.settings.eveningDaysBefore) {
                         Text("Yok").tag(0)
@@ -30,8 +32,6 @@ struct SettingsScreen: View {
                            ? "Zili açık kategorilerde teslim günü sabah bildirim gelir."
                            : "Zili açık kategorilerde son \(store.settings.eveningDaysBefore) gün her akşam, teslim günü sabah bildirim gelir.")
                 }
-
-                Section("Kategoriler") { CategoryEditor(store: store) }
             }
             .navigationTitle("Ayarlar")
             .onChange(of: store.settings) { Task { await model.reschedule() } }
