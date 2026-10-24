@@ -25,13 +25,30 @@ public final class TodoStore {
         guard !action.isEmpty else { return nil }
         let item = TodoItem(person: entry.person, action: action, dueDate: entry.dueDate)
         item.categoryID = entry.categoryID
+        item.dueMinutes = entry.dueMinutes
+        item.repeatRule = entry.repeatRule
+        item.checklist = entry.checklist.map { ChecklistEntry(title: $0) }
         context.insert(item)
         try? context.save()
         return item
     }
 
-    public func markDone(_ item: TodoItem, now: Date) {
+    /// Completing a repeating item also creates its next occurrence (the first one after today).
+    public func markDone(_ item: TodoItem, now: Date, calendar: Calendar = .current) {
         item.doneAt = now
+        if let rule = item.repeatRule, let due = item.dueDate {
+            let today = calendar.startOfDay(for: now)
+            var next = nextOccurrence(after: due, rule: rule, calendar: calendar)
+            while let n = next, n <= today { next = nextOccurrence(after: n, rule: rule, calendar: calendar) }
+            if let next {
+                let copy = TodoItem(person: item.person, action: item.action, dueDate: next)
+                copy.categoryID = item.categoryID
+                copy.dueMinutes = item.dueMinutes
+                copy.repeatRule = rule
+                copy.checklist = item.checklist.map { ChecklistEntry(title: $0.title) }
+                context.insert(copy)
+            }
+        }
         try? context.save()
     }
 

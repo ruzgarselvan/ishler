@@ -32,6 +32,9 @@ private func matchIndex(_ stem: String, in names: [String]) -> Int? {
         .offset
 }
 
+/// Calendar weekday (1 = Sunday ... 7 = Saturday) for a folded weekday name, allowing a case suffix.
+func weekdayNumber(_ stem: String) -> Int? { matchIndex(stem, in: weekdays).map { $0 + 1 } }
+
 private let weekdays = ["pazar", "pazartesi", "sali", "carsamba", "persembe", "cuma", "cumartesi"] // index+1 = Calendar weekday
 private let months = ["ocak", "subat", "mart", "nisan", "mayis", "haziran", "temmuz", "agustos", "eylul", "ekim", "kasim", "aralik"]
 
