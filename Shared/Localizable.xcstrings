@@ -1,0 +1,91 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@" : {
+
+    },
+    "%@ · %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ · %2$@"
+          }
+        }
+      }
+    },
+    "1 ay" : {
+
+    },
+    "1 hafta" : {
+
+    },
+    "Açık" : {
+
+    },
+    "Açık iş kalmadı." : {
+
+    },
+    "Adımlar" : {
+
+    },
+    "Arşiv boş" : {
+
+    },
+    "Aşağıdan yeni iş yaz." : {
+
+    },
+    "Bu gün için bir şey yok" : {
+
+    },
+    "Bugün" : {
+
+    },
+    "Gecikmiş ve tarihsiz işler her zaman görünür." : {
+
+    },
+    "Hatırlatıcı" : {
+
+    },
+    "Hepsi" : {
+
+    },
+    "Her şey yolunda" : {
+
+    },
+    "İşler" : {
+
+    },
+    "Koyu" : {
+
+    },
+    "Liste" : {
+
+    },
+    "Notun başına şablon adını yaz: \"çekim sonrası Deniz Cuma\"" : {
+
+    },
+    "Notun sonuna kısayolu yaz: \"logo teslimi x\" ya da, Parantez açıksa, \"logo teslimi (x)\". Kısayol harf ya da rakam olabilir." : {
+
+    },
+    "Sayı" : {
+
+    },
+    "Şimdi sadece bu" : {
+
+    },
+    "Sistem" : {
+
+    },
+    "Sıradaki iş" : {
+
+    },
+    "Yok" : {
+
+    },
+    "Zil açık olan kategorilerin işleri için teslim hatırlatması gelir." : {
+
+    }
+  },
+  "version" : "1.0"
+}

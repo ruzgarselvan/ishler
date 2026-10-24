@@ -1,6 +1,8 @@
 name: MenuBarTodo
 options:
   bundleIdPrefix: com.ruzgar
+  developmentLanguage: en
+  knownRegions: [en, tr]
   deploymentTarget:
     macOS: "26.0"
 settings:
@@ -22,6 +24,7 @@ targets:
       properties:
         CFBundleName: ishler
         CFBundleDisplayName: ishler
+        CFBundleLocalizations: [en, tr]
         LSUIElement: true
         NSHumanReadableCopyright: ""
         NSCalendarsFullAccessUsageDescription: Takvimindeki etkinlikleri işlerinin yanında göstermek için.
@@ -55,6 +58,7 @@ targets:
       properties:
         CFBundleName: ishler
         CFBundleDisplayName: ishler
+        CFBundleLocalizations: [en, tr]
         UILaunchScreen: {}
         UISupportedInterfaceOrientations: [UIInterfaceOrientationPortrait]
         UIBackgroundModes: [remote-notification]

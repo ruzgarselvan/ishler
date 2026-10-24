@@ -94,8 +94,7 @@ public struct EntryParser: Sendable {
             knownPeople.first { fold($0) == stem(tokens[i]) }
         }
         if personIndex == nil {
-            personIndex = tokens.firstIndex { $0.contains("'") && $0.first?.isUppercase == true }
-                ?? tokens.firstIndex { $0.first?.isUppercase == true }
+            personIndex = tokens.firstIndex { $0.contains("'") && $0.first?.isUppercase == true } ?? properNameIndex(in: tokens)
             if let i = personIndex {
                 person = String(tokens[i].split(whereSeparator: { $0 == "'" || $0 == "’" }).first ?? "")
             }
@@ -126,39 +125,73 @@ public struct EntryParser: Sendable {
         return categories.first { !$0.shortcut.isEmpty && fold($0.shortcut) == t }
     }
 
+    /// The capitalized word most likely to be a name. A capitalized first word is probably just the start of the
+    /// sentence when another capitalized word follows, or when it is a common English verb ("Call", "Send").
+    private func properNameIndex(in tokens: [String]) -> Int? {
+        let capitals = tokens.indices.filter { tokens[$0].first?.isUppercase == true }
+        guard let first = capitals.first else { return nil }
+        if first == 0, capitals.count > 1 { return capitals[1] }
+        if first == 0, commonVerbs.contains(stem(tokens[0])) { return nil }
+        return first
+    }
+
     private func startsWith(_ tokens: [String], name: String) -> Bool {
         let nameStems = name.split(whereSeparator: \.isWhitespace).map { stem(String($0)) }
         guard !nameStems.isEmpty, tokens.count >= nameStems.count else { return false }
         return zip(tokens, nameStems).allSatisfy { stem($0) == $1 }
     }
 
-    /// "her gün", "her hafta", "her ay", "her yıl", "her pazartesi", "her ayın 1'i".
+    /// "her gün", "her pazartesi", "her ayın 1'i", "every day", "every monday", "weekly".
     private func extractRepeatRule(_ tokens: inout [String]) -> String? {
         let stems = tokens.map(stem)
-        guard let i = stems.firstIndex(of: "her"), i + 1 < stems.count else { return nil }
-        var rule: String?
-        var length = 2
-        switch stems[i + 1] {
-        case "gun": rule = "daily"
-        case "hafta": rule = "weekly"
-        case "ay": rule = "monthly"
-        case "yil": rule = "yearly"
-        case "ayin":
-            if i + 2 < stems.count, let day = Int(stems[i + 2]), (1...31).contains(day) { rule = "monthly:\(day)"; length = 3 }
-        default:
-            if let wd = weekdayNumber(stems[i + 1]) { rule = "weekly:\(wd)" }
+        for (i, s) in stems.enumerated() {
+            guard s == "her" || s == "every", i + 1 < stems.count else { continue }
+            var rule: String?
+            var length = 2
+            switch stems[i + 1] {
+            case "gun", "day": rule = "daily"
+            case "hafta", "week": rule = "weekly"
+            case "ay", "month": rule = "monthly"
+            case "yil", "year": rule = "yearly"
+            case "ayin":
+                if i + 2 < stems.count, let day = Int(stems[i + 2]), (1...31).contains(day) { rule = "monthly:\(day)"; length = 3 }
+            default:
+                if let wd = weekdayNumber(stems[i + 1]) { rule = "weekly:\(wd)" }
+            }
+            if let rule {
+                tokens.removeSubrange(i..<(i + length))
+                return rule
+            }
         }
-        guard let rule else { return nil }
-        tokens.removeSubrange(i..<(i + length))
-        return rule
+        for (i, s) in stems.enumerated() {
+            if let rule = ["daily": "daily", "weekly": "weekly", "monthly": "monthly", "yearly": "yearly"][s] {
+                tokens.remove(at: i)
+                return rule
+            }
+        }
+        return nil
     }
 
-    /// "14:00", "14.30" or "saat 14" -> minutes since midnight.
+    /// "14:00", "14.30", "saat 14", "5pm", "9:30am" (with a leading "at") -> minutes since midnight.
     private func extractTime(_ tokens: inout [String]) -> Int? {
         for (i, token) in tokens.enumerated() {
+            let lower = token.lowercased()
+            if let r = lower.range(of: #"^(\d{1,2})(?::(\d{2}))?(am|pm)$"#, options: .regularExpression) {
+                let body = lower[r].dropLast(2)
+                let parts = body.split(separator: ":").compactMap { Int($0) }
+                if var h = parts.first, h >= 1, h <= 12 {
+                    if lower.hasSuffix("pm"), h < 12 { h += 12 }
+                    if lower.hasSuffix("am"), h == 12 { h = 0 }
+                    let minutes = h * 60 + (parts.count > 1 ? parts[1] : 0)
+                    let from = i > 0 && stem(tokens[i - 1]) == "at" ? i - 1 : i
+                    tokens.removeSubrange(from...i)
+                    return minutes
+                }
+            }
             let parts = token.split(whereSeparator: { $0 == ":" || $0 == "." }).map(String.init)
             if parts.count == 2, parts[1].count == 2, let h = Int(parts[0]), let m = Int(parts[1]), h < 24, m < 60 {
-                tokens.remove(at: i)
+                let from = i > 0 && stem(tokens[i - 1]) == "at" ? i - 1 : i
+                tokens.removeSubrange(from...i)
                 return h * 60 + m
             }
             if stem(token) == "saat", i + 1 < tokens.count, let h = Int(stem(tokens[i + 1])), h < 24 {
@@ -182,3 +215,9 @@ public struct EntryParser: Sendable {
         return (day, String(text[r]))
     }
 }
+
+private let commonVerbs: Set<String> = [
+    "call", "email", "send", "pay", "buy", "review", "write", "fix", "finish", "prepare", "book", "schedule", "ask", "follow",
+    "meet", "check", "update", "plan", "back", "invoice", "text", "message", "reply", "submit", "deliver", "order", "renew",
+    "clean", "read", "edit", "design", "create", "make", "get", "take", "pick", "print", "sign", "upload", "remind", "try",
+]
