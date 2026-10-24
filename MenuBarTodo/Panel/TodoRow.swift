@@ -15,9 +15,7 @@ struct TodoRow: View {
             }
             .buttonStyle(.plain)
             .help("Yapıldı")
-            (Text(item.person.map { "\($0)" } ?? "").fontWeight(.semibold)
-                + Text(item.person == nil ? "" : " · ")
-                + Text(item.action))
+            label
                 .font(.system(size: 14))
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(due.text)
@@ -26,5 +24,10 @@ struct TodoRow: View {
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 6)
+    }
+
+    private var label: Text {
+        guard let person = item.person else { return Text(item.action) }
+        return Text("\(Text(person).fontWeight(.semibold)) · \(item.action)")
     }
 }

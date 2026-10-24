@@ -5,10 +5,13 @@ import TodoCore
 @Observable @MainActor
 final class AppModel {
     let store: TodoStore
+    let settingsStore: SettingsStore
     let calendar: Calendar
+    @ObservationIgnored private let scheduler = NotificationScheduler()
 
-    init(store: TodoStore) {
+    init(store: TodoStore, settingsStore: SettingsStore = SettingsStore()) {
         self.store = store
+        self.settingsStore = settingsStore
         var c = Calendar(identifier: .gregorian)
         c.locale = Locale(identifier: "tr_TR")
         c.firstWeekday = 2
@@ -17,11 +20,27 @@ final class AppModel {
 
     var parser: EntryParser { EntryParser(knownPeople: store.knownPeople(), calendar: calendar) }
 
-    func add(_ text: String) {
-        let entry = parser.parse(text, now: Date())
-        store.add(entry)
+    func start() async {
+        _ = await SystemNotificationCenter.requestAuthorization()
+        await reschedule()
     }
 
-    func markDone(_ item: TodoItem) { store.markDone(item, now: Date()) }
-    func reopen(_ item: TodoItem) { store.reopen(item) }
+    func add(_ text: String) {
+        store.add(parser.parse(text, now: Date()))
+        Task { await reschedule() }
+    }
+
+    func markDone(_ item: TodoItem) {
+        store.markDone(item, now: Date())
+        Task { await reschedule() }
+    }
+
+    func reopen(_ item: TodoItem) {
+        store.reopen(item)
+        Task { await reschedule() }
+    }
+
+    func reschedule() async {
+        await scheduler.reschedule(items: store.openItems(), settings: settingsStore.settings, now: Date(), calendar: calendar)
+    }
 }

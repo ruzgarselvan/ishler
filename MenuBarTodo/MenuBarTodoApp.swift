@@ -8,7 +8,9 @@ struct MenuBarTodoApp: App {
 
     init() {
         let store = try! TodoStore()
-        _model = State(initialValue: AppModel(store: store))
+        let model = AppModel(store: store)
+        _model = State(initialValue: model)
+        Task { await model.start() }
     }
 
     var body: some Scene {
