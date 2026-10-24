@@ -36,9 +36,9 @@ public final class NotificationScheduler {
         self.center = center
     }
 
-    public func reschedule(items: [TodoItem], settings: NotificationSettings, now: Date, calendar: Calendar) async {
+    public func reschedule(items: [TodoItem], settings: NotificationSettings, now: Date, calendar: Calendar, reminderCategories: Set<UUID>) async {
         center.removeAllPending()
-        for n in planNotifications(items: items, settings: settings, now: now, calendar: calendar) {
+        for n in planNotifications(items: items, settings: settings, now: now, calendar: calendar, reminderCategories: reminderCategories) {
             await center.add(n, calendar: calendar)
         }
     }

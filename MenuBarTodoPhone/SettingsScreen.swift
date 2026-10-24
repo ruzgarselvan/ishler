@@ -24,15 +24,18 @@ struct SettingsScreen: View {
                     }
                     .pickerStyle(.segmented)
                 } header: { Text("Teslimden kaç gün önce hatırlat") } footer: {
-                    Text(store.settings.eveningDaysBefore == 0
-                         ? "Sadece teslim günü sabah bildirim gelir."
-                         : "Son \(store.settings.eveningDaysBefore) gün her akşam, teslim günü sabah bildirim gelir.")
+                    Text(store.reminderCategoryIDs.isEmpty
+                         ? "Hatırlatma kapalı. Kategorilerden zili açarak başlat."
+                         : store.settings.eveningDaysBefore == 0
+                           ? "Zili açık kategorilerde teslim günü sabah bildirim gelir."
+                           : "Zili açık kategorilerde son \(store.settings.eveningDaysBefore) gün her akşam, teslim günü sabah bildirim gelir.")
                 }
 
                 Section("Kategoriler") { CategoryEditor(store: store) }
             }
             .navigationTitle("Ayarlar")
             .onChange(of: store.settings) { Task { await model.reschedule() } }
+            .onChange(of: store.categories) { Task { await model.reschedule() } }
         }
     }
 }

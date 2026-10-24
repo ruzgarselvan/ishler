@@ -12,9 +12,11 @@ import Foundation
     @Test func rescheduleReplacesPending() async {
         let center = FakeCenter()
         let scheduler = NotificationScheduler(center: center)
+        let work = UUID()
         let item = TodoItem(person: "X", action: "teklif", dueDate: date(2026, 10, 30))
+        item.categoryID = work
         for _ in 0..<2 {
-            await scheduler.reschedule(items: [item], settings: .default, now: date(2026, 10, 24, 9), calendar: istanbul)
+            await scheduler.reschedule(items: [item], settings: .default, now: date(2026, 10, 24, 9), calendar: istanbul, reminderCategories: [work])
         }
         #expect(center.log == ["clear", "add", "add", "add", "add", "clear", "add", "add", "add", "add"])
     }

@@ -32,7 +32,8 @@ private let maxPending = 60
 private let digestDays = 14
 
 public func planNotifications(
-    items: [TodoItem], settings: NotificationSettings, now: Date, calendar: Calendar
+    items: [TodoItem], settings: NotificationSettings, now: Date, calendar: Calendar,
+    reminderCategories: Set<UUID>
 ) -> [PlannedNotification] {
     let today = calendar.startOfDay(for: now)
     func at(_ day: Date, _ time: DateComponents) -> Date {
@@ -46,6 +47,7 @@ public func planNotifications(
     var digestItems: [TodoItem] = []
 
     for item in items where !item.isDone {
+        guard let category = item.categoryID, reminderCategories.contains(category) else { continue }
         guard let due = item.dueDate else { digestItems.append(item); continue }
         let dueDay = calendar.startOfDay(for: due)
         if dueDay < today { digestItems.append(item); continue }

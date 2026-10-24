@@ -17,6 +17,8 @@ public final class SettingsStore {
         didSet { if let data = try? JSONEncoder().encode(shortcuts) { defaults.set(data, forKey: Self.shortcutsKey) } }
     }
 
+    public var reminderCategoryIDs: Set<UUID> { Set(categories.filter(\.remind).map(\.id)) }
+
     public func category(_ id: UUID?) -> TodoCategory? {
         guard let id else { return nil }
         return categories.first { $0.id == id }
@@ -38,7 +40,14 @@ public final class SettingsStore {
 
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        self.categories = defaults.data(forKey: Self.categoriesKey).flatMap { try? JSONDecoder().decode([TodoCategory].self, from: $0) } ?? []
+        if let data = defaults.data(forKey: Self.categoriesKey), let saved = try? JSONDecoder().decode([TodoCategory].self, from: data) {
+            self.categories = saved
+        } else {
+            // First launch: seed the defaults and save them now, so their ids stay stable.
+            let seeded = TodoCategory.defaults()
+            self.categories = seeded
+            if let data = try? JSONEncoder().encode(seeded) { defaults.set(data, forKey: Self.categoriesKey) }
+        }
         self.shortcuts = defaults.data(forKey: Self.shortcutsKey).flatMap { try? JSONDecoder().decode(ShortcutOptions.self, from: $0) } ?? ShortcutOptions()
         self.showBadge = defaults.object(forKey: Self.badgeKey) as? Bool ?? true
         self.horizon = defaults.string(forKey: Self.horizonKey).flatMap(Horizon.init(rawValue:)) ?? .month

@@ -88,6 +88,7 @@ final class AppModel {
 
     func reschedule() async {
         refreshBadge()
-        await scheduler.reschedule(items: store.openItems(), settings: settingsStore.settings, now: Date(), calendar: calendar)
+        await scheduler.reschedule(items: store.openItems(), settings: settingsStore.settings, now: Date(), calendar: calendar,
+                                  reminderCategories: settingsStore.reminderCategoryIDs)
     }
 }

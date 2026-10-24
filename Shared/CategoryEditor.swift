@@ -31,6 +31,12 @@ struct CategoryEditor: View {
                             .padding(.vertical, 3)
                             .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
                             .onChange(of: category.shortcut) { category.shortcut = String(category.shortcut.prefix(3)) }
+                        Button { category.remind.toggle() } label: {
+                            Image(systemName: category.remind ? "bell.fill" : "bell.slash")
+                                .foregroundStyle(category.remind ? Color.accentColor : Color.secondary)
+                        }
+                        .buttonStyle(.plain)
+                        .help(category.remind ? "Hatırlatma açık" : "Hatırlatma kapalı")
                         Button {
                             store.categories.removeAll { $0.id == category.id }
                         } label: { Image(systemName: "minus.circle.fill").foregroundStyle(.secondary) }
@@ -57,10 +63,18 @@ struct CategoryEditor: View {
                     }
                 }
             }
-            Button { addCategory() } label: { Label("Kategori ekle", systemImage: "plus.circle.fill") }
-                .buttonStyle(.plain).foregroundStyle(Color.accentColor)
+            HStack(spacing: 14) {
+                Button { addCategory() } label: { Label("Kategori ekle", systemImage: "plus.circle.fill") }
+                if !missingDefaults.isEmpty {
+                    Button("Varsayılanları ekle") { store.categories += missingDefaults }
+                        .help("Eksik olanlar: \(missingDefaults.map(\.name).joined(separator: ", "))")
+                }
+            }
+            .buttonStyle(.plain).foregroundStyle(Color.accentColor)
 
             if !store.categories.isEmpty {
+                Text("Zil açık olan kategorilerin işleri için teslim hatırlatması gelir.")
+                    .font(.system(size: compact ? 11 : 13)).foregroundStyle(.secondary)
                 Text("Notun sonuna kısayolu yaz: \"logo teslimi x\"")
                     .font(.system(size: compact ? 11 : 13)).foregroundStyle(.secondary)
                 Toggle("Harf kısayolu (x)", isOn: $store.shortcuts.letters)
@@ -69,6 +83,13 @@ struct CategoryEditor: View {
             }
         }
         .font(.system(size: compact ? 12 : 17))
+    }
+
+    /// Default categories (İş, Okul, Kişisel) the user doesn't have, skipping shortcuts already taken.
+    private var missingDefaults: [TodoCategory] {
+        let names = Set(store.categories.map { $0.name.lowercased() })
+        let taken = Set(store.categories.map { $0.shortcut.lowercased() })
+        return TodoCategory.defaults().filter { !names.contains($0.name.lowercased()) && !taken.contains($0.shortcut) }
     }
 
     private func addCategory() {

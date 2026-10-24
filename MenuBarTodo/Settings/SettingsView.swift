@@ -21,7 +21,7 @@ struct SettingsView: View {
                         .pickerStyle(.segmented).labelsHidden().controlSize(.small)
                     }
 
-                    section("Teslimden kaç gün önce hatırlat", footnote: footnote(store.settings.eveningDaysBefore)) {
+                    section("Teslimden kaç gün önce hatırlat", footnote: footnote(store)) {
                         Picker("", selection: $store.settings.eveningDaysBefore) {
                             Text("Yok").tag(0)
                             ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }
@@ -50,11 +50,14 @@ struct SettingsView: View {
         .onChange(of: launchAtLogin) { model.launchAtLogin = launchAtLogin }
         .onChange(of: store.showBadge) { model.refreshBadge() }
         .onChange(of: store.settings) { Task { await model.reschedule() } }
+        .onChange(of: store.categories) { Task { await model.reschedule() } }
     }
 
-    private func footnote(_ days: Int) -> String {
-        days == 0 ? "Sadece teslim günü sabah bildirim gelir."
-                  : "Son \(days) gün her akşam, teslim günü sabah bildirim gelir."
+    private func footnote(_ store: SettingsStore) -> String {
+        if store.reminderCategoryIDs.isEmpty { return "Hatırlatma kapalı. Kategorilerden zili açarak başlat." }
+        let days = store.settings.eveningDaysBefore
+        return days == 0 ? "Zili açık kategorilerde teslim günü sabah bildirim gelir."
+                         : "Zili açık kategorilerde son \(days) gün her akşam, teslim günü sabah bildirim gelir."
     }
 
     private func section(_ title: String, footnote: String?, @ViewBuilder content: () -> some View) -> some View {

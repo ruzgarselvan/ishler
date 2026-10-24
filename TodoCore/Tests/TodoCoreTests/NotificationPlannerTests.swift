@@ -5,11 +5,17 @@ import Foundation
 @Suite struct NotificationPlannerTests {
     let settings = NotificationSettings.default
     let morning = date(2026, 10, 24, 9)
+    let work = UUID()
 
-    func plan(_ items: [TodoItem], now: Date? = nil) -> [PlannedNotification] {
-        planNotifications(items: items, settings: settings, now: now ?? morning, calendar: istanbul)
+    func plan(_ items: [TodoItem], now: Date? = nil, reminders: Set<UUID>? = nil) -> [PlannedNotification] {
+        planNotifications(items: items, settings: settings, now: now ?? morning, calendar: istanbul, reminderCategories: reminders ?? [work])
     }
-    func teklif() -> TodoItem { TodoItem(person: "X", action: "teklif at", dueDate: date(2026, 10, 30)) }
+    func make(_ person: String?, _ action: String, _ due: Date?, category: UUID? = nil) -> TodoItem {
+        let i = TodoItem(person: person, action: action, dueDate: due)
+        i.categoryID = category ?? work
+        return i
+    }
+    func teklif() -> TodoItem { make("X", "teklif at", date(2026, 10, 30)) }
 
     @Test func eveningNotificationsLastThreeDays() {
         let p = plan([teklif()])
@@ -22,15 +28,15 @@ import Foundation
         #expect(p.map(\.fireDate) == [date(2026, 10, 30, 10, 30)])
     }
     @Test func undatedAndOverdueGoInDailyDigest() {
-        let undated = TodoItem(person: "Deniz", action: "ara", dueDate: nil)
-        let overdue = TodoItem(person: "Ayşe", action: "faturayı gönder", dueDate: date(2026, 10, 22))
+        let undated = make("Deniz", "ara", nil)
+        let overdue = make("Ayşe", "faturayı gönder", date(2026, 10, 22))
         let p = plan([undated, overdue])
         #expect(p.count == 14)
         #expect(p[0].fireDate == date(2026, 10, 24, 12))
         #expect(p[0].body.contains("Deniz · ara") && p[0].body.contains("Ayşe · faturayı gönder"))
     }
     @Test func digestSkipsTodayWhenNoonPassed() {
-        let undated = TodoItem(person: "Deniz", action: "ara", dueDate: nil)
+        let undated = make("Deniz", "ara", nil)
         let p = plan([undated], now: date(2026, 10, 24, 13))
         #expect(p[0].fireDate == date(2026, 10, 25, 12))
     }
@@ -42,7 +48,7 @@ import Foundation
         #expect(plan([t]).isEmpty)
     }
     @Test func cappedAt60() {
-        let items = (0..<100).map { TodoItem(person: nil, action: "iş \($0)", dueDate: date(2026, 11, 1 + $0 % 28)) }
+        let items = (0..<100).map { make(nil, "iş \($0)", date(2026, 11, 1 + $0 % 28)) }
         let p = plan(items)
         #expect(p.count == 60)
         #expect(p == p.sorted { $0.fireDate < $1.fireDate })
@@ -52,5 +58,15 @@ import Foundation
         let a = plan([t]), b = plan([t])
         #expect(a.map(\.id) == b.map(\.id))
         #expect(a.first?.id == "item-\(t.id.uuidString)-evening-3")
+    }
+    @Test func nothingWithoutReminderCategories() {
+        let uncategorized = TodoItem(person: "X", action: "ara", dueDate: date(2026, 10, 30))
+        #expect(plan([uncategorized, teklif()], reminders: []).isEmpty)
+    }
+    @Test func onlyItemsOfReminderCategoriesNotify() {
+        let other = make("Mert", "ders", date(2026, 10, 30), category: UUID())
+        let p = plan([teklif(), other])
+        #expect(p.count == 4)
+        #expect(p.allSatisfy { $0.body == "X · teklif at" })
     }
 }

@@ -40,13 +40,29 @@ import Foundation
     @Test func categoriesAndShortcutsPersist() {
         let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
         let a = SettingsStore(defaults: suite)
-        #expect(a.categories.isEmpty && a.shortcuts == ShortcutOptions())
-        let c = TodoCategory(name: "İş", shortcut: "x", colorHex: "#FF9500")
+        #expect(a.shortcuts == ShortcutOptions())
+        let c = TodoCategory(name: "Özel", shortcut: "z", colorHex: "#FF9500", remind: true)
         a.categories = [c]
         a.shortcuts.parentheses = false
         let b = SettingsStore(defaults: suite)
         #expect(b.categories == [c])
         #expect(!b.shortcuts.parentheses)
-        #expect(b.category(c.id)?.name == "İş")
+        #expect(b.category(c.id)?.name == "Özel")
+    }
+    @Test func defaultCategoriesSeededOnceAndRemindersOff() {
+        let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
+        let a = SettingsStore(defaults: suite)
+        #expect(a.categories.map(\.name) == ["İş", "Okul", "Kişisel"])
+        #expect(a.categories.allSatisfy { !$0.remind })
+        a.categories.removeAll()
+        #expect(SettingsStore(defaults: suite).categories.isEmpty)
+    }
+    @Test func oldSavedCategoriesWithoutRemindFieldStillLoad() throws {
+        let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
+        let id = UUID()
+        let json = "[{\"id\":\"\(id.uuidString)\",\"name\":\"Eski\",\"shortcut\":\"e\",\"colorHex\":\"#007AFF\"}]"
+        suite.set(Data(json.utf8), forKey: "categories")
+        let c = SettingsStore(defaults: suite).categories
+        #expect(c.count == 1 && c[0].name == "Eski" && !c[0].remind)
     }
 }
