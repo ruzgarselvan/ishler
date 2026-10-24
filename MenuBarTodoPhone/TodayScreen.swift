@@ -65,6 +65,7 @@ struct PhoneEntryField: View {
             HStack {
                 TextField("Yeni iş yaz…", text: $text)
                     .submitLabel(.done)
+                    .autocorrectionDisabled()
                     .onSubmit(submit)
                 if !trimmed.isEmpty {
                     Button("Ekle", action: submit).fontWeight(.semibold)
