@@ -21,6 +21,7 @@ targets:
     sources: [MenuBarTodo, Shared]
     dependencies:
       - package: TodoCore
+      - target: IshlerWidgetMac
     info:
       path: MenuBarTodo/Info.plist
       properties:
@@ -59,6 +60,7 @@ targets:
     sources: [MenuBarTodoPhone, Shared]
     dependencies:
       - package: TodoCore
+      - target: IshlerWidget
     info:
       path: MenuBarTodoPhone/Info.plist
       properties:
@@ -86,6 +88,68 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         TARGETED_DEVICE_FAMILY: "1"
+  IshlerWidget:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: IshlerWidget
+        excludes: ["Info-*.plist", "*.entitlements"]
+      - Shared/Localizable.xcstrings
+    dependencies:
+      - package: TodoCore
+    info:
+      path: IshlerWidget/Info-iOS.plist
+      properties:
+        CFBundleName: ishler
+        CFBundleDisplayName: ishler
+        CFBundleLocalizations: [en, tr]
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: IshlerWidget/IshlerWidget-iOS.entitlements
+      properties:
+        com.apple.security.application-groups: [group.com.ruzgar.ishler]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruzgar.ishler.widget
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: NO
+        SKIP_INSTALL: YES
+  IshlerWidgetMac:
+    type: app-extension
+    platform: macOS
+    deploymentTarget: "26.0"
+    sources:
+      - path: IshlerWidget
+        excludes: ["Info-*.plist", "*.entitlements"]
+      - Shared/Localizable.xcstrings
+    dependencies:
+      - package: TodoCore
+    info:
+      path: IshlerWidget/Info-macOS.plist
+      properties:
+        CFBundleName: ishler
+        CFBundleDisplayName: ishler
+        CFBundleLocalizations: [en, tr]
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: IshlerWidget/IshlerWidget-macOS.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.application-groups: [HK34NNSZ5W.com.ruzgar.ishler]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruzgar.ishler.widget
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: NO
+        ENABLE_HARDENED_RUNTIME: YES
+        SKIP_INSTALL: YES
   MenuBarTodoTests:
     type: bundle.unit-test
     platform: macOS

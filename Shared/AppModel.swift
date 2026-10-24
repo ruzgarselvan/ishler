@@ -4,6 +4,7 @@ import Foundation
 import Observation
 import SwiftUI
 import UserNotifications
+import WidgetKit
 #if os(macOS)
 import AppKit
 import ServiceManagement
@@ -139,7 +140,13 @@ final class AppModel {
         #endif
         #if DEBUG
         if ProcessInfo.processInfo.arguments.contains("-initCloudSchema") {
-            do { try TodoStore.initializeCloudKitSchema(); FileHandle.standardError.write(Data("ishler: CloudKit schema initialized\n".utf8)) }
+            // Background-only menu bar apps get their CloudKit requests deferred ("discretionary"); act like a normal app for this run.
+            #if os(macOS)
+            NSApp.setActivationPolicy(.regular)
+            NSApp.activate(ignoringOtherApps: true)
+            try? await Task.sleep(for: .seconds(1))
+            #endif
+            do { try await Task.detached(priority: .userInitiated) { try TodoStore.initializeCloudKitSchema() }.value; FileHandle.standardError.write(Data("ishler: CloudKit schema initialized\n".utf8)) }
             catch { FileHandle.standardError.write(Data("ishler: schema init failed: \(error)\n".utf8)) }
         }
         // Debug aid: `-seedCloudKit` adds one item so CloudKit creates its record type in the Development schema.
@@ -243,6 +250,7 @@ final class AppModel {
             store.save()
         }
         indexSpotlight()
+        WidgetCenter.shared.reloadAllTimelines()
     }
 
     private func indexSpotlight() {

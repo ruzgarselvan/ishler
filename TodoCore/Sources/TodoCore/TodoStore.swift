@@ -11,11 +11,11 @@ public final class TodoStore {
 
     /// macOS uses a team-prefixed group; iOS uses a "group." one. Each platform's store is synced by iCloud, not shared.
     #if os(macOS)
-    public static let appGroupID = "HK34NNSZ5W.com.ruzgar.ishler"
+    nonisolated public static let appGroupID = "HK34NNSZ5W.com.ruzgar.ishler"
     #else
-    public static let appGroupID = "group.com.ruzgar.ishler"
+    nonisolated public static let appGroupID = "group.com.ruzgar.ishler"
     #endif
-    public static let cloudContainerID = "iCloud.com.ruzgar.ishler"
+    nonisolated public static let cloudContainerID = "iCloud.com.ruzgar.ishler"
 
     /// In memory for tests. Otherwise the store lives in the shared App Group container (so widgets and extensions can
     /// read it) and syncs through the user's private iCloud database; without iCloud it quietly stays local.
@@ -158,7 +158,7 @@ public func migrateStore(from old: URL, to new: URL) -> Bool {
 extension TodoStore {
     /// Creates the CloudKit record types for `TodoItem` in the Development schema right away (run once from a debug
     /// build, then deploy the schema to Production in the CloudKit Console).
-    public static func initializeCloudKitSchema() throws {
+    nonisolated public static func initializeCloudKitSchema() throws {
         guard let model = NSManagedObjectModel.makeManagedObjectModel(for: [TodoItem.self]) else { return }
         let container = NSPersistentCloudKitContainer(name: "ishler-schema", managedObjectModel: model)
         let description = NSPersistentStoreDescription(url: FileManager.default.temporaryDirectory.appending(path: "schema-\(UUID()).store"))

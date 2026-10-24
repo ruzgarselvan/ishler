@@ -2064,6 +2064,22 @@
           }
         }
       }
+    },
+    "Sıradaki işlerini gösterir.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shows your next tasks."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sıradaki işlerini gösterir."
+          }
+        }
+      }
     }
   },
   "version": "1.0"
