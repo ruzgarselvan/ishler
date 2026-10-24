@@ -51,9 +51,12 @@ section{margin-bottom:110px}
 .shots figure{margin:0}
 .shots figcaption{margin-top:14px;font-size:15px;color:var(--mut)}
 .mac{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
-.mac img{display:block;width:100%;height:auto;filter:drop-shadow(0 24px 30px rgba(10,20,60,.25))}
-.mac img.dark{display:none}
-@media (prefers-color-scheme:dark){.mac img.light{display:none}.mac img.dark{display:block}}
+.mac img{display:none;width:100%;height:auto;filter:drop-shadow(0 24px 30px rgba(10,20,60,.25))}
+html[lang=tr] .mac img.tr.light,html[lang=en] .mac img.en.light{display:block}
+@media (prefers-color-scheme:dark){
+  html[lang=tr] .mac img.tr.light,html[lang=en] .mac img.en.light{display:none}
+  html[lang=tr] .mac img.tr.dark,html[lang=en] .mac img.en.dark{display:block}
+}
 .widget{max-width:520px;border-radius:26px;overflow:hidden;box-shadow:var(--shadow)}
 .widget img{display:block;width:100%}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
