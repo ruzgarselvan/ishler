@@ -17,46 +17,43 @@ struct PanelView: View {
             case .settings: SettingsView { screen = .list }
             }
         }
-        .padding(14)
-        .frame(width: 340)
+        .padding(10)
+        .frame(width: 300)
     }
 
     private var list: some View {
         let now = Date()
-        let groups = sortedOpenItems(items, now: now, calendar: model.calendar)
-        return VStack(alignment: .leading, spacing: 0) {
+        let visible = items.filter { isVisible($0, horizon: model.settingsStore.horizon, now: now, calendar: model.calendar) }
+        let groups = sortedOpenItems(visible, now: now, calendar: model.calendar)
+        return VStack(alignment: .leading, spacing: 6) {
             EntryField()
-            ScrollView {
-                VStack(alignment: .leading, spacing: 0) {
-                    ForEach(groups, id: \.0) { bucket, rows in
-                        Text(bucketTitle(bucket))
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundStyle(.secondary)
-                            .padding(.top, 14).padding(.bottom, 4).padding(.horizontal, 6)
-                        ForEach(rows) { item in
-                            TodoRow(item: item, now: now, calendar: model.calendar) { model.markDone(item) }
-                            Divider().opacity(0.5)
+            if !groups.isEmpty {
+                FittedScroll(maxHeight: 460) {
+                    VStack(alignment: .leading, spacing: 0) {
+                        ForEach(groups, id: \.0) { bucket, rows in
+                            Text(bucketTitle(bucket))
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundStyle(.secondary)
+                                .padding(.top, 8).padding(.bottom, 1)
+                            ForEach(rows) { item in
+                                TodoRow(item: item, now: now, calendar: model.calendar) { model.markDone(item) }
+                            }
                         }
                     }
-                    if groups.isEmpty {
-                        Text("Açık iş yok")
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity).padding(.vertical, 30)
-                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
-            .frame(maxHeight: 420)
-            HStack {
-                Text("\(items.filter { !$0.isDone }.count) açık iş")
+            HStack(spacing: 12) {
+                Text(groups.isEmpty ? "Açık iş yok" : "\(visible.filter { !$0.isDone }.count) açık iş")
                 Spacer()
-                Button("Arşiv") { screen = .archive }
-                Button("Ayarlar") { screen = .settings }
-                Button("Çık") { NSApplication.shared.terminate(nil) }
+                Button { screen = .archive } label: { Image(systemName: "archivebox") }.help("Arşiv")
+                Button { screen = .settings } label: { Image(systemName: "gearshape") }.help("Ayarlar")
+                Button { NSApplication.shared.terminate(nil) } label: { Image(systemName: "power") }.help("Çık")
             }
             .buttonStyle(.plain)
-            .font(.system(size: 12))
+            .font(.system(size: 11))
             .foregroundStyle(.secondary)
-            .padding(.top, 10).padding(.horizontal, 6)
+            .padding(.top, 4)
         }
     }
 }

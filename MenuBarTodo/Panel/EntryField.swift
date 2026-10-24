@@ -7,12 +7,12 @@ struct EntryField: View {
     @FocusState private var focused: Bool
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 5) {
             TextField("Yeni iş yaz…", text: $text)
                 .textFieldStyle(.plain)
-                .font(.system(size: 14))
-                .padding(.horizontal, 12).padding(.vertical, 9)
-                .background(.quaternary, in: RoundedRectangle(cornerRadius: 12))
+                .font(.system(size: 13))
+                .padding(.horizontal, 10).padding(.vertical, 6)
+                .background(.quaternary, in: RoundedRectangle(cornerRadius: 9))
                 .focused($focused)
                 .onSubmit(submit)
             if !trimmed.isEmpty { chips }
@@ -37,8 +37,8 @@ struct EntryField: View {
     }
 
     private func chip(_ s: String) -> some View {
-        Text(s).font(.system(size: 12))
-            .padding(.horizontal, 9).padding(.vertical, 2)
+        Text(s).font(.system(size: 11))
+            .padding(.horizontal, 8).padding(.vertical, 1)
             .background(.quaternary, in: Capsule())
     }
 

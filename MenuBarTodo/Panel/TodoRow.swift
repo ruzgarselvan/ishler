@@ -9,21 +9,21 @@ struct TodoRow: View {
 
     var body: some View {
         let due = DueLabel(item: item, now: now, calendar: calendar)
-        HStack(spacing: 11) {
+        HStack(spacing: 9) {
             Button(action: onDone) {
-                Circle().strokeBorder(.secondary.opacity(0.6), lineWidth: 1.5).frame(width: 20, height: 20)
+                Circle().strokeBorder(.secondary.opacity(0.6), lineWidth: 1.3).frame(width: 16, height: 16)
             }
             .buttonStyle(.plain)
             .help("Yapıldı")
             label
-                .font(.system(size: 14))
+                .font(.system(size: 13))
+                .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
             Text(due.text)
-                .font(.system(size: 12))
+                .font(.system(size: 11))
                 .foregroundStyle(due.isOverdue ? Color.red : Color.secondary)
         }
-        .padding(.vertical, 8)
-        .padding(.horizontal, 6)
+        .padding(.vertical, 4)
     }
 
     private var label: Text {

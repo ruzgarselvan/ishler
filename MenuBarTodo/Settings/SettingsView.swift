@@ -7,30 +7,37 @@ struct SettingsView: View {
 
     var body: some View {
         @Bindable var store = model.settingsStore
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Button("‹ İşler", action: onBack).buttonStyle(.plain).foregroundStyle(Color.accentColor)
-                Spacer()
-                Text("Ayarlar").font(.system(size: 13, weight: .semibold))
-                Spacer()
-                Text("‹ İşler").hidden()
+        VStack(alignment: .leading, spacing: 14) {
+            PanelHeader(title: "Ayarlar", onBack: onBack)
+
+            section("Listede göster", footnote: "Gecikmiş ve tarihsiz işler her zaman görünür.") {
+                Picker("", selection: $store.horizon) {
+                    Text("1 hafta").tag(Horizon.week)
+                    Text("1 ay").tag(Horizon.month)
+                    Text("Hepsi").tag(Horizon.all)
+                }
             }
-            Text("Bildirimler").font(.system(size: 12, weight: .semibold)).foregroundStyle(.secondary)
-            Stepper("Teslimden önce her akşam: \(store.settings.eveningDaysBefore) gün",
-                    value: $store.settings.eveningDaysBefore, in: 0...7)
-            timeRow("Akşam saati", $store.settings.eveningTime)
-            timeRow("Teslim günü sabah", $store.settings.morningTime)
-            timeRow("Tarihsiz/gecikmiş işler", $store.settings.digestTime)
+
+            section("Teslimden önce hatırlat", footnote: footnote(store.settings.eveningDaysBefore)) {
+                Picker("", selection: $store.settings.eveningDaysBefore) {
+                    Text("Yok").tag(0)
+                    ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0) gün").tag($0) }
+                }
+            }
         }
-        .font(.system(size: 13))
         .onChange(of: store.settings) { Task { await model.reschedule() } }
     }
 
-    private func timeRow(_ title: String, _ comps: Binding<DateComponents>) -> some View {
-        let date = Binding<Date>(
-            get: { Calendar.current.date(from: DateComponents(hour: comps.wrappedValue.hour, minute: comps.wrappedValue.minute)) ?? .now },
-            set: { comps.wrappedValue = Calendar.current.dateComponents([.hour, .minute], from: $0) }
-        )
-        return DatePicker(title, selection: date, displayedComponents: .hourAndMinute)
+    private func footnote(_ days: Int) -> String {
+        days == 0 ? "Sadece teslim günü sabah bildirim gelir."
+                  : "Son \(days) gün her akşam, teslim günü sabah bildirim gelir."
+    }
+
+    private func section(_ title: String, footnote: String, @ViewBuilder content: () -> some View) -> some View {
+        VStack(alignment: .leading, spacing: 5) {
+            Text(title).font(.system(size: 12, weight: .semibold))
+            content().pickerStyle(.segmented).labelsHidden().controlSize(.small)
+            Text(footnote).font(.system(size: 11)).foregroundStyle(.secondary)
+        }
     }
 }
