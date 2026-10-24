@@ -106,6 +106,12 @@ final class AppModel {
         }
     }
 
+    /// "1.0 (4)" from the app bundle.
+    static var versionText: String {
+        let info = Bundle.main.infoDictionary
+        return "\(info?["CFBundleShortVersionString"] as? String ?? "?") (\(info?["CFBundleVersion"] as? String ?? "?"))"
+    }
+
     // MARK: iCloud status
 
     /// Short human-readable sync state shown at the bottom of Settings.
