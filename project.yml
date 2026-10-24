@@ -1,0 +1,48 @@
+name: MenuBarTodo
+options:
+  bundleIdPrefix: com.ruzgar
+  deploymentTarget:
+    macOS: "26.0"
+packages:
+  TodoCore:
+    path: TodoCore
+targets:
+  MenuBarTodo:
+    type: application
+    platform: macOS
+    sources: [MenuBarTodo]
+    dependencies:
+      - package: TodoCore
+    info:
+      path: MenuBarTodo/Info.plist
+      properties:
+        CFBundleName: Menü Bar İşler
+        LSUIElement: true
+        NSHumanReadableCopyright: ""
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruzgar.menubartodo
+        SWIFT_VERSION: "6.0"
+        CODE_SIGN_STYLE: Automatic
+        CODE_SIGN_IDENTITY: "-"
+        ENABLE_APP_SANDBOX: YES
+        ENABLE_HARDENED_RUNTIME: YES
+        GENERATE_INFOPLIST_FILE: NO
+  MenuBarTodoTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources: [MenuBarTodoTests]
+    dependencies:
+      - target: MenuBarTodo
+      - package: TodoCore
+    settings:
+      base:
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+schemes:
+  MenuBarTodo:
+    build:
+      targets:
+        MenuBarTodo: all
+    test:
+      targets: [MenuBarTodoTests]

@@ -1,0 +1,50 @@
+import SwiftUI
+import TodoCore
+
+struct EntryField: View {
+    @Environment(AppModel.self) private var model
+    @State private var text = ""
+    @FocusState private var focused: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            TextField("Yeni iş yaz…", text: $text)
+                .textFieldStyle(.plain)
+                .font(.system(size: 14))
+                .padding(.horizontal, 12).padding(.vertical, 9)
+                .background(.quaternary, in: RoundedRectangle(cornerRadius: 12))
+                .focused($focused)
+                .onSubmit(submit)
+            if !trimmed.isEmpty { chips }
+        }
+        .onAppear { focused = true }
+    }
+
+    private var trimmed: String { text.trimmingCharacters(in: .whitespacesAndNewlines) }
+
+    private var chips: some View {
+        let e = model.parser.parse(trimmed, now: Date())
+        return HStack(spacing: 6) {
+            if let p = e.person { chip(p) }
+            if !e.action.isEmpty { chip(e.action.prefix(1).uppercased() + e.action.dropFirst()) }
+            if let d = e.dueDate {
+                chip(d.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).locale(Locale(identifier: "tr_TR"))))
+            } else if !e.action.isEmpty {
+                chip("Tarih yok · Bugün'de bekler")
+            }
+        }
+        .padding(.horizontal, 2)
+    }
+
+    private func chip(_ s: String) -> some View {
+        Text(s).font(.system(size: 12))
+            .padding(.horizontal, 9).padding(.vertical, 2)
+            .background(.quaternary, in: Capsule())
+    }
+
+    private func submit() {
+        guard !trimmed.isEmpty else { return }
+        model.add(trimmed)
+        text = ""
+    }
+}
