@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ishler: Gizlilik Politikası / Privacy Policy</title>
+<link rel="icon" href="icon.png">
+<style>
+:root{--bg:#fff;--fg:#111113;--mut:#6b6b73;--line:#e4e4ea;--accent:#0a84ff}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0b0d;--fg:#f4f4f6;--mut:#9a9aa3;--line:#26262c}}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.65 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:680px;margin:0 auto;padding:56px 24px 80px}
+a{color:var(--accent)}
+h1{font-size:34px;letter-spacing:-.025em;margin:32px 0 6px}
+h2{font-size:20px;margin:32px 0 8px}
+.mut{color:var(--mut);font-size:15px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.top a{color:var(--mut);text-decoration:none}
+.en{display:none}
+html[lang=en] .tr{display:none}
+html[lang=en] .en{display:revert}
+footer{margin-top:56px;border-top:1px solid var(--line);padding-top:20px;color:var(--mut);font-size:14px}
+</style>
+</head>
+<body>
+<main>
+<div class="top"><a href="./">← ishler</a><a href="#" id="lang">EN</a></div>
+
+<div class="tr">
+<h1>Gizlilik Politikası</h1>
+<p class="mut">Son güncelleme: 25 Ekim 2026</p>
+<p>ishler, sizden hiçbir kişisel veri toplamaz. Bir hesap oluşturmanız gerekmez, reklam ya da izleme yoktur.</p>
+<h2>İşleriniz nerede durur?</h2>
+<p>Yazdığınız işler cihazınızda saklanır. iCloud'a giriş yaptıysanız Apple'ın iCloud hizmeti (CloudKit) üzerinden kendi cihazlarınız arasında eşitlenir. Bu veri sizin iCloud hesabınızın özel alanında durur; geliştirici dâhil kimse ona erişemez. Apple Kimliğiniz ve şifreniz uygulamaya hiçbir zaman iletilmez.</p>
+<h2>İzinler</h2>
+<p><b>Takvim:</b> Takvimdeki etkinlikleri işlerinizin yanında göstermek ve teslim tarihli işleri takviminize eklemek için kullanılır. Etkinlikleriniz cihazdan çıkmaz.</p>
+<p><b>Bildirimler:</b> Hatırlatmaları göstermek için kullanılır. Bildirimler cihazınızda planlanır, bir sunucudan gönderilmez.</p>
+<h2>Üçüncü taraflar ve analiz</h2>
+<p>Uygulamada üçüncü taraf kütüphane, analiz, reklam ya da çökme raporlama servisi yoktur. Cümleleri anlama işlemi tamamen cihazınızda yapılır; hiçbir yapay zekâ servisine ya da sunucuya gönderilmez.</p>
+<h2>Çocuklar</h2>
+<p>Uygulama hiçbir kişisel veri toplamadığı için çocukların verilerini de toplamaz.</p>
+<h2>İletişim</h2>
+<p>Sorularınız için <a href="https://github.com/ruzgarselvan/ishler/issues">GitHub üzerinden</a> yazabilirsiniz. Uygulamanın kaynak kodu açıktır; yukarıdakileri kendiniz de doğrulayabilirsiniz.</p>
+</div>
+
+<div class="en">
+<h1>Privacy Policy</h1>
+<p class="mut">Last updated: October 25, 2026</p>
+<p>ishler does not collect any personal data from you. There is no account to create, and no ads or tracking.</p>
+<h2>Where your tasks live</h2>
+<p>The tasks you type are stored on your device. If you are signed in to iCloud, they sync between your own devices through Apple's iCloud service (CloudKit). That data sits in the private area of your iCloud account; nobody, including the developer, can access it. Your Apple ID and password are never passed to the app.</p>
+<h2>Permissions</h2>
+<p><b>Calendar:</b> used to show your calendar events next to your tasks and to add dated tasks to your calendar. Your events never leave your device.</p>
+<p><b>Notifications:</b> used to show reminders. Notifications are scheduled on your device, not sent from a server.</p>
+<h2>Third parties and analytics</h2>
+<p>The app contains no third-party libraries, analytics, advertising or crash-reporting services. Understanding your sentences happens entirely on your device; nothing is sent to an AI service or a server.</p>
+<h2>Children</h2>
+<p>Because the app collects no personal data, it collects none from children either.</p>
+<h2>Contact</h2>
+<p>You can reach out <a href="https://github.com/ruzgarselvan/ishler/issues">on GitHub</a>. The source code is open, so you can verify all of the above yourself.</p>
+</div>
+
+<footer>ishler · Rüzgar Selvan</footer>
+</main>
+<script>
+(function(){var h=document.documentElement,l=document.getElementById('lang'),s;try{s=localStorage.lang}catch(e){}
+function set(x){h.lang=x;l.textContent=x==='tr'?'EN':'TR';try{localStorage.lang=x}catch(e){}}
+set(s||((navigator.language||'').toLowerCase().startsWith('tr')?'tr':'en'));
+l.onclick=function(e){e.preventDefault();set(h.lang==='tr'?'en':'tr')}})();
+</script>
+</body>
+</html>

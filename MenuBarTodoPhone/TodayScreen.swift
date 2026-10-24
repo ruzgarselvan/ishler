@@ -6,7 +6,11 @@ struct TodayScreen: View {
     @Environment(AppModel.self) private var model
     @Query private var items: [TodoItem]
     @State private var editing: TodoItem?
+    #if DEBUG
+    @State private var focusing = ProcessInfo.processInfo.arguments.contains("-showFocus")
+    #else
     @State private var focusing = false
+    #endif
 
     var body: some View {
         let now = Date()

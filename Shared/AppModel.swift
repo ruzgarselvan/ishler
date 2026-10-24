@@ -153,7 +153,12 @@ final class AppModel {
         UNUserNotificationCenter.current().delegate = notificationHandler
         NotificationActions.register()
         // Asking can wait on the user, so it must not hold up the rest of start-up; notifications re-plan once answered.
-        Task { _ = await SystemNotificationCenter.requestAuthorization(); await reschedule() }
+        #if DEBUG
+        let skipPermissions = ProcessInfo.processInfo.arguments.contains("-skipPermissions")
+        #else
+        let skipPermissions = false
+        #endif
+        if !skipPermissions { Task { _ = await SystemNotificationCenter.requestAuthorization(); await reschedule() } }
         UserDefaults.standard.set(Date(), forKey: Self.activityKey)
         #if os(macOS)
         applyAppearance()
