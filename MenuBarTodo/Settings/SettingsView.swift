@@ -18,13 +18,16 @@ struct SettingsView: View {
                 }
             }
 
-            section("Teslimden önce hatırlat", footnote: footnote(store.settings.eveningDaysBefore)) {
+            section("Teslimden kaç gün önce hatırlat", footnote: footnote(store.settings.eveningDaysBefore)) {
                 Picker("", selection: $store.settings.eveningDaysBefore) {
                     Text("Yok").tag(0)
-                    ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0) gün").tag($0) }
+                    ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 4)
+        .padding(.bottom, 4)
         .onChange(of: store.settings) { Task { await model.reschedule() } }
     }
 
@@ -38,6 +41,7 @@ struct SettingsView: View {
             Text(title).font(.system(size: 12, weight: .semibold))
             content().pickerStyle(.segmented).labelsHidden().controlSize(.small)
             Text(footnote).font(.system(size: 11)).foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 }
