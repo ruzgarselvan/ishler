@@ -72,4 +72,17 @@ import Foundation
         #expect(parse("bir hafta sonra Mert ara").dueDate == date(2026, 10, 31))
         #expect(parse("iki ay sonra Mert ara").dueDate == date(2026, 12, 24))
     }
+    @Test func worksWithoutTurkishCharacters() {
+        let e = parse("tugba hocayi ara 24 kasim")
+        #expect(e.dueDate == date(2026, 11, 24))
+        #expect(e.action == "tugba hocayi ara")
+        #expect(parse("yarin Mert ara").dueDate == date(2026, 10, 25))
+        #expect(parse("uc gun sonra Mert ara").dueDate == date(2026, 10, 27))
+        #expect(parse("Mert musterisine sali gunu teklif").dueDate == date(2026, 10, 27))
+        #expect(parse("Cumartesi'ye Ayse fatura").person == "Ayse")
+    }
+    @Test func knownPersonMatchesWithoutDiacritics() {
+        let e = parse("ayse fatura", known: ["Ayşe"])
+        #expect(e.person == "Ayşe")
+    }
 }

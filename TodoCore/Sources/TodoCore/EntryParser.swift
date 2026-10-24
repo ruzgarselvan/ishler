@@ -39,13 +39,13 @@ public struct EntryParser: Sendable {
                 .split(whereSeparator: \.isWhitespace).map(String.init)
         }
 
-        tokens.removeAll { stem($0).hasPrefix("müşteri") }
+        tokens.removeAll { stem($0).hasPrefix("musteri") }
 
         var personIndex = tokens.firstIndex { token in
-            knownPeople.contains { $0.lowercased(with: turkish) == stem(token) }
+            knownPeople.contains { fold($0) == stem(token) }
         }
         var person = personIndex.flatMap { i in
-            knownPeople.first { $0.lowercased(with: turkish) == stem(tokens[i]) }
+            knownPeople.first { fold($0) == stem(tokens[i]) }
         }
         if personIndex == nil {
             personIndex = tokens.firstIndex { $0.contains("'") && $0.first?.isUppercase == true }
