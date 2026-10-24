@@ -44,7 +44,7 @@ struct CalendarScreen: View {
                                     Circle().fill(Color(cgColor: e.calendar.cgColor)).frame(width: 8, height: 8)
                                     Text(e.title ?? "").foregroundStyle(.secondary).lineLimit(1)
                                     Spacer()
-                                    Text(e.isAllDay ? "Tüm gün" : e.startDate.formatted(.dateTime.hour().minute().locale(tr)))
+                                    Text(e.isAllDay ? String(localized: "Tüm gün") : e.startDate.formatted(.dateTime.hour().minute().locale(tr)))
                                         .font(.subheadline).foregroundStyle(.tertiary)
                                 }
                                 .padding(.horizontal, 16).padding(.vertical, 10)

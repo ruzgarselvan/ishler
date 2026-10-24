@@ -7,30 +7,58 @@
 <meta name="description" content="Menü bar'da ve telefonda küçük bir iş uygulaması. Bir cümle yaz, kişiyi, işi ve tarihi kendisi anlasın. Ücretsiz ve açık kaynak.">
 <link rel="icon" href="icon.png">
 <style>
-:root{--bg:#fff;--fg:#111113;--mut:#6b6b73;--card:#f4f4f7;--accent:#0a84ff;--line:#e4e4ea}
-@media (prefers-color-scheme:dark){:root{--bg:#0b0b0d;--fg:#f4f4f6;--mut:#9a9aa3;--card:#17171b;--line:#26262c}}
+:root{--bg:#fff;--fg:#111113;--mut:#6b6b73;--card:#f4f4f7;--accent:#0a84ff;--line:#e4e4ea;--shadow:0 30px 60px -20px rgba(20,30,70,.28),0 10px 24px -12px rgba(20,30,70,.2)}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0b0d;--fg:#f4f4f6;--mut:#9a9aa3;--card:#16161a;--line:#26262c;--shadow:0 30px 70px -20px rgba(0,0,0,.8),0 10px 24px -12px rgba(0,0,0,.7)}}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
-main{max-width:760px;margin:0 auto;padding:64px 24px 80px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:72px;font-size:15px}
-.top a{color:var(--mut);text-decoration:none;margin-left:20px}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.glow{position:fixed;inset:-20% -10% auto -10%;height:70vh;pointer-events:none;z-index:-1;
+  background:radial-gradient(40% 50% at 25% 30%,rgba(10,132,255,.22),transparent 70%),radial-gradient(35% 45% at 80% 20%,rgba(138,99,255,.18),transparent 70%);filter:blur(20px);animation:drift 14s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate3d(3%,6%,0) scale(1.08)}}
+main{max-width:1040px;margin:0 auto;padding:40px 24px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:56px;font-size:15px}
+.top a{color:var(--mut);text-decoration:none;margin-left:20px;transition:color .2s}
 .top a:hover{color:var(--fg)}
 .logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:20px;letter-spacing:-.01em}
 .logo img{width:36px;height:36px;border-radius:9px}
-h1{font-size:clamp(34px,6vw,54px);line-height:1.08;letter-spacing:-.03em;margin:0 0 20px}
-h1 em{font-style:normal;color:var(--accent)}
-.lead{font-size:20px;color:var(--mut);max-width:34em;margin:0 0 32px}
-.cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
-.btn{display:inline-block;padding:13px 22px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600}
-.btn.alt{background:var(--card);color:var(--fg)}
-.demo{background:var(--card);border-radius:22px;padding:22px;margin-bottom:64px}
-.demo .in{background:var(--bg);border-radius:12px;padding:12px 14px;font-size:16px;border:1px solid var(--line)}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 2px 0}
-.chip{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:14px}
+.hero{display:grid;grid-template-columns:1.05fr .95fr;gap:48px;align-items:center;margin-bottom:96px}
+h1{font-size:clamp(36px,5.6vw,58px);line-height:1.06;letter-spacing:-.035em;margin:0 0 20px}
+h1 em{font-style:normal;background:linear-gradient(90deg,#0a84ff,#8a63ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:19px;color:var(--mut);max-width:30em;margin:0 0 28px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-block;padding:13px 22px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600;transition:transform .2s,box-shadow .2s;box-shadow:0 8px 24px -8px rgba(10,132,255,.6)}
+.btn:hover{transform:translateY(-2px)}
+.btn.alt{background:var(--card);color:var(--fg);box-shadow:none}
+.demo{background:var(--card);border-radius:24px;padding:22px;box-shadow:var(--shadow)}
+.demo .in{background:var(--bg);border-radius:12px;padding:13px 15px;font-size:16px;border:1px solid var(--line);min-height:50px;display:flex;align-items:center}
+.caret{display:inline-block;width:2px;height:1.1em;background:var(--accent);margin-left:2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 2px 2px;min-height:34px}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 13px;font-size:14px;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
 .chip.c{border-color:#ff9500;color:#ff9500}
-h2{font-size:26px;letter-spacing:-.02em;margin:0 0 20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:64px}
-.card{background:var(--card);border-radius:18px;padding:20px}
+@keyframes pop{from{opacity:0;transform:scale(.6) translateY(6px)}to{opacity:1;transform:none}}
+.done{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:15px;color:var(--mut);min-height:24px}
+.ring{width:22px;height:22px;border-radius:50%;border:2px solid var(--mut);position:relative;transition:all .4s}
+.ring.on{background:var(--accent);border-color:var(--accent)}
+.ring.on::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+h2{font-size:clamp(26px,3.6vw,36px);letter-spacing:-.025em;margin:0 0 12px}
+.sub{color:var(--mut);margin:0 0 36px;max-width:34em}
+section{margin-bottom:110px}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:28px;align-items:start}
+.phone{border-radius:34px;overflow:hidden;box-shadow:var(--shadow);border:1px solid var(--line);background:#000;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.phone img{display:block;width:100%;height:auto}
+.phone:hover{transform:translateY(-8px) rotate(-.6deg)}
+.shots figure{margin:0}
+.shots figcaption{margin-top:14px;font-size:15px;color:var(--mut)}
+.mac{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center}
+.mac img{display:block;width:100%;height:auto;filter:drop-shadow(0 24px 30px rgba(10,20,60,.25))}
+.mac img.dark{display:none}
+@media (prefers-color-scheme:dark){.mac img.light{display:none}.mac img.dark{display:block}}
+.widget{max-width:520px;border-radius:26px;overflow:hidden;box-shadow:var(--shadow)}
+.widget img{display:block;width:100%}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.card{background:var(--card);border-radius:20px;padding:22px;transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
 .card h3{margin:0 0 6px;font-size:17px}
 .card p{margin:0;color:var(--mut);font-size:15px}
 footer{color:var(--mut);font-size:14px;border-top:1px solid var(--line);padding-top:24px}
@@ -38,47 +66,127 @@ footer a{color:var(--mut)}
 .en{display:none}
 html[lang=en] .tr{display:none}
 html[lang=en] .en{display:revert}
+img.en{display:none}
+html[lang=en] img.en{display:block}
+html[lang=en] img.tr{display:none}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+@media (max-width:820px){.hero{grid-template-columns:1fr;gap:32px}.mac{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 </style>
 </head>
 <body>
+<div class="glow"></div>
 <main>
 <div class="top">
   <div class="logo"><img src="icon.png" alt=""> ishler</div>
   <div><a href="https://github.com/ruzgarselvan/ishler">GitHub</a><a href="#" id="lang">EN</a></div>
 </div>
 
-<h1><span class="tr">Bir cümle yaz.<br><em>İşin kendini</em> hatırlatsın.</span><span class="en">Type a sentence.<br>Let it <em>remind you.</em></span></h1>
-<p class="lead tr">Menü bar'da ve telefonunda duran küçük bir iş uygulaması. Kişiyi, işi ve tarihi kendisi anlar; zamanı gelince sana ulaşır. Not, takvim ve on farklı liste arasında kaybolan işler için.</p>
-<p class="lead en">A tiny task app for your menu bar and your phone. It works out the person, the task and the date by itself, and reaches you when it's time. For tasks that get lost between notes, calendars and ten different lists.</p>
-
-<div class="cta">
-  <a class="btn" href="https://github.com/ruzgarselvan/ishler/releases/latest"><span class="tr">Mac için indir (.dmg)</span><span class="en">Download for Mac (.dmg)</span></a>
-  <a class="btn alt" href="https://github.com/ruzgarselvan/ishler"><span class="tr">Kaynak kodu</span><span class="en">Source code</span></a>
+<div class="hero">
+  <div>
+    <h1><span class="tr">Bir cümle yaz.<br><em>İşin kendini</em> hatırlatsın.</span><span class="en">Type a sentence.<br>Let it <em>remind you.</em></span></h1>
+    <p class="lead tr">Menü bar'da ve telefonunda duran küçük bir iş uygulaması. Kişiyi, işi ve tarihi kendisi anlar; zamanı gelince sana ulaşır. Not, takvim ve on farklı liste arasında kaybolan işler için.</p>
+    <p class="lead en">A tiny task app for your menu bar and your phone. It works out the person, the task and the date by itself, and reaches you when it's time. For tasks that get lost between notes, calendars and ten different lists.</p>
+    <div class="cta">
+      <a class="btn" href="https://github.com/ruzgarselvan/ishler/releases/latest"><span class="tr">Mac için indir (.dmg)</span><span class="en">Download for Mac (.dmg)</span></a>
+      <a class="btn alt" href="https://github.com/ruzgarselvan/ishler"><span class="tr">Kaynak kodu</span><span class="en">Source code</span></a>
+    </div>
+  </div>
+  <div class="demo" aria-hidden="true">
+    <div class="in"><span id="typed"></span><span class="caret"></span></div>
+    <div class="chips" id="chips"></div>
+    <div class="done"><div class="ring" id="ring"></div><span id="doneText"></span></div>
+  </div>
 </div>
 
-<div class="demo">
-  <div class="in">Cuma'ya kadar X müşterisine teklif at x</div>
-  <div class="chips"><span class="chip c">● İş</span><span class="chip">X</span><span class="chip">Teklif at</span><span class="chip">Cum 30 Eki</span></div>
-</div>
+<section class="reveal">
+  <h2 class="tr">Menü bar'da, hep elinin altında</h2><h2 class="en">In your menu bar, always at hand</h2>
+  <p class="sub tr">Tek bir küçük panel. Yaz, listele, daireye bas, bitti. Açık ve koyu modda kendini sistemine uydurur.</p>
+  <p class="sub en">One small panel. Type, scan, tap the circle, done. Follows your system's light and dark mode.</p>
+  <div class="mac">
+    <div><img class="light tr" src="img/mac-tr-light.png" alt=""><img class="light en" src="img/mac-en-light.png" alt=""><img class="dark tr" src="img/mac-tr-dark.png" alt=""><img class="dark en" src="img/mac-en-dark.png" alt=""></div>
+    <div class="reveal d1">
+      <div class="card"><h3><span class="tr">Menü bar ya da Dock</span><span class="en">Menu bar or Dock</span></h3><p><span class="tr">İstersen sadece menü bar'da, istersen normal bir uygulama olarak Dock'ta kullan. Hızlı ekleme için her yerden ⌃⌥N.</span><span class="en">Live only in the menu bar, or run it as a regular Dock app. Press ⌃⌥N anywhere for quick add.</span></p></div>
+    </div>
+  </div>
+</section>
 
-<h2 class="tr">Ne yapar</h2><h2 class="en">What it does</h2>
-<div class="grid">
-  <div class="card"><h3><span class="tr">Formsuz ekleme</span><span class="en">No forms</span></h3><p><span class="tr">"Deniz'i ara 17:30", "her ayın 15'i fatura kes". Türkçe ve İngilizce, cihazın içinde, sunucusuz.</span><span class="en">"Call Deniz 5pm", "every Monday plan". Turkish and English, on-device, no server.</span></p></div>
-  <div class="card"><h3><span class="tr">Kategoriler</span><span class="en">Categories</span></h3><p><span class="tr">Notun sonuna <b>x</b> ya da <b>(x)</b> yaz, iş kendi rengiyle doğru yere gitsin.</span><span class="en">End a note with <b>x</b> or <b>(x)</b> and it lands in the right place, in its own colour.</span></p></div>
-  <div class="card"><h3><span class="tr">Sakin hatırlatma</span><span class="en">Calm reminders</span></h3><p><span class="tr">Teslimden önceki akşamlar, teslim sabahı, bir de uzun süre uğramazsan bir dürtme. Bildirimden Yapıldı ya da Ertele.</span><span class="en">Evenings before a deadline, the morning of, and a nudge only if you've been away. Done or snooze from the notification.</span></p></div>
-  <div class="card"><h3><span class="tr">Düzenli işler</span><span class="en">Recurring tasks</span></h3><p><span class="tr">Her ayın 15'inde fatura kes: zamanı gelince listene kendi düşer, adımlarıyla.</span><span class="en">"Send the invoice on the 15th": it lands on your list by itself, with its steps.</span></p></div>
-  <div class="card"><h3><span class="tr">Mac + iPhone</span><span class="en">Mac + iPhone</span></h3><p><span class="tr">Widget'lar, Siri, Spotlight, Apple Takvim. Eşitleme senin iCloud'unda, benim sunucumda değil.</span><span class="en">Widgets, Siri, Spotlight, Apple Calendar. Syncs through your own iCloud, not a server of mine.</span></p></div>
-  <div class="card"><h3><span class="tr">Ücretsiz, açık kaynak</span><span class="en">Free and open source</span></h3><p><span class="tr">Reklam yok, hesap yok, takip yok. MIT lisansı.</span><span class="en">No ads, no account, no tracking. MIT licensed.</span></p></div>
-</div>
+<section>
+  <h2 class="reveal tr">Telefonunda da aynısı</h2><h2 class="reveal en">The same on your phone</h2>
+  <p class="sub reveal tr">Mac ile iPhone arasında iCloud'unla eşitlenir. Benim sunucum yok, senin işlerin sende kalır.</p>
+  <p class="sub reveal en">Syncs between Mac and iPhone through your own iCloud. There is no server of mine, your tasks stay yours.</p>
+  <div class="shots">
+    <figure class="reveal"><div class="phone"><img class="tr" src="img/ph-tr-list.jpg" alt=""><img class="en" src="img/ph-en-list.jpg" alt=""></div><figcaption class="tr">Tarihe göre sıralı liste, kategori renkleri, saat ve tekrar.</figcaption><figcaption class="en">A date-sorted list with category colours, times and repeats.</figcaption></figure>
+    <figure class="reveal d1"><div class="phone"><img class="tr" src="img/ph-tr-focus.jpg" alt=""><img class="en" src="img/ph-en-focus.jpg" alt=""></div><figcaption class="tr">"Şimdi sadece bu": kalabalıkta tek bir işe odaklan.</figcaption><figcaption class="en">"Just this, now": focus on one task in the crowd.</figcaption></figure>
+    <figure class="reveal d2"><div class="phone"><img src="img/ph-en-settings.jpg" alt=""></div><figcaption class="tr">Kategoriler, kısayollar ve düzenli işler senin kurallarınla.</figcaption><figcaption class="en">Categories, shortcuts and recurring tasks, on your rules.</figcaption></figure>
+  </div>
+</section>
+
+<section class="reveal">
+  <h2 class="tr">Ana ekranda ve kilit ekranında</h2><h2 class="en">On your Home and Lock Screen</h2>
+  <p class="sub tr">Widget'lar sıradaki işlerini uygulamayı açmadan gösterir.</p>
+  <p class="sub en">Widgets show what's next without opening the app.</p>
+  <div class="widget"><img src="img/widget-en.png" alt=""></div>
+</section>
+
+<section>
+  <h2 class="reveal tr">Ne yapar</h2><h2 class="reveal en">What it does</h2>
+  <div class="grid">
+    <div class="card reveal"><h3><span class="tr">Formsuz ekleme</span><span class="en">No forms</span></h3><p><span class="tr">"Deniz'i ara 17:30", "her ayın 15'i fatura kes". Türkçe ve İngilizce, cihazın içinde, sunucusuz.</span><span class="en">"Call Deniz 5pm", "every Monday plan". Turkish and English, on-device, no server.</span></p></div>
+    <div class="card reveal d1"><h3><span class="tr">Kategoriler</span><span class="en">Categories</span></h3><p><span class="tr">Notun sonuna <b>x</b> ya da <b>(x)</b> yaz, iş kendi rengiyle doğru yere gitsin.</span><span class="en">End a note with <b>x</b> or <b>(x)</b> and it lands in the right place, in its own colour.</span></p></div>
+    <div class="card reveal d2"><h3><span class="tr">Sakin hatırlatma</span><span class="en">Calm reminders</span></h3><p><span class="tr">Teslimden önceki akşamlar, teslim sabahı, bir de uzun süre uğramazsan bir dürtme. Bildirimden Yapıldı ya da Ertele.</span><span class="en">Evenings before a deadline, the morning of, and a nudge only if you've been away. Done or snooze from the notification.</span></p></div>
+    <div class="card reveal"><h3><span class="tr">Düzenli işler</span><span class="en">Recurring tasks</span></h3><p><span class="tr">Her ayın 15'inde fatura kes: zamanı gelince listene kendi düşer, adımlarıyla.</span><span class="en">"Send the invoice on the 15th": it lands on your list by itself, with its steps.</span></p></div>
+    <div class="card reveal d1"><h3><span class="tr">Apple ile bütünleşik</span><span class="en">Plays well with Apple</span></h3><p><span class="tr">Apple Takvim, Siri, Spotlight, Kısayollar ve CSV dışa aktarma.</span><span class="en">Apple Calendar, Siri, Spotlight, Shortcuts and CSV export.</span></p></div>
+    <div class="card reveal d2"><h3><span class="tr">Ücretsiz, açık kaynak</span><span class="en">Free and open source</span></h3><p><span class="tr">Reklam yok, hesap yok, takip yok. MIT lisansı.</span><span class="en">No ads, no account, no tracking. MIT licensed.</span></p></div>
+  </div>
+</section>
 
 <footer><span class="tr">ADHD'li bir freelancer'ın kendi için yaptığı bir uygulama. Rüzgar Selvan</span><span class="en">Made by a freelancer with ADHD, for themselves. Rüzgar Selvan</span> · <a href="https://github.com/ruzgarselvan/ishler">GitHub</a></footer>
 </main>
 <script>
-(function(){var l=document.getElementById('lang'),h=document.documentElement;
-function set(x){h.lang=x;l.textContent=x==='tr'?'EN':'TR';try{localStorage.lang=x}catch(e){}}
+(function(){
+var h=document.documentElement,l=document.getElementById('lang');
+function set(x){h.lang=x;l.textContent=x==='tr'?'EN':'TR';try{localStorage.lang=x}catch(e){}restart()}
 var s;try{s=localStorage.lang}catch(e){}
-set(s||((navigator.language||'').toLowerCase().startsWith('tr')?'tr':'en'));
-l.onclick=function(e){e.preventDefault();set(h.lang==='tr'?'en':'tr')}})();
+h.lang=s||((navigator.language||'').toLowerCase().startsWith('tr')?'tr':'en');l.textContent=h.lang==='tr'?'EN':'TR';
+l.onclick=function(e){e.preventDefault();set(h.lang==='tr'?'en':'tr')};
+
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+var examples={
+ tr:[{t:"Cuma'ya kadar Acme müşterisine teklif at x",c:[["● İş","c"],["Acme"],["Teklif at"],["Cum 30 Eki"]],d:"Teklif at · Acme"},
+     {t:"Deniz'i ara yarın 17:30",c:[["Deniz"],["Ara"],["Yarın 17:30"]],d:"Ara · Deniz"},
+     {t:"her ayın 15'i fatura kes",c:[["Fatura kes"],["↻ Her ay, 15'i"],["15 Kas"]],d:"Fatura kes"}],
+ en:[{t:"Send the proposal to Acme by Friday x",c:[["● Work","c"],["Acme"],["Send the proposal"],["Fri Oct 30"]],d:"Send the proposal · Acme"},
+     {t:"Call Deniz tomorrow 5:30pm",c:[["Deniz"],["Call"],["Tomorrow 17:30"]],d:"Call · Deniz"},
+     {t:"every monday weekly plan",c:[["Weekly plan"],["↻ Every Monday"],["Mon Oct 26"]],d:"Weekly plan"}]
+};
+var typed=document.getElementById('typed'),chips=document.getElementById('chips'),ring=document.getElementById('ring'),doneText=document.getElementById('doneText');
+var run=0;
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+async function loop(id){
+  var i=0;
+  while(id===run){
+    var ex=examples[h.lang][i%3];i++;
+    typed.textContent='';chips.innerHTML='';ring.className='ring';doneText.textContent='';
+    if(reduce){typed.textContent=ex.t;show(ex);return}
+    for(var k=1;k<=ex.t.length;k++){if(id!==run)return;typed.textContent=ex.t.slice(0,k);await sleep(38+Math.random()*40)}
+    await sleep(350);
+    for(var j=0;j<ex.c.length;j++){if(id!==run)return;chip(ex.c[j]);await sleep(220)}
+    await sleep(900);if(id!==run)return;
+    ring.className='ring on';doneText.textContent=ex.d;
+    await sleep(2200);
+  }
+}
+function chip(c){var e=document.createElement('span');e.className='chip'+(c[1]?' '+c[1]:'');e.textContent=c[0];chips.appendChild(e)}
+function show(ex){ex.c.forEach(chip);ring.className='ring on';doneText.textContent=ex.d}
+function restart(){run++;loop(run)}
+loop(run);
+
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+})();
 </script>
 </body>
 </html>

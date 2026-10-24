@@ -9,9 +9,9 @@ final class EventsProvider {
     private var granted = false
     private(set) var byDay: [Date: [EKEvent]] = [:]
 
-    /// Events on `day`, without the ones this app wrote itself (those are already shown as tasks).
-    func events(on day: Date, calendar: Calendar, excluding ownIDs: Set<String>) -> [EKEvent] {
-        (byDay[calendar.startOfDay(for: day)] ?? []).filter { !ownIDs.contains($0.eventIdentifier) }
+    /// Events on `day` that this app didn't write itself (its own are already shown as tasks).
+    func events(on day: Date, calendar: Calendar, excluding ownIDs: Set<String> = []) -> [EKEvent] {
+        (byDay[calendar.startOfDay(for: day)] ?? []).filter { CalendarSync.taskID(of: $0) == nil && !ownIDs.contains($0.eventIdentifier) }
     }
 
     func load(month: Date, calendar: Calendar) async {

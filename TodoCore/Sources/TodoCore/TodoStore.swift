@@ -30,6 +30,13 @@ public final class TodoStore {
         let dir = fm.containerURL(forSecurityApplicationGroupIdentifier: Self.appGroupID) ?? support
         try fm.createDirectory(at: dir, withIntermediateDirectories: true)
         let url = dir.appending(path: "ishler.store")
+        #if DEBUG
+        // `-wipeLocalStore`: start from an empty store (debug builds only).
+        if ProcessInfo.processInfo.arguments.contains("-wipeLocalStore"),
+           let names = try? fm.contentsOfDirectory(atPath: dir.path) {
+            for name in names where name.hasPrefix("ishler.store") || name.hasPrefix(".ishler") { try? fm.removeItem(at: dir.appending(path: name)) }
+        }
+        #endif
         migrateStore(from: support.appending(path: "todo.store"), to: url)
         do {
             container = try ModelContainer(for: schema, configurations:

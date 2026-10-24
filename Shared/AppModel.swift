@@ -1,4 +1,5 @@
 import CloudKit
+import EventKit
 import CoreSpotlight
 import Foundation
 import Observation
@@ -168,13 +169,29 @@ final class AppModel {
             do { try await Task.detached(priority: .userInitiated) { try TodoStore.initializeCloudKitSchema() }.value; FileHandle.standardError.write(Data("ishler: CloudKit schema initialized\n".utf8)) }
             catch { FileHandle.standardError.write(Data("ishler: schema init failed: \(error)\n".utf8)) }
         }
+        if ProcessInfo.processInfo.arguments.contains("-listTasks") {
+            let lines = store.allItems().map { "  \($0.person ?? "-") | \($0.action) | \($0.dueDate.map { $0.formatted(date: .abbreviated, time: .omitted) } ?? "-") | done=\($0.isDone) | created \($0.createdAt.formatted())" }
+            FileHandle.standardError.write(Data((["ishler: \(lines.count) tasks in this Mac's store"] + lines).joined(separator: "\n").appending("\n").utf8))
+        }
+        if ProcessInfo.processInfo.arguments.contains("-calendarStatus") {
+            let status = EKEventStore.authorizationStatus(for: .event)
+            var lines = ["ishler: calendar status = \(status.rawValue) (3 = full access)"]
+            if status == .fullAccess {
+                let es = EKEventStore()
+                let events = es.events(matching: es.predicateForEvents(withStart: Date().addingTimeInterval(-86400 * 60), end: Date().addingTimeInterval(86400 * 400), calendars: nil))
+                for e in events where (e.title ?? "").contains(" · ") || e.notes?.hasPrefix(CalendarSync.marker) == true {
+                    lines.append("  \(e.startDate.formatted(date: .abbreviated, time: .omitted)) | \(e.title ?? "") | calendar: \(e.calendar.title)")
+                }
+            }
+            FileHandle.standardError.write(Data((lines.joined(separator: "\n") + "\n").utf8))
+        }
         if ProcessInfo.processInfo.arguments.contains("-seedDemo"), store.allItems().isEmpty {
             let turkish = Bundle.main.preferredLocalizations.first == "tr"
             let samples = turkish
                 ? ["Cuma'ya kadar Acme müşterisine teklif at x", "Deniz'i ara 17:30", "her pazartesi Mert haftalık plan", "çekim sonrası Deniz Cuma",
-                   "Tuğba hocaya yaz 24 kasim", "Mert'i ara yarın 9:30", "Fatura gönder Ayşe'ye Cuma 1", "Ayşe'ye mail at (o)"]
+                   "Tuğba hocaya yaz 24 kasim", "Mert'i ara yarın 9:30", "Ayşe'ye fatura gönder Cuma", "Ayşe'ye mail at (o)"]
                 : ["Send the proposal to Acme by Friday x", "Call Deniz 5:30pm", "every monday Mert weekly plan", "after shoot Deniz Friday",
-                   "Write to Prof. Tuğba 24 november", "Call Mert tomorrow 9:30am", "Pay the invoice by Friday 1", "Email Ayşe (s)"]
+                   "Write to Prof. Tuğba 24 november", "Call Mert tomorrow 9:30am", "Pay the invoice by Friday", "Email Ayşe (s)"]
             for text in samples { add(text) }
             store.add(ParsedEntry(person: "Ayşe", action: Bundle.main.preferredLocalizations.first == "tr" ? "faturayı gönder" : "send the invoice", dueDate: calendar.date(byAdding: .day, value: -2, to: calendar.startOfDay(for: Date()))))
             if !settingsStore.categories.isEmpty && !ProcessInfo.processInfo.arguments.contains("-demoStore") { settingsStore.categories[0].remind = true }
