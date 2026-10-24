@@ -32,6 +32,7 @@ struct RootView: View {
             Tab("Arşiv", systemImage: "archivebox") { ArchiveScreen() }
             Tab("Ayarlar", systemImage: "gearshape") { SettingsScreen() }
         }
+        .preferredColorScheme(model.colorScheme)
         .onChange(of: scenePhase) { if scenePhase == .active { model.touch() } }
     }
 }

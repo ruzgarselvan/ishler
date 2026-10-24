@@ -6,9 +6,14 @@ public final class SettingsStore {
     private static let key = "notificationSettings"
     private static let horizonKey = "listHorizon"
     private static let badgeKey = "showBadge"
+    private static let appearanceKey = "appearance"
     private static let categoriesKey = "categories"
     private static let shortcutsKey = "shortcutOptions"
     @ObservationIgnored private let defaults: UserDefaults
+
+    public var appearance: Appearance {
+        didSet { defaults.set(appearance.rawValue, forKey: Self.appearanceKey) }
+    }
 
     public var categories: [TodoCategory] {
         didSet { if let data = try? JSONEncoder().encode(categories) { defaults.set(data, forKey: Self.categoriesKey) } }
@@ -49,6 +54,7 @@ public final class SettingsStore {
             if let data = try? JSONEncoder().encode(seeded) { defaults.set(data, forKey: Self.categoriesKey) }
         }
         self.shortcuts = defaults.data(forKey: Self.shortcutsKey).flatMap { try? JSONDecoder().decode(ShortcutOptions.self, from: $0) } ?? ShortcutOptions()
+        self.appearance = defaults.string(forKey: Self.appearanceKey).flatMap(Appearance.init(rawValue:)) ?? .system
         self.showBadge = defaults.object(forKey: Self.badgeKey) as? Bool ?? true
         self.horizon = defaults.string(forKey: Self.horizonKey).flatMap(Horizon.init(rawValue:)) ?? .month
         self.settings = defaults.data(forKey: Self.key)

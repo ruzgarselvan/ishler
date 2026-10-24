@@ -65,4 +65,11 @@ import Foundation
         let c = SettingsStore(defaults: suite).categories
         #expect(c.count == 1 && c[0].name == "Eski" && !c[0].remind)
     }
+    @Test func appearanceDefaultsToSystemAndPersists() {
+        let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
+        let a = SettingsStore(defaults: suite)
+        #expect(a.appearance == .system)
+        a.appearance = .dark
+        #expect(SettingsStore(defaults: suite).appearance == .dark)
+    }
 }

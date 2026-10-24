@@ -33,6 +33,15 @@ struct SettingsView: View {
                         .pickerStyle(.segmented).labelsHidden().controlSize(.small)
                     }
 
+                    section("Görünüm", footnote: nil) {
+                        Picker("", selection: $store.appearance) {
+                            Text("Sistem").tag(Appearance.system)
+                            Text("Açık").tag(Appearance.light)
+                            Text("Koyu").tag(Appearance.dark)
+                        }
+                        .pickerStyle(.segmented).labelsHidden().controlSize(.small)
+                    }
+
                     section("Genel", footnote: nil) {
                         VStack(alignment: .leading, spacing: 8) {
                             Toggle("Girişte otomatik başlat", isOn: $launchAtLogin)
@@ -49,6 +58,7 @@ struct SettingsView: View {
         .onAppear { launchAtLogin = model.launchAtLogin }
         .onChange(of: launchAtLogin) { model.launchAtLogin = launchAtLogin }
         .onChange(of: store.showBadge) { model.refreshBadge() }
+        .onChange(of: store.appearance) { model.applyAppearance() }
         .onChange(of: store.settings) { Task { await model.reschedule() } }
         .onChange(of: store.categories) { Task { await model.reschedule() } }
     }

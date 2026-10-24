@@ -2,6 +2,9 @@ import Foundation
 import Observation
 import SwiftUI
 #if os(macOS)
+import AppKit
+#endif
+#if os(macOS)
 import ServiceManagement
 #endif
 import TodoCore
@@ -33,6 +36,25 @@ final class AppModel {
         }
     }
     #endif
+
+    #if os(macOS)
+    /// nil follows the system; the menu bar panel has no scene to hang preferredColorScheme on.
+    func applyAppearance() {
+        NSApp.appearance = switch settingsStore.appearance {
+        case .system: nil
+        case .light: NSAppearance(named: .aqua)
+        case .dark: NSAppearance(named: .darkAqua)
+        }
+    }
+    #endif
+
+    var colorScheme: ColorScheme? {
+        switch settingsStore.appearance {
+        case .system: nil
+        case .light: .light
+        case .dark: .dark
+        }
+    }
 
     private static let activityKey = "lastActivity"
 
@@ -67,6 +89,9 @@ final class AppModel {
     func start() async {
         _ = await SystemNotificationCenter.requestAuthorization()
         UserDefaults.standard.set(Date(), forKey: Self.activityKey)
+        #if os(macOS)
+        applyAppearance()
+        #endif
         await reschedule()
         while !Task.isCancelled {
             try? await Task.sleep(for: .seconds(15 * 60))

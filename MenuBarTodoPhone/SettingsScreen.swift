@@ -32,6 +32,15 @@ struct SettingsScreen: View {
                            ? "Zili açık kategorilerde teslim günü sabah bildirim gelir."
                            : "Zili açık kategorilerde son \(store.settings.eveningDaysBefore) gün her akşam, teslim günü sabah bildirim gelir.")
                 }
+
+                Section("Görünüm") {
+                    Picker("Görünüm", selection: $store.appearance) {
+                        Text("Sistem").tag(Appearance.system)
+                        Text("Açık").tag(Appearance.light)
+                        Text("Koyu").tag(Appearance.dark)
+                    }
+                    .pickerStyle(.segmented)
+                }
             }
             .navigationTitle("Ayarlar")
             .onChange(of: store.settings) { Task { await model.reschedule() } }
