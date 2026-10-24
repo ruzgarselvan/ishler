@@ -30,4 +30,11 @@ import Foundation
         a.horizon = .week
         #expect(SettingsStore(defaults: suite).horizon == .week)
     }
+    @Test func badgeSettingDefaultsOnAndPersists() {
+        let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
+        let a = SettingsStore(defaults: suite)
+        #expect(a.showBadge)
+        a.showBadge = false
+        #expect(!SettingsStore(defaults: suite).showBadge)
+    }
 }

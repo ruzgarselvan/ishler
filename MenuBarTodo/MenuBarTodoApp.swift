@@ -14,10 +14,15 @@ struct MenuBarTodoApp: App {
     }
 
     var body: some Scene {
-        MenuBarExtra("İşler", systemImage: "checklist") {
+        MenuBarExtra {
             PanelView()
                 .environment(model)
                 .modelContainer(model.store.container)
+        } label: {
+            HStack(spacing: 3) {
+                Image(systemName: "checklist")
+                if model.settingsStore.showBadge, model.badgeCount > 0 { Text("\(model.badgeCount)") }
+            }
         }
         .menuBarExtraStyle(.window)
     }

@@ -4,6 +4,7 @@ import TodoCore
 struct SettingsView: View {
     @Environment(AppModel.self) private var model
     let onBack: () -> Void
+    @State private var launchAtLogin = false
 
     var body: some View {
         @Bindable var store = model.settingsStore
@@ -24,10 +25,22 @@ struct SettingsView: View {
                     ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }
                 }
             }
+
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Genel").font(.system(size: 12, weight: .semibold))
+                Toggle("Girişte otomatik başlat", isOn: $launchAtLogin)
+                Toggle("Menü bar'da bugünkü işleri say", isOn: $store.showBadge)
+            }
+            .toggleStyle(.switch)
+            .controlSize(.small)
+            .font(.system(size: 12))
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, 4)
         .padding(.bottom, 4)
+        .onAppear { launchAtLogin = model.launchAtLogin }
+        .onChange(of: launchAtLogin) { model.launchAtLogin = launchAtLogin }
+        .onChange(of: store.showBadge) { model.refreshBadge() }
         .onChange(of: store.settings) { Task { await model.reschedule() } }
     }
 

@@ -29,8 +29,18 @@ struct PanelHeader: View {
         ZStack {
             Text(title).font(.system(size: 13, weight: .semibold))
             HStack {
-                Button(action: onBack) { Image(systemName: "chevron.left").fontWeight(.semibold) }
-                    .buttonStyle(.plain).foregroundStyle(Color.accentColor)
+                Button(action: onBack) {
+                    HStack(spacing: 3) {
+                        Image(systemName: "chevron.left").fontWeight(.semibold)
+                        Text("İşler")
+                    }
+                    .font(.system(size: 13))
+                    .padding(.vertical, 6).padding(.trailing, 14)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(Color.accentColor)
+                .keyboardShortcut(.cancelAction)
                 Spacer()
             }
         }
