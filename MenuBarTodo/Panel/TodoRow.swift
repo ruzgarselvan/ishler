@@ -38,6 +38,12 @@ struct TodoRow: View {
                     .foregroundStyle(completing ? .secondary : .primary)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
+                if let progress = checklistProgress(item) {
+                    Text(progress).font(.system(size: 11)).foregroundStyle(.tertiary)
+                }
+                if item.repeatRule != nil {
+                    Image(systemName: "repeat").font(.system(size: 9)).foregroundStyle(.tertiary)
+                }
                 Text(due.text)
                     .font(.system(size: 11))
                     .foregroundStyle(due.isOverdue ? Color.red : Color.secondary)

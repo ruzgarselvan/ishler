@@ -6,6 +6,7 @@ struct TodayScreen: View {
     @Environment(AppModel.self) private var model
     @Query private var items: [TodoItem]
     @State private var editing: TodoItem?
+    @State private var focusing = false
 
     var body: some View {
         let now = Date()
@@ -30,6 +31,21 @@ struct TodayScreen: View {
                 }
             }
             .navigationTitle("İşler")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { focusing = true } label: { Image(systemName: "scope") }.accessibilityLabel("Şimdi sadece bu")
+                }
+            }
+            .fullScreenCover(isPresented: $focusing) {
+                NavigationStack {
+                    FocusCard(items: groups.flatMap(\.1), compact: false)
+                        .padding(24)
+                        .frame(maxHeight: .infinity, alignment: .top)
+                        .navigationTitle("Odak")
+                        .navigationBarTitleDisplayMode(.inline)
+                        .toolbar { ToolbarItem(placement: .topBarLeading) { Button("Kapat") { focusing = false } } }
+                }
+            }
             .safeAreaInset(edge: .bottom) { PhoneEntryField() }
             .sheet(item: $editing) { EditSheet(item: $0) }
         }
@@ -53,6 +69,8 @@ struct PhoneRow: View {
             .buttonStyle(.plain)
             HStack {
                 itemLabel(item).frame(maxWidth: .infinity, alignment: .leading)
+                if let progress = checklistProgress(item) { Text(progress).font(.subheadline).foregroundStyle(.tertiary) }
+                if item.repeatRule != nil { Image(systemName: "repeat").font(.caption2).foregroundStyle(.tertiary) }
                 Text(due.text).font(.subheadline).foregroundStyle(due.isOverdue ? Color.red : Color.secondary)
             }
             .contentShape(Rectangle())

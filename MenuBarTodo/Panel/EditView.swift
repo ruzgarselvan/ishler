@@ -10,6 +10,8 @@ struct EditView: View {
     @State private var action: String
     @State private var hasDate: Bool
     @State private var date: Date
+    @State private var hasTime: Bool
+    @State private var time: Date
     @State private var categoryID: UUID?
 
     init(item: TodoItem, onClose: @escaping () -> Void) {
@@ -19,28 +21,59 @@ struct EditView: View {
         _action = State(initialValue: item.action)
         _hasDate = State(initialValue: item.dueDate != nil)
         _date = State(initialValue: item.dueDate ?? Date())
+        _hasTime = State(initialValue: item.dueMinutes != nil)
+        let minutes = item.dueMinutes ?? 9 * 60
+        _time = State(initialValue: Calendar.current.date(bySettingHour: minutes / 60, minute: minutes % 60, second: 0, of: Date()) ?? Date())
         _categoryID = State(initialValue: item.categoryID)
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             PanelHeader(title: "İşi düzenle", onBack: onClose)
-            field("Kişi", text: $person)
-            field("İş", text: $action)
-            if !model.settingsStore.categories.isEmpty {
-                CategoryMenu(categories: model.settingsStore.categories, selection: $categoryID)
-                    .font(.system(size: 12))
-            }
-            HStack {
-                Toggle("Tarih", isOn: $hasDate).toggleStyle(.switch).controlSize(.small)
-                Spacer()
-                if hasDate {
-                    DatePicker("", selection: $date, displayedComponents: .date)
-                        .labelsHidden().datePickerStyle(.compact)
-                        .environment(\.locale, Locale(identifier: "tr_TR"))
+            FittedScroll(maxHeight: 400) {
+                VStack(alignment: .leading, spacing: 10) {
+                    field("Kişi", text: $person)
+                    field("İş", text: $action)
+                    if !model.settingsStore.categories.isEmpty {
+                        CategoryMenu(categories: model.settingsStore.categories, selection: $categoryID)
+                            .font(.system(size: 12))
+                    }
+                    HStack {
+                        Toggle("Tarih", isOn: $hasDate).toggleStyle(.switch).controlSize(.small)
+                        Spacer()
+                        if hasDate {
+                            DatePicker("", selection: $date, displayedComponents: .date)
+                                .labelsHidden().datePickerStyle(.compact)
+                                .environment(\.locale, Locale(identifier: "tr_TR"))
+                        }
+                    }
+                    if hasDate {
+                        HStack {
+                            Toggle("Saat", isOn: $hasTime).toggleStyle(.switch).controlSize(.small)
+                            Spacer()
+                            if hasTime {
+                                DatePicker("", selection: $time, displayedComponents: .hourAndMinute)
+                                    .labelsHidden().datePickerStyle(.compact)
+                            }
+                        }
+                    }
+                    if item.repeatRule != nil {
+                        HStack {
+                            Label("Tekrarlıyor", systemImage: "repeat").foregroundStyle(.secondary)
+                            Spacer()
+                            Button("Tekrarı kaldır") { item.repeatRule = nil; model.save() }
+                                .buttonStyle(.plain).foregroundStyle(Color.accentColor)
+                        }
+                        .font(.system(size: 12))
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Adımlar").font(.system(size: 11)).foregroundStyle(.secondary)
+                        ChecklistView(item: item, editable: true)
+                    }
                 }
+                .padding(.horizontal, 4)
+                .font(.system(size: 12))
             }
-            .font(.system(size: 12))
             HStack {
                 Button("Sil", role: .destructive) { model.delete(item); onClose() }
                     .buttonStyle(.plain).foregroundStyle(.red).font(.system(size: 12))
@@ -50,9 +83,9 @@ struct EditView: View {
                     .keyboardShortcut(.defaultAction)
                     .disabled(action.trimmingCharacters(in: .whitespaces).isEmpty)
             }
-            .padding(.top, 4)
+            .padding(.horizontal, 4)
         }
-        .padding(.horizontal, 4).padding(.bottom, 4)
+        .padding(.bottom, 4)
     }
 
     private func field(_ title: String, text: Binding<String>) -> some View {
@@ -67,6 +100,8 @@ struct EditView: View {
 
     private func save() {
         let due = hasDate ? model.calendar.startOfDay(for: date) : nil
-        if model.update(item, person: person, action: action, dueDate: due, categoryID: categoryID) { onClose() }
+        let minutes = hasDate && hasTime
+            ? Calendar.current.component(.hour, from: time) * 60 + Calendar.current.component(.minute, from: time) : nil
+        if model.update(item, person: person, action: action, dueDate: due, dueMinutes: minutes, categoryID: categoryID) { onClose() }
     }
 }

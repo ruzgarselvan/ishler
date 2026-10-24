@@ -4,13 +4,14 @@ import TodoCore
 
 @main
 struct MenuBarTodoApp: App {
-    @State private var model: AppModel
+    @State private var model = AppModel.shared
 
     init() {
-        let store = try! TodoStore()
-        let model = AppModel(store: store)
-        _model = State(initialValue: model)
-        Task { await model.start() }
+        let model = AppModel.shared
+        Task {
+            QuickAdd.shared.setEnabled(model.settingsStore.quickAddHotkey)
+            await model.start()
+        }
     }
 
     var body: some Scene {
@@ -21,7 +22,11 @@ struct MenuBarTodoApp: App {
         } label: {
             HStack(spacing: 3) {
                 Image(systemName: "checklist")
-                if model.settingsStore.showBadge, model.badgeCount > 0 { Text("\(model.badgeCount)") }
+                switch model.settingsStore.menuBarStyle {
+                case .count: if model.badgeCount > 0 { Text("\(model.badgeCount)") }
+                case .title: if !model.nextItemText.isEmpty { Text(model.nextItemText) }
+                case .off: EmptyView()
+                }
             }
         }
         .menuBarExtraStyle(.window)

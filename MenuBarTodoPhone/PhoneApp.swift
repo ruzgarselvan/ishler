@@ -4,12 +4,10 @@ import TodoCore
 
 @main
 struct PhoneApp: App {
-    @State private var model: AppModel
+    @State private var model = AppModel.shared
 
     init() {
-        let model = AppModel(store: try! TodoStore())
-        _model = State(initialValue: model)
-        Task { await model.start() }
+        Task { await AppModel.shared.start() }
     }
 
     var body: some Scene {

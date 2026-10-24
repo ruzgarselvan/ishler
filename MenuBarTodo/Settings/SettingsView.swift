@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(AppModel.self) private var model
     let onBack: () -> Void
     @State private var launchAtLogin = false
+    @State private var exportURL: URL?
 
     var body: some View {
         @Bindable var store = model.settingsStore
@@ -25,10 +26,23 @@ struct SettingsView: View {
                         CategoryEditor(store: store, compact: true)
                     }
 
+                    section("Şablonlar", footnote: nil) {
+                        TemplateEditor(store: store, compact: true)
+                    }
+
                     section("Hatırlatıcı", footnote: footnote(store)) {
                         Picker("", selection: $store.settings.eveningDaysBefore) {
                             Text("Yok").tag(0)
                             ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }
+                        }
+                        .pickerStyle(.segmented).labelsHidden().controlSize(.small)
+                    }
+
+                    section("Menü bar", footnote: nil) {
+                        Picker("", selection: $store.menuBarStyle) {
+                            Text("Sayı").tag(MenuBarStyle.count)
+                            Text("Sıradaki iş").tag(MenuBarStyle.title)
+                            Text("Yok").tag(MenuBarStyle.off)
                         }
                         .pickerStyle(.segmented).labelsHidden().controlSize(.small)
                     }
@@ -42,10 +56,18 @@ struct SettingsView: View {
                         .pickerStyle(.segmented).labelsHidden().controlSize(.small)
                     }
 
+                    section("Yedek", footnote: nil) {
+                        if let url = exportURL {
+                            ShareLink(item: url) { Label("İşleri CSV olarak dışa aktar", systemImage: "square.and.arrow.up") }
+                                .buttonStyle(.plain).foregroundStyle(Color.accentColor).font(.system(size: 12))
+                        }
+                    }
+
                     section("Genel", footnote: nil) {
                         VStack(alignment: .leading, spacing: 8) {
                             Toggle("Girişte otomatik başlat", isOn: $launchAtLogin)
-                            Toggle("Menü bar'da bugünkü işleri say", isOn: $store.showBadge)
+                            Toggle("Apple Takvim'e yaz", isOn: $store.writeToCalendar)
+                            Toggle("Hızlı ekle kısayolu (⌃⌥N)", isOn: $store.quickAddHotkey)
                         }
                         .toggleStyle(.switch).controlSize(.small).font(.system(size: 12))
                     }
@@ -55,9 +77,12 @@ struct SettingsView: View {
             }
         }
         .padding(.bottom, 4)
-        .onAppear { launchAtLogin = model.launchAtLogin }
+        .onAppear { launchAtLogin = model.launchAtLogin; exportURL = model.makeExport() }
         .onChange(of: launchAtLogin) { model.launchAtLogin = launchAtLogin }
-        .onChange(of: store.showBadge) { model.refreshBadge() }
+        .onChange(of: store.menuBarStyle) { model.refreshBadge() }
+        .onChange(of: store.quickAddHotkey) { QuickAdd.shared.setEnabled(store.quickAddHotkey) }
+        .onChange(of: store.writeToCalendar) { Task { await model.reschedule() } }
+        .onChange(of: store.templates) { }
         .onChange(of: store.appearance) { model.applyAppearance() }
         .onChange(of: store.settings) { Task { await model.reschedule() } }
         .onChange(of: store.categories) { Task { await model.reschedule() } }

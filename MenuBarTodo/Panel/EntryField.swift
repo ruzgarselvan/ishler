@@ -3,6 +3,7 @@ import TodoCore
 
 struct EntryField: View {
     @Environment(AppModel.self) private var model
+    var onAdded: (() -> Void)? = nil
     @State private var text = ""
     @FocusState private var focused: Bool
 
@@ -55,5 +56,6 @@ struct EntryField: View {
         guard !trimmed.isEmpty else { return }
         model.add(trimmed)
         text = ""
+        onAdded?()
     }
 }

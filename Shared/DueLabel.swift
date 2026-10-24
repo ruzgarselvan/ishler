@@ -8,7 +8,10 @@ struct DueLabel {
 
     init(item: TodoItem, now: Date, calendar: Calendar) {
         guard let due = item.dueDate else { text = "Bekliyor"; isOverdue = false; return }
-        (text, isOverdue) = dueLabelText(due: due, now: now, calendar: calendar)
+        let label = dueLabelText(due: due, now: now, calendar: calendar)
+        let clock = item.dueMinutes.map { " " + String(format: "%02d:%02d", $0 / 60, $0 % 60) } ?? ""
+        text = label.text + (label.isOverdue ? "" : clock)
+        isOverdue = label.isOverdue
     }
 }
 

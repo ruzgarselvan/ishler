@@ -3,6 +3,7 @@ import TodoCore
 
 struct SettingsScreen: View {
     @Environment(AppModel.self) private var model
+    @State private var exportURL: URL?
 
     var body: some View {
         @Bindable var store = model.settingsStore
@@ -19,6 +20,8 @@ struct SettingsScreen: View {
 
                 Section("Kategoriler") { CategoryEditor(store: store) }
 
+                Section("Şablonlar") { TemplateEditor(store: store) }
+
                 Section {
                     Picker("Gün", selection: $store.settings.eveningDaysBefore) {
                         Text("Yok").tag(0)
@@ -33,6 +36,13 @@ struct SettingsScreen: View {
                            : "Zili açık kategorilerde son \(store.settings.eveningDaysBefore) gün her akşam, teslim günü sabah bildirim gelir.")
                 }
 
+                Section("Takvim ve yedek") {
+                    Toggle("Apple Takvim'e yaz", isOn: $store.writeToCalendar)
+                    if let url = exportURL {
+                        ShareLink(item: url) { Label("İşleri CSV olarak dışa aktar", systemImage: "square.and.arrow.up") }
+                    }
+                }
+
                 Section("Görünüm") {
                     Picker("Görünüm", selection: $store.appearance) {
                         Text("Sistem").tag(Appearance.system)
@@ -43,6 +53,8 @@ struct SettingsScreen: View {
                 }
             }
             .navigationTitle("Ayarlar")
+            .onAppear { exportURL = model.makeExport() }
+            .onChange(of: store.writeToCalendar) { Task { await model.reschedule() } }
             .onChange(of: store.settings) { Task { await model.reschedule() } }
             .onChange(of: store.categories) { Task { await model.reschedule() } }
         }

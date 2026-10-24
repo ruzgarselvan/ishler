@@ -7,13 +7,14 @@ struct PanelView: View {
     @Query private var items: [TodoItem]
     @State private var screen: Screen = .list
 
-    enum Screen { case list, archive, settings, calendar, edit(TodoItem) }
+    enum Screen { case list, archive, settings, calendar, focus, edit(TodoItem) }
 
     var body: some View {
         Group {
             switch screen {
             case .list: list
             case .archive: ArchiveView { screen = .list }
+            case .focus: focusScreen
             case .calendar: CalendarView(onBack: { screen = .list }, onEdit: { screen = .edit($0) })
             case .settings: SettingsView { screen = .list }
             case .edit(let item): EditView(item: item) { screen = .list }
@@ -23,6 +24,16 @@ struct PanelView: View {
         .frame(width: 300)
         .onAppear { model.refreshBadge(); model.touch() }
         .onDisappear { screen = .list }
+    }
+
+    private var focusScreen: some View {
+        let now = Date()
+        let visible = items.filter { isVisible($0, horizon: model.settingsStore.horizon, now: now, calendar: model.calendar) }
+        let ordered = sortedOpenItems(visible, now: now, calendar: model.calendar).flatMap(\.1)
+        return VStack(alignment: .leading, spacing: 10) {
+            PanelHeader(title: "Odak", onBack: { screen = .list })
+            FocusCard(items: ordered).padding(.horizontal, 4)
+        }
     }
 
     private var list: some View {
@@ -50,6 +61,7 @@ struct PanelView: View {
             HStack(spacing: 12) {
                 Text(groups.isEmpty ? "Açık iş yok" : "\(visible.filter { !$0.isDone }.count) açık iş")
                 Spacer()
+                Button { screen = .focus } label: { Image(systemName: "scope") }.help("Şimdi sadece bu")
                 Button { screen = .calendar } label: { Image(systemName: "calendar") }.help("Takvim")
                 Button { screen = .archive } label: { Image(systemName: "archivebox") }.help("Arşiv")
                 Button { screen = .settings } label: { Image(systemName: "gearshape") }.help("Ayarlar")
