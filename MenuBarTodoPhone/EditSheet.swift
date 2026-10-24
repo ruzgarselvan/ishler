@@ -10,6 +10,7 @@ struct EditSheet: View {
     @State private var action: String
     @State private var hasDate: Bool
     @State private var date: Date
+    @State private var categoryID: UUID?
 
     init(item: TodoItem) {
         self.item = item
@@ -17,6 +18,7 @@ struct EditSheet: View {
         _action = State(initialValue: item.action)
         _hasDate = State(initialValue: item.dueDate != nil)
         _date = State(initialValue: item.dueDate ?? Date())
+        _categoryID = State(initialValue: item.categoryID)
     }
 
     var body: some View {
@@ -25,6 +27,9 @@ struct EditSheet: View {
                 Section {
                     TextField("Kişi", text: $person).autocorrectionDisabled()
                     TextField("İş", text: $action).autocorrectionDisabled()
+                    if !model.settingsStore.categories.isEmpty {
+                        CategoryMenu(categories: model.settingsStore.categories, selection: $categoryID)
+                    }
                 }
                 Section {
                     Toggle("Tarih", isOn: $hasDate)
@@ -52,6 +57,6 @@ struct EditSheet: View {
 
     private func save() {
         let due = hasDate ? model.calendar.startOfDay(for: date) : nil
-        if model.update(item, person: person, action: action, dueDate: due) { dismiss() }
+        if model.update(item, person: person, action: action, dueDate: due, categoryID: categoryID) { dismiss() }
     }
 }

@@ -10,6 +10,7 @@ struct EditView: View {
     @State private var action: String
     @State private var hasDate: Bool
     @State private var date: Date
+    @State private var categoryID: UUID?
 
     init(item: TodoItem, onClose: @escaping () -> Void) {
         self.item = item
@@ -18,6 +19,7 @@ struct EditView: View {
         _action = State(initialValue: item.action)
         _hasDate = State(initialValue: item.dueDate != nil)
         _date = State(initialValue: item.dueDate ?? Date())
+        _categoryID = State(initialValue: item.categoryID)
     }
 
     var body: some View {
@@ -25,6 +27,10 @@ struct EditView: View {
             PanelHeader(title: "İşi düzenle", onBack: onClose)
             field("Kişi", text: $person)
             field("İş", text: $action)
+            if !model.settingsStore.categories.isEmpty {
+                CategoryMenu(categories: model.settingsStore.categories, selection: $categoryID)
+                    .font(.system(size: 12))
+            }
             HStack {
                 Toggle("Tarih", isOn: $hasDate).toggleStyle(.switch).controlSize(.small)
                 Spacer()
@@ -61,6 +67,6 @@ struct EditView: View {
 
     private func save() {
         let due = hasDate ? model.calendar.startOfDay(for: date) : nil
-        if model.update(item, person: person, action: action, dueDate: due) { onClose() }
+        if model.update(item, person: person, action: action, dueDate: due, categoryID: categoryID) { onClose() }
     }
 }

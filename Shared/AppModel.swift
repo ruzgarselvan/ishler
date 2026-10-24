@@ -1,5 +1,6 @@
 import Foundation
 import Observation
+import SwiftUI
 #if os(macOS)
 import ServiceManagement
 #endif
@@ -41,7 +42,14 @@ final class AppModel {
         }.count
     }
 
-    var parser: EntryParser { EntryParser(knownPeople: store.knownPeople(), calendar: calendar) }
+    var parser: EntryParser {
+        EntryParser(knownPeople: store.knownPeople(), calendar: calendar,
+                    categories: settingsStore.categories, shortcuts: settingsStore.shortcuts)
+    }
+
+    func color(for item: TodoItem) -> Color? {
+        settingsStore.category(item.categoryID).map { Color(hex: $0.colorHex) }
+    }
 
     func start() async {
         _ = await SystemNotificationCenter.requestAuthorization()
@@ -62,8 +70,8 @@ final class AppModel {
         Task { await reschedule() }
     }
 
-    func update(_ item: TodoItem, person: String?, action: String, dueDate: Date?) -> Bool {
-        let ok = store.update(item, person: person, action: action, dueDate: dueDate)
+    func update(_ item: TodoItem, person: String?, action: String, dueDate: Date?, categoryID: UUID?) -> Bool {
+        let ok = store.update(item, person: person, action: action, dueDate: dueDate, categoryID: categoryID)
         if ok { Task { await reschedule() } }
         return ok
     }

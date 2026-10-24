@@ -40,7 +40,7 @@ struct PanelView: View {
                                 .foregroundStyle(.secondary)
                                 .padding(.top, 8).padding(.bottom, 1)
                             ForEach(rows) { item in
-                                TodoRow(item: item, now: now, calendar: model.calendar, onDone: { model.markDone(item) }, onEdit: { screen = .edit(item) })
+                                TodoRow(item: item, now: now, calendar: model.calendar, tint: model.color(for: item), onDone: { model.markDone(item) }, onEdit: { screen = .edit(item) })
                             }
                         }
                     }

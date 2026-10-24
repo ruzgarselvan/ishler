@@ -35,7 +35,7 @@ struct CalendarScreen: View {
                     } else {
                         VStack(spacing: 0) {
                             ForEach(dayItems) { item in
-                                PhoneRow(item: item, now: Date(), calendar: cal,
+                                PhoneRow(item: item, now: Date(), calendar: cal, tint: model.color(for: item),
                                          onDone: { model.markDone(item) }, onEdit: { editing = item })
                                     .padding(.horizontal, 16).padding(.vertical, 10)
                             }

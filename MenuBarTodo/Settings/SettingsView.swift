@@ -8,35 +8,43 @@ struct SettingsView: View {
 
     var body: some View {
         @Bindable var store = model.settingsStore
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 10) {
             PanelHeader(title: "Ayarlar", onBack: onBack)
+            FittedScroll(maxHeight: 440) {
+                VStack(alignment: .leading, spacing: 16) {
+                    section("Listede göster", footnote: "Gecikmiş ve tarihsiz işler her zaman görünür.") {
+                        Picker("", selection: $store.horizon) {
+                            Text("1 hafta").tag(Horizon.week)
+                            Text("1 ay").tag(Horizon.month)
+                            Text("Hepsi").tag(Horizon.all)
+                        }
+                        .pickerStyle(.segmented).labelsHidden().controlSize(.small)
+                    }
 
-            section("Listede göster", footnote: "Gecikmiş ve tarihsiz işler her zaman görünür.") {
-                Picker("", selection: $store.horizon) {
-                    Text("1 hafta").tag(Horizon.week)
-                    Text("1 ay").tag(Horizon.month)
-                    Text("Hepsi").tag(Horizon.all)
+                    section("Teslimden kaç gün önce hatırlat", footnote: footnote(store.settings.eveningDaysBefore)) {
+                        Picker("", selection: $store.settings.eveningDaysBefore) {
+                            Text("Yok").tag(0)
+                            ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }
+                        }
+                        .pickerStyle(.segmented).labelsHidden().controlSize(.small)
+                    }
+
+                    section("Kategoriler", footnote: nil) {
+                        CategoryEditor(store: store, compact: true)
+                    }
+
+                    section("Genel", footnote: nil) {
+                        VStack(alignment: .leading, spacing: 8) {
+                            Toggle("Girişte otomatik başlat", isOn: $launchAtLogin)
+                            Toggle("Menü bar'da bugünkü işleri say", isOn: $store.showBadge)
+                        }
+                        .toggleStyle(.switch).controlSize(.small).font(.system(size: 12))
+                    }
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 4)
             }
-
-            section("Teslimden kaç gün önce hatırlat", footnote: footnote(store.settings.eveningDaysBefore)) {
-                Picker("", selection: $store.settings.eveningDaysBefore) {
-                    Text("Yok").tag(0)
-                    ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }
-                }
-            }
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Genel").font(.system(size: 12, weight: .semibold))
-                Toggle("Girişte otomatik başlat", isOn: $launchAtLogin)
-                Toggle("Menü bar'da bugünkü işleri say", isOn: $store.showBadge)
-            }
-            .toggleStyle(.switch)
-            .controlSize(.small)
-            .font(.system(size: 12))
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.horizontal, 4)
         .padding(.bottom, 4)
         .onAppear { launchAtLogin = model.launchAtLogin }
         .onChange(of: launchAtLogin) { model.launchAtLogin = launchAtLogin }
@@ -49,12 +57,14 @@ struct SettingsView: View {
                   : "Son \(days) gün her akşam, teslim günü sabah bildirim gelir."
     }
 
-    private func section(_ title: String, footnote: String, @ViewBuilder content: () -> some View) -> some View {
-        VStack(alignment: .leading, spacing: 5) {
+    private func section(_ title: String, footnote: String?, @ViewBuilder content: () -> some View) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
             Text(title).font(.system(size: 12, weight: .semibold))
-            content().pickerStyle(.segmented).labelsHidden().controlSize(.small)
-            Text(footnote).font(.system(size: 11)).foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+            content()
+            if let footnote {
+                Text(footnote).font(.system(size: 11)).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
     }
 }

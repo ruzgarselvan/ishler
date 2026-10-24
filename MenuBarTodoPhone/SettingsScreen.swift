@@ -28,6 +28,8 @@ struct SettingsScreen: View {
                          ? "Sadece teslim günü sabah bildirim gelir."
                          : "Son \(store.settings.eveningDaysBefore) gün her akşam, teslim günü sabah bildirim gelir.")
                 }
+
+                Section("Kategoriler") { CategoryEditor(store: store) }
             }
             .navigationTitle("Ayarlar")
             .onChange(of: store.settings) { Task { await model.reschedule() } }

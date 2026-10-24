@@ -5,20 +5,37 @@ struct TodoRow: View {
     let item: TodoItem
     let now: Date
     let calendar: Calendar
+    var tint: Color? = nil
     let onDone: () -> Void
     let onEdit: () -> Void
 
+    @State private var hovering = false
+    @State private var completing = false
+
     var body: some View {
         let due = DueLabel(item: item, now: now, calendar: calendar)
+        let ring = tint ?? Color.secondary
         HStack(spacing: 9) {
-            Button(action: onDone) {
-                Circle().strokeBorder(.secondary.opacity(0.6), lineWidth: 1.3).frame(width: 16, height: 16)
+            Button(action: complete) {
+                ZStack {
+                    Circle().strokeBorder(ring.opacity(completing ? 1 : 0.65), lineWidth: 1.5)
+                    if completing || hovering {
+                        Image(systemName: "checkmark")
+                            .font(.system(size: 8, weight: .bold))
+                            .foregroundStyle(ring.opacity(completing ? 1 : 0.5))
+                    }
+                }
+                .frame(width: 16, height: 16)
+                .background(completing ? ring.opacity(0.18) : .clear, in: Circle())
             }
             .buttonStyle(.plain)
             .help("Yapıldı")
+
             HStack(spacing: 9) {
                 label
                     .font(.system(size: 13))
+                    .strikethrough(completing)
+                    .foregroundStyle(completing ? .secondary : .primary)
                     .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 Text(due.text)
@@ -29,7 +46,22 @@ struct TodoRow: View {
             .onTapGesture(perform: onEdit)
             .help("Düzenle")
         }
-        .padding(.vertical, 4)
+        .padding(.vertical, 4).padding(.horizontal, 6)
+        .background(hovering ? Color.primary.opacity(0.06) : .clear, in: RoundedRectangle(cornerRadius: 8))
+        .padding(.horizontal, -6)
+        .opacity(completing ? 0.5 : 1)
+        .onHover { hovering = $0 }
+        .animation(.easeOut(duration: 0.15), value: hovering)
+        .animation(.easeOut(duration: 0.2), value: completing)
+    }
+
+    private func complete() {
+        guard !completing else { return }
+        completing = true
+        Task {
+            try? await Task.sleep(for: .milliseconds(350))
+            onDone()
+        }
     }
 
     private var label: Text {

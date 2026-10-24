@@ -43,7 +43,7 @@ struct CalendarView: View {
                 FittedScroll(maxHeight: 200) {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(dayItems) { item in
-                            TodoRow(item: item, now: Date(), calendar: cal,
+                            TodoRow(item: item, now: Date(), calendar: cal, tint: model.color(for: item),
                                     onDone: { model.markDone(item) }, onEdit: { onEdit(item) })
                         }
                         ForEach(dayEvents, id: \.eventIdentifier) { e in

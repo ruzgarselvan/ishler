@@ -16,7 +16,7 @@ struct TodayScreen: View {
                 ForEach(groups, id: \.0) { bucket, rows in
                     Section(bucketTitle(bucket)) {
                         ForEach(rows) { item in
-                            PhoneRow(item: item, now: now, calendar: model.calendar, onDone: { model.markDone(item) }, onEdit: { editing = item })
+                            PhoneRow(item: item, now: now, calendar: model.calendar, tint: model.color(for: item), onDone: { model.markDone(item) }, onEdit: { editing = item })
                                 .swipeActions(edge: .trailing) {
                                     Button("Yapıldı", systemImage: "checkmark") { model.markDone(item) }.tint(.green)
                                 }
@@ -40,6 +40,7 @@ struct PhoneRow: View {
     let item: TodoItem
     let now: Date
     let calendar: Calendar
+    var tint: Color? = nil
     let onDone: () -> Void
     let onEdit: () -> Void
 
@@ -47,7 +48,7 @@ struct PhoneRow: View {
         let due = DueLabel(item: item, now: now, calendar: calendar)
         HStack(spacing: 12) {
             Button(action: onDone) {
-                Image(systemName: "circle").font(.title3).foregroundStyle(.secondary)
+                Image(systemName: "circle").font(.title3).foregroundStyle(tint ?? Color.secondary)
             }
             .buttonStyle(.plain)
             HStack {
@@ -87,6 +88,15 @@ struct PhoneEntryField: View {
     private var chips: some View {
         let e = model.parser.parse(trimmed, now: Date())
         return HStack(spacing: 6) {
+            if let c = model.settingsStore.category(e.categoryID) {
+                HStack(spacing: 5) {
+                    Circle().fill(Color(hex: c.colorHex)).frame(width: 7, height: 7)
+                    Text(c.name)
+                }
+                .font(.footnote)
+                .padding(.horizontal, 10).padding(.vertical, 3)
+                .glassEffect(.regular, in: .capsule)
+            }
             if let p = e.person { chip(p) }
             if !e.action.isEmpty { chip(e.action.prefix(1).uppercased() + e.action.dropFirst()) }
             if let d = e.dueDate {

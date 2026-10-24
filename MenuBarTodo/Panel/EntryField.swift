@@ -25,6 +25,15 @@ struct EntryField: View {
     private var chips: some View {
         let e = model.parser.parse(trimmed, now: Date())
         return HStack(spacing: 6) {
+            if let c = model.settingsStore.category(e.categoryID) {
+                HStack(spacing: 4) {
+                    Circle().fill(Color(hex: c.colorHex)).frame(width: 6, height: 6)
+                    Text(c.name)
+                }
+                .font(.system(size: 11))
+                .padding(.horizontal, 8).padding(.vertical, 1)
+                .background(Color(hex: c.colorHex).opacity(0.18), in: Capsule())
+            }
             if let p = e.person { chip(p) }
             if !e.action.isEmpty { chip(e.action.prefix(1).uppercased() + e.action.dropFirst()) }
             if let d = e.dueDate {
