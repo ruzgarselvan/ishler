@@ -1,7 +1,7 @@
 import SwiftUI
 import AppKit
 
-/// Reports horizontal two-finger trackpad swipes over the hosting window: +1 for a swipe left, -1 for a swipe right.
+/// Reports horizontal two-finger trackpad swipes over the hosting window: +1 for a swipe right, -1 for a swipe left.
 struct SwipeMonitor: NSViewRepresentable {
     let onSwipe: (Int) -> Void
 
@@ -46,7 +46,7 @@ struct SwipeMonitor: NSViewRepresentable {
             accumulated += event.scrollingDeltaX
             if !fired, abs(accumulated) > 30 {
                 fired = true
-                onSwipe(accumulated < 0 ? 1 : -1)
+                onSwipe(accumulated < 0 ? -1 : 1)
             }
             if event.phase.contains(.ended) || event.phase.contains(.cancelled) { accumulated = 0 }
         }
