@@ -55,7 +55,7 @@ import Foundation
     @Test func updateChangesFields() throws {
         let s = try store()
         let item = s.add(ParsedEntry(person: "Tugba", action: "hocayi ara 24 kasim"))!
-        let ok = s.update(item, person: " Tuğba ", action: "hocayı ara", dueDate: date(2026, 11, 24))
+        let ok = s.update(item, person: " Tuğba ", action: "hocayı ara", dueDate: date(2026, 11, 24), categoryID: nil)
         #expect(ok)
         #expect(item.person == "Tuğba")
         #expect(item.action == "hocayı ara")
@@ -64,9 +64,17 @@ import Foundation
     @Test func updateRejectsEmptyActionAndClearsBlankPerson() throws {
         let s = try store()
         let item = s.add(ParsedEntry(person: "X", action: "ara"))!
-        #expect(!s.update(item, person: "X", action: "  ", dueDate: nil))
+        #expect(!s.update(item, person: "X", action: "  ", dueDate: nil, categoryID: nil))
         #expect(item.action == "ara")
-        #expect(s.update(item, person: "  ", action: "ara", dueDate: nil))
+        #expect(s.update(item, person: "  ", action: "ara", dueDate: nil, categoryID: nil))
         #expect(item.person == nil)
+    }
+    @Test func categoryStoredAndUpdated() throws {
+        let s = try store()
+        let id = UUID()
+        let item = s.add(ParsedEntry(action: "logo", categoryID: id))!
+        #expect(item.categoryID == id)
+        #expect(s.update(item, person: nil, action: "logo", dueDate: nil, categoryID: nil))
+        #expect(item.categoryID == nil)
     }
 }

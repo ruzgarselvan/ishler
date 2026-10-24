@@ -24,6 +24,7 @@ public final class TodoStore {
         let action = entry.action.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !action.isEmpty else { return nil }
         let item = TodoItem(person: entry.person, action: action, dueDate: entry.dueDate)
+        item.categoryID = entry.categoryID
         context.insert(item)
         try? context.save()
         return item
@@ -41,13 +42,14 @@ public final class TodoStore {
 
     /// Returns false (and changes nothing) when `action` is blank.
     @discardableResult
-    public func update(_ item: TodoItem, person: String?, action: String, dueDate: Date?) -> Bool {
+    public func update(_ item: TodoItem, person: String?, action: String, dueDate: Date?, categoryID: UUID?) -> Bool {
         let action = action.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !action.isEmpty else { return false }
         let person = person?.trimmingCharacters(in: .whitespacesAndNewlines)
         item.person = (person?.isEmpty ?? true) ? nil : person
         item.action = action
         item.dueDate = dueDate
+        item.categoryID = categoryID
         try? context.save()
         return true
     }

@@ -37,4 +37,16 @@ import Foundation
         a.showBadge = false
         #expect(!SettingsStore(defaults: suite).showBadge)
     }
+    @Test func categoriesAndShortcutsPersist() {
+        let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
+        let a = SettingsStore(defaults: suite)
+        #expect(a.categories.isEmpty && a.shortcuts == ShortcutOptions())
+        let c = TodoCategory(name: "İş", shortcut: "x", colorHex: "#FF9500")
+        a.categories = [c]
+        a.shortcuts.parentheses = false
+        let b = SettingsStore(defaults: suite)
+        #expect(b.categories == [c])
+        #expect(!b.shortcuts.parentheses)
+        #expect(b.category(c.id)?.name == "İş")
+    }
 }

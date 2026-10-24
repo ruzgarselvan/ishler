@@ -9,6 +9,7 @@ public final class TodoItem {
     public var dueDate: Date? = nil
     public var createdAt: Date = Date()
     public var doneAt: Date? = nil
+    public var categoryID: UUID? = nil
 
     public var isDone: Bool { doneAt != nil }
 
