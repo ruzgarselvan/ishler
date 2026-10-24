@@ -54,22 +54,26 @@ public func planNotifications(
         if settings.eveningDaysBefore >= 1 {
             for k in 1...settings.eveningDaysBefore {
                 let day = calendar.date(byAdding: .day, value: -k, to: dueDay)!
+                let when = k == 1 ? "Yarın" : "\(longDate(dueDay, calendar: calendar)) · \(k) gün kaldı"
                 out.append(PlannedNotification(
                     id: "item-\(item.id.uuidString)-evening-\(k)",
                     fireDate: at(day, settings.eveningTime),
-                    title: "\(k) gün kaldı", body: line(item)))
+                    title: line(item), body: when))
             }
         }
         out.append(PlannedNotification(
             id: "item-\(item.id.uuidString)-morning",
             fireDate: at(dueDay, settings.morningTime),
-            title: "Bugün teslim", body: line(item)))
+            title: line(item), body: "Bugün"))
     }
 
     if !digestItems.isEmpty {
-        let body = digestItems.map(line).joined(separator: "\n")
         for offset in 0..<digestDays {
             let day = calendar.date(byAdding: .day, value: offset, to: today)!
+            let body = digestItems.map { item in
+                guard let due = item.dueDate else { return line(item) }
+                return "\(line(item)) · \(dueLabelText(due: due, now: day, calendar: calendar).text)"
+            }.joined(separator: "\n")
             let c = calendar.dateComponents([.year, .month, .day], from: day)
             out.append(PlannedNotification(
                 id: String(format: "digest-%04d-%02d-%02d", c.year!, c.month!, c.day!),

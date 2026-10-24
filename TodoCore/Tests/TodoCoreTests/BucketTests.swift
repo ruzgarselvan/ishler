@@ -39,3 +39,19 @@ func item(_ action: String = "iş", person: String? = nil, due: Date?, done: Dat
         #expect(groups[0].1.map(\.action) == ["fatura", "ara"])
     }
 }
+
+@Suite struct DueLabelTests {
+    func label(_ due: Date) -> String { dueLabelText(due: due, now: now, calendar: istanbul).text }
+
+    @Test func relativeThenDate() {
+        #expect(label(date(2026, 10, 24)) == "Bugün")
+        #expect(label(date(2026, 10, 25)) == "Yarın")
+        #expect(label(date(2026, 11, 23)) == "23 Kasım")
+        #expect(label(date(2026, 10, 27)) == "27 Ekim")
+    }
+    @Test func overdueWording() {
+        #expect(label(date(2026, 10, 23)) == "Dün")
+        #expect(label(date(2026, 10, 21)) == "3 gün önce")
+        #expect(dueLabelText(due: date(2026, 10, 21), now: now, calendar: istanbul).isOverdue)
+    }
+}

@@ -20,8 +20,8 @@ import Foundation
     @Test func eveningNotificationsLastThreeDays() {
         let p = plan([teklif()])
         #expect(p.map(\.fireDate) == [date(2026, 10, 27, 20), date(2026, 10, 28, 20), date(2026, 10, 29, 20), date(2026, 10, 30, 10, 30)])
-        #expect(p.map(\.title) == ["3 gün kaldı", "2 gün kaldı", "1 gün kaldı", "Bugün teslim"])
-        #expect(p.allSatisfy { $0.body == "X · teklif at" })
+        #expect(p.allSatisfy { $0.title == "X · teklif at" })
+        #expect(p.map(\.body) == ["30 Ekim · 3 gün kaldı", "30 Ekim · 2 gün kaldı", "Yarın", "Bugün"])
     }
     @Test func pastTimesAreSkipped() {
         let p = plan([teklif()], now: date(2026, 10, 29, 21))
@@ -33,7 +33,9 @@ import Foundation
         let p = plan([undated, overdue])
         #expect(p.count == 14)
         #expect(p[0].fireDate == date(2026, 10, 24, 12))
-        #expect(p[0].body.contains("Deniz · ara") && p[0].body.contains("Ayşe · faturayı gönder"))
+        #expect(p[0].title == "Bekleyen işler")
+        #expect(p[0].body == "Deniz · ara\nAyşe · faturayı gönder · 2 gün önce")
+        #expect(p[1].body == "Deniz · ara\nAyşe · faturayı gönder · 3 gün önce")
     }
     @Test func digestSkipsTodayWhenNoonPassed() {
         let undated = make("Deniz", "ara", nil)
@@ -67,6 +69,6 @@ import Foundation
         let other = make("Mert", "ders", date(2026, 10, 30), category: UUID())
         let p = plan([teklif(), other])
         #expect(p.count == 4)
-        #expect(p.allSatisfy { $0.body == "X · teklif at" })
+        #expect(p.allSatisfy { $0.title == "X · teklif at" })
     }
 }
