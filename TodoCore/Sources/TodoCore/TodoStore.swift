@@ -1,9 +1,12 @@
 import Foundation
+import CoreData
 import SwiftData
 
 @MainActor
 public final class TodoStore {
     public let container: ModelContainer
+    /// True when the store is mirrored to iCloud; false when it fell back to local-only storage.
+    public private(set) var usesICloud = false
     private var context: ModelContext { container.mainContext }
 
     /// macOS uses a team-prefixed group; iOS uses a "group." one. Each platform's store is synced by iCloud, not shared.
@@ -31,7 +34,9 @@ public final class TodoStore {
         do {
             container = try ModelContainer(for: schema, configurations:
                 ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .private(Self.cloudContainerID)))
+            usesICloud = true
         } catch {
+            NSLog("ishler: iCloud sync unavailable, using a local store only: \(error)")
             container = try ModelContainer(for: schema, configurations:
                 ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none))
         }
@@ -148,3 +153,21 @@ public func migrateStore(from old: URL, to new: URL) -> Bool {
     }
     return true
 }
+
+#if DEBUG
+extension TodoStore {
+    /// Creates the CloudKit record types for `TodoItem` in the Development schema right away (run once from a debug
+    /// build, then deploy the schema to Production in the CloudKit Console).
+    public static func initializeCloudKitSchema() throws {
+        guard let model = NSManagedObjectModel.makeManagedObjectModel(for: [TodoItem.self]) else { return }
+        let container = NSPersistentCloudKitContainer(name: "ishler-schema", managedObjectModel: model)
+        let description = NSPersistentStoreDescription(url: FileManager.default.temporaryDirectory.appending(path: "schema-\(UUID()).store"))
+        description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: cloudContainerID)
+        container.persistentStoreDescriptions = [description]
+        var loadError: Error?
+        container.loadPersistentStores { _, error in loadError = error }
+        if let loadError { throw loadError }
+        try container.initializeCloudKitSchema(options: [])
+    }
+}
+#endif

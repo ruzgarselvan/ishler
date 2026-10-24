@@ -1968,6 +1968,102 @@
           }
         }
       }
+    },
+    "iCloud kapalı: işler sadece bu cihazda duruyor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud is off: tasks stay on this device only"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud kapalı: işler sadece bu cihazda duruyor"
+          }
+        }
+      }
+    },
+    "iCloud açık: işler cihazların arasında eşitleniyor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud is on: tasks sync between your devices"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud açık: işler cihazların arasında eşitleniyor"
+          }
+        }
+      }
+    },
+    "iCloud hesabı yok: Ayarlar'dan iCloud'a giriş yap": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No iCloud account: sign in to iCloud in Settings"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud hesabı yok: Ayarlar'dan iCloud'a giriş yap"
+          }
+        }
+      }
+    },
+    "iCloud kısıtlı: bu cihazda kullanılamıyor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud is restricted on this device"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud kısıtlı: bu cihazda kullanılamıyor"
+          }
+        }
+      }
+    },
+    "iCloud durumu bilinmiyor": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud status unknown"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud durumu bilinmiyor"
+          }
+        }
+      }
+    },
+    "iCloud": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

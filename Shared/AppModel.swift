@@ -1,3 +1,4 @@
+import CloudKit
 import CoreSpotlight
 import Foundation
 import Observation
@@ -104,6 +105,28 @@ final class AppModel {
         }
     }
 
+    // MARK: iCloud status
+
+    /// Short human-readable sync state shown at the bottom of Settings.
+    private(set) var iCloudStatus = ""
+
+    func refreshICloudStatus() async {
+        guard store.usesICloud else {
+            iCloudStatus = String(localized: "iCloud kapalı: işler sadece bu cihazda duruyor")
+            return
+        }
+        let status = (try? await CKContainer(identifier: TodoStore.cloudContainerID).accountStatus()) ?? .couldNotDetermine
+        switch status {
+        case .available: iCloudStatus = String(localized: "iCloud açık: işler cihazların arasında eşitleniyor")
+        case .noAccount: iCloudStatus = String(localized: "iCloud hesabı yok: Ayarlar'dan iCloud'a giriş yap")
+        case .restricted: iCloudStatus = String(localized: "iCloud kısıtlı: bu cihazda kullanılamıyor")
+        default: iCloudStatus = String(localized: "iCloud durumu bilinmiyor")
+        }
+        #if DEBUG
+        FileHandle.standardError.write(Data("ishler: iCloud status = \(iCloudStatus)\n".utf8))
+        #endif
+    }
+
     // MARK: Lifecycle
 
     func start() async {
@@ -114,6 +137,17 @@ final class AppModel {
         #if os(macOS)
         applyAppearance()
         #endif
+        #if DEBUG
+        if ProcessInfo.processInfo.arguments.contains("-initCloudSchema") {
+            do { try TodoStore.initializeCloudKitSchema(); FileHandle.standardError.write(Data("ishler: CloudKit schema initialized\n".utf8)) }
+            catch { FileHandle.standardError.write(Data("ishler: schema init failed: \(error)\n".utf8)) }
+        }
+        // Debug aid: `-seedCloudKit` adds one item so CloudKit creates its record type in the Development schema.
+        if ProcessInfo.processInfo.arguments.contains("-seedCloudKit"), !store.allItems().contains(where: { $0.action == "iCloud test" }) {
+            add("iCloud test")
+        }
+        #endif
+        await refreshICloudStatus()
         await reschedule()
         while !Task.isCancelled {
             try? await Task.sleep(for: .seconds(15 * 60))

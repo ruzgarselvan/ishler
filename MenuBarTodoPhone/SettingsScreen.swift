@@ -39,6 +39,8 @@ struct SettingsScreen: View {
                     }
                 }
 
+                Section("iCloud") { Text(model.iCloudStatus).foregroundStyle(.secondary) }
+
                 Section("Görünüm") {
                     Picker("Görünüm", selection: $store.appearance) {
                         Text("Sistem").tag(Appearance.system)

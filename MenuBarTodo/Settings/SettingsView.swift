@@ -63,6 +63,10 @@ struct SettingsView: View {
                         }
                     }
 
+                    section("iCloud", footnote: nil) {
+                        Text(model.iCloudStatus).foregroundStyle(.secondary).font(.system(size: 11))
+                    }
+
                     section("Genel", footnote: nil) {
                         VStack(alignment: .leading, spacing: 8) {
                             Toggle("Girişte otomatik başlat", isOn: $launchAtLogin)
