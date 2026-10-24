@@ -16,7 +16,7 @@ import Foundation
         let item = TodoItem(person: "X", action: "teklif", dueDate: date(2026, 10, 30))
         item.categoryID = work
         for _ in 0..<2 {
-            await scheduler.reschedule(items: [item], settings: .default, now: date(2026, 10, 24, 9), calendar: istanbul, reminderCategories: [work])
+            await scheduler.reschedule(items: [item], settings: .default, now: date(2026, 10, 24, 9), calendar: istanbul, reminderCategories: [work], lastActivity: date(2026, 10, 24, 9))
         }
         #expect(center.log == ["clear", "add", "add", "add", "add", "clear", "add", "add", "add", "add"])
     }

@@ -22,6 +22,9 @@ struct PhoneApp: App {
 }
 
 struct RootView: View {
+    @Environment(AppModel.self) private var model
+    @Environment(\.scenePhase) private var scenePhase
+
     var body: some View {
         TabView {
             Tab("İşler", systemImage: "checklist") { TodayScreen() }
@@ -29,5 +32,6 @@ struct RootView: View {
             Tab("Arşiv", systemImage: "archivebox") { ArchiveScreen() }
             Tab("Ayarlar", systemImage: "gearshape") { SettingsScreen() }
         }
+        .onChange(of: scenePhase) { if scenePhase == .active { model.touch() } }
     }
 }

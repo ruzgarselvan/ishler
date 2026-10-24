@@ -34,6 +34,19 @@ final class AppModel {
     }
     #endif
 
+    private static let activityKey = "lastActivity"
+
+    /// When the user last opened the app or changed something; drives the "Seni bekleyen işler var!" nudge.
+    var lastActivity: Date {
+        UserDefaults.standard.object(forKey: Self.activityKey) as? Date ?? Date()
+    }
+
+    /// Records activity now and re-plans notifications (the nudge moves forward).
+    func touch() {
+        UserDefaults.standard.set(Date(), forKey: Self.activityKey)
+        Task { await reschedule() }
+    }
+
     func refreshBadge() {
         let now = Date()
         badgeCount = store.openItems().filter {
@@ -53,6 +66,7 @@ final class AppModel {
 
     func start() async {
         _ = await SystemNotificationCenter.requestAuthorization()
+        UserDefaults.standard.set(Date(), forKey: Self.activityKey)
         await reschedule()
         while !Task.isCancelled {
             try? await Task.sleep(for: .seconds(15 * 60))
@@ -62,33 +76,33 @@ final class AppModel {
 
     func add(_ text: String) {
         store.add(parser.parse(text, now: Date()))
-        Task { await reschedule() }
+        touch()
     }
 
     func markDone(_ item: TodoItem) {
         store.markDone(item, now: Date())
-        Task { await reschedule() }
+        touch()
     }
 
     func update(_ item: TodoItem, person: String?, action: String, dueDate: Date?, categoryID: UUID?) -> Bool {
         let ok = store.update(item, person: person, action: action, dueDate: dueDate, categoryID: categoryID)
-        if ok { Task { await reschedule() } }
+        if ok { touch() }
         return ok
     }
 
     func delete(_ item: TodoItem) {
         store.delete(item)
-        Task { await reschedule() }
+        touch()
     }
 
     func reopen(_ item: TodoItem) {
         store.reopen(item)
-        Task { await reschedule() }
+        touch()
     }
 
     func reschedule() async {
         refreshBadge()
         await scheduler.reschedule(items: store.openItems(), settings: settingsStore.settings, now: Date(), calendar: calendar,
-                                  reminderCategories: settingsStore.reminderCategoryIDs)
+                                  reminderCategories: settingsStore.reminderCategoryIDs, lastActivity: lastActivity)
     }
 }

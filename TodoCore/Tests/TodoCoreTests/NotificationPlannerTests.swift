@@ -7,8 +7,9 @@ import Foundation
     let morning = date(2026, 10, 24, 9)
     let work = UUID()
 
-    func plan(_ items: [TodoItem], now: Date? = nil, reminders: Set<UUID>? = nil) -> [PlannedNotification] {
-        planNotifications(items: items, settings: settings, now: now ?? morning, calendar: istanbul, reminderCategories: reminders ?? [work])
+    func plan(_ items: [TodoItem], now: Date? = nil, reminders: Set<UUID>? = nil, lastActivity: Date? = nil) -> [PlannedNotification] {
+        planNotifications(items: items, settings: settings, now: now ?? morning, calendar: istanbul,
+                          reminderCategories: reminders ?? [work], lastActivity: lastActivity ?? now ?? morning)
     }
     func make(_ person: String?, _ action: String, _ due: Date?, category: UUID? = nil) -> TodoItem {
         let i = TodoItem(person: person, action: action, dueDate: due)
@@ -27,20 +28,21 @@ import Foundation
         let p = plan([teklif()], now: date(2026, 10, 29, 21))
         #expect(p.map(\.fireDate) == [date(2026, 10, 30, 10, 30)])
     }
-    @Test func undatedAndOverdueGoInDailyDigest() {
+    @Test func digestWaitsForTwoInactiveDays() {
         let undated = make("Deniz", "ara", nil)
         let overdue = make("Ayşe", "faturayı gönder", date(2026, 10, 22))
         let p = plan([undated, overdue])
         #expect(p.count == 14)
-        #expect(p[0].fireDate == date(2026, 10, 24, 12))
-        #expect(p[0].title == "Bekleyen işler")
-        #expect(p[0].body == "Deniz · ara\nAyşe · faturayı gönder · 2 gün önce")
-        #expect(p[1].body == "Deniz · ara\nAyşe · faturayı gönder · 3 gün önce")
+        #expect(p[0].fireDate == date(2026, 10, 26, 12))
+        #expect(p[0].title == "Seni bekleyen işler var!")
+        #expect(p[0].body == "Deniz · ara\nAyşe · faturayı gönder · 4 gün önce")
+        #expect(p[1].body == "Deniz · ara\nAyşe · faturayı gönder · 5 gün önce")
     }
-    @Test func digestSkipsTodayWhenNoonPassed() {
+    @Test func digestStartsFromLastActivityNotFromNow() {
         let undated = make("Deniz", "ara", nil)
-        let p = plan([undated], now: date(2026, 10, 24, 13))
-        #expect(p[0].fireDate == date(2026, 10, 25, 12))
+        let p = plan([undated], now: date(2026, 10, 24, 9), lastActivity: date(2026, 10, 20, 18))
+        #expect(p[0].fireDate == date(2026, 10, 24, 12))
+        #expect(p.count == 12)
     }
     @Test func noDigestWhenNothingPending() {
         #expect(plan([teklif()]).allSatisfy { !$0.id.hasPrefix("digest") })

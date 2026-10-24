@@ -30,10 +30,12 @@ public struct PlannedNotification: Equatable, Sendable {
 
 private let maxPending = 60
 private let digestDays = 14
+/// The "Seni bekleyen işler var!" nudge only starts after this many days without opening or changing anything.
+private let digestAfterInactiveDays = 2
 
 public func planNotifications(
     items: [TodoItem], settings: NotificationSettings, now: Date, calendar: Calendar,
-    reminderCategories: Set<UUID>
+    reminderCategories: Set<UUID>, lastActivity: Date
 ) -> [PlannedNotification] {
     let today = calendar.startOfDay(for: now)
     func at(_ day: Date, _ time: DateComponents) -> Date {
@@ -68,8 +70,9 @@ public func planNotifications(
     }
 
     if !digestItems.isEmpty {
+        let first = calendar.date(byAdding: .day, value: digestAfterInactiveDays, to: calendar.startOfDay(for: lastActivity))!
         for offset in 0..<digestDays {
-            let day = calendar.date(byAdding: .day, value: offset, to: today)!
+            let day = calendar.date(byAdding: .day, value: offset, to: first)!
             let body = digestItems.map { item in
                 guard let due = item.dueDate else { return line(item) }
                 return "\(line(item)) · \(dueLabelText(due: due, now: day, calendar: calendar).text)"
@@ -78,7 +81,7 @@ public func planNotifications(
             out.append(PlannedNotification(
                 id: String(format: "digest-%04d-%02d-%02d", c.year!, c.month!, c.day!),
                 fireDate: at(day, settings.digestTime),
-                title: "Bekleyen işler", body: body))
+                title: "Seni bekleyen işler var!", body: body))
         }
     }
 

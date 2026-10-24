@@ -21,7 +21,7 @@ struct PanelView: View {
         }
         .padding(10)
         .frame(width: 300)
-        .onAppear { model.refreshBadge() }
+        .onAppear { model.refreshBadge(); model.touch() }
         .onDisappear { screen = .list }
     }
 
