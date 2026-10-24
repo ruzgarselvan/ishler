@@ -17,7 +17,7 @@ import Foundation
     @Test func weekdaysWithPrefixWords() {
         let e = parse("Send proposal to Mert by Friday")
         #expect(e.dueDate == date(2026, 10, 30))
-        #expect(e.action == "Send proposal to")
+        #expect(e.action == "Send proposal")
         #expect(parse("Review on Monday").dueDate == date(2026, 10, 26))
         #expect(parse("Review next monday").dueDate == date(2026, 10, 26))
     }
@@ -42,5 +42,15 @@ import Foundation
         #expect(e.repeatRule == "weekly:2" && e.dueDate == date(2026, 10, 26))
         #expect(parse("Back up every day").repeatRule == "daily")
         #expect(parse("Invoice monthly").repeatRule == "monthly")
+    }
+    @Test func trailingPrepositionIsDropped() {
+        let e = parse("Send the proposal to Acme by Friday")
+        #expect(e.person == "Acme" && e.action == "Send the proposal")
+        #expect(parse("Write to Mert tomorrow").action == "Write")
+    }
+    @Test func titleBeforeNameStaysWithName() {
+        let e = parse("Write to Prof. Tuğba 24 november")
+        #expect(e.person == "Prof. Tuğba" && e.action == "Write")
+        #expect(parse("Email Dr. Smith tomorrow").person == "Dr. Smith")
     }
 }

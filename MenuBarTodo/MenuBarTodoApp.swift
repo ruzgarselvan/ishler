@@ -13,10 +13,15 @@ struct MenuBarTodoApp: App {
             if ProcessInfo.processInfo.arguments.contains("-demoWindow") {
                 if ProcessInfo.processInfo.arguments.contains("-demoDark") { NSApp.appearance = NSAppearance(named: .darkAqua) }
                 else { NSApp.appearance = NSAppearance(named: .aqua) }
-                DemoWindow.show(model: model)
+                if let out = ProcessInfo.processInfo.arguments.drop(while: { $0 != "-demoOut" }).dropFirst().first {
+                    Task { await model.start() }
+                    try? await Task.sleep(for: .seconds(4))
+                    DemoRender.panel(model: model, dark: ProcessInfo.processInfo.arguments.contains("-demoDark"), to: out)
+                    NSApp.terminate(nil)
+                } else { DemoWindow.show(model: model) }
             }
             #endif
-            model.applyAppMode()
+            if !ProcessInfo.processInfo.arguments.contains("-demoWindow") { model.applyAppMode() }
             QuickAdd.shared.setEnabled(model.settingsStore.quickAddHotkey)
             await model.start()
         }

@@ -8,6 +8,7 @@ enum DemoWindow {
     private static var window: NSWindow?
 
     static func show(model: AppModel) {
+        NSLog("ishler demo: show window")
         NSApp.setActivationPolicy(.regular)
         let view = PanelView().environment(model).modelContainer(model.store.container)
         let host = NSHostingView(rootView: view)
@@ -33,8 +34,9 @@ enum DemoWindow {
                 let bounds = host.bounds
                 if let rep = host.bitmapImageRepForCachingDisplay(in: bounds) {
                     host.cacheDisplay(in: bounds, to: rep)
-                    try? rep.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: out))
+                    try? rep.representation(using: .png, properties: [:])?.write(to: URL(fileURLWithPath: out)) // run a copy re-signed without the sandbox so this path is writable
                 }
+                NSLog("ishler demo: captured \(out) rep=\(host.bitmapImageRepForCachingDisplay(in: bounds) != nil)")
                 NSApp.terminate(nil)
             }
         }

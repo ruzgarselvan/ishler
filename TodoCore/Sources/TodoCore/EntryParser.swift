@@ -99,7 +99,15 @@ public struct EntryParser: Sendable {
                 person = String(tokens[i].split(whereSeparator: { $0 == "'" || $0 == "’" }).first ?? "")
             }
         }
+        // "Prof. Tuğba", "Dr. Smith": an abbreviation in front of the name belongs to the name.
+        if let i = personIndex, tokens[i].hasSuffix("."), tokens[i].count <= 5, i + 1 < tokens.count,
+           tokens[i + 1].first?.isUppercase == true {
+            let name = String(tokens[i + 1].split(whereSeparator: { $0 == "'" || $0 == "’" }).first ?? "")
+            person = "\(tokens[i]) \(name)"
+            tokens.remove(at: i + 1)
+        }
         if let i = personIndex { tokens.remove(at: i) }
+        while let last = tokens.last, tokens.count > 1, ["to", "for", "with", "from"].contains(stem(last)) { tokens.removeLast() }
 
         let rest = tokens.joined(separator: " ")
         return ParsedEntry(

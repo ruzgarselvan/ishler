@@ -169,10 +169,14 @@ final class AppModel {
             catch { FileHandle.standardError.write(Data("ishler: schema init failed: \(error)\n".utf8)) }
         }
         if ProcessInfo.processInfo.arguments.contains("-seedDemo"), store.allItems().isEmpty {
-            for text in ["Cuma'ya kadar X müşterisine teklif at x", "Deniz'i ara 17:30", "her pazartesi Mert haftalık plan",
-                         "çekim sonrası Deniz Cuma", "tuğba hocaya yaz 24 kasim", "Call Mert tomorrow 9:30am", "Pay invoice by Friday 1",
-                         "Ayşe'ye mail at (o)"] { add(text) }
-            store.add(ParsedEntry(person: "Ayşe", action: "faturayı gönder", dueDate: calendar.date(byAdding: .day, value: -2, to: calendar.startOfDay(for: Date()))))
+            let turkish = Bundle.main.preferredLocalizations.first == "tr"
+            let samples = turkish
+                ? ["Cuma'ya kadar Acme müşterisine teklif at x", "Deniz'i ara 17:30", "her pazartesi Mert haftalık plan", "çekim sonrası Deniz Cuma",
+                   "Tuğba hocaya yaz 24 kasim", "Mert'i ara yarın 9:30", "Fatura gönder Ayşe'ye Cuma 1", "Ayşe'ye mail at (o)"]
+                : ["Send the proposal to Acme by Friday x", "Call Deniz 5:30pm", "every monday Mert weekly plan", "after shoot Deniz Friday",
+                   "Write to Prof. Tuğba 24 november", "Call Mert tomorrow 9:30am", "Pay the invoice by Friday 1", "Email Ayşe (s)"]
+            for text in samples { add(text) }
+            store.add(ParsedEntry(person: "Ayşe", action: Bundle.main.preferredLocalizations.first == "tr" ? "faturayı gönder" : "send the invoice", dueDate: calendar.date(byAdding: .day, value: -2, to: calendar.startOfDay(for: Date()))))
             if !settingsStore.categories.isEmpty && !ProcessInfo.processInfo.arguments.contains("-demoStore") { settingsStore.categories[0].remind = true }
         }
         // Debug aid: `-seedCloudKit` adds one item so CloudKit creates its record type in the Development schema.
