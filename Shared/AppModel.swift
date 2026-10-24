@@ -133,7 +133,8 @@ final class AppModel {
     func start() async {
         UNUserNotificationCenter.current().delegate = notificationHandler
         NotificationActions.register()
-        _ = await SystemNotificationCenter.requestAuthorization()
+        // Asking can wait on the user, so it must not hold up the rest of start-up; notifications re-plan once answered.
+        Task { _ = await SystemNotificationCenter.requestAuthorization(); await reschedule() }
         UserDefaults.standard.set(Date(), forKey: Self.activityKey)
         #if os(macOS)
         applyAppearance()
@@ -148,6 +149,13 @@ final class AppModel {
             #endif
             do { try await Task.detached(priority: .userInitiated) { try TodoStore.initializeCloudKitSchema() }.value; FileHandle.standardError.write(Data("ishler: CloudKit schema initialized\n".utf8)) }
             catch { FileHandle.standardError.write(Data("ishler: schema init failed: \(error)\n".utf8)) }
+        }
+        if ProcessInfo.processInfo.arguments.contains("-seedDemo"), store.allItems().isEmpty {
+            for text in ["Cuma'ya kadar X müşterisine teklif at x", "Deniz'i ara 17:30", "her pazartesi Mert haftalık plan",
+                         "çekim sonrası Deniz Cuma", "tuğba hocaya yaz 24 kasim", "Call Mert tomorrow 9:30am", "Pay invoice by Friday 1",
+                         "Ayşe'ye mail at (o)"] { add(text) }
+            store.add(ParsedEntry(person: "Ayşe", action: "faturayı gönder", dueDate: calendar.date(byAdding: .day, value: -2, to: calendar.startOfDay(for: Date()))))
+            if !settingsStore.categories.isEmpty { settingsStore.categories[0].remind = true }
         }
         // Debug aid: `-seedCloudKit` adds one item so CloudKit creates its record type in the Development schema.
         if ProcessInfo.processInfo.arguments.contains("-seedCloudKit"), !store.allItems().contains(where: { $0.action == "iCloud test" }) {

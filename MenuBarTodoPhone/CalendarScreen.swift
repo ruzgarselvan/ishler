@@ -17,7 +17,8 @@ struct CalendarScreen: View {
     var body: some View {
         let open = items.filter { !$0.isDone && $0.dueDate != nil }
         let dayItems = open.filter { cal.isDate($0.dueDate!, inSameDayAs: selected) }
-        let dayEvents = (events.byDay[cal.startOfDay(for: selected)] ?? []).sorted { $0.startDate < $1.startDate }
+        let ownIDs = Set(items.compactMap(\.eventID))
+        let dayEvents = events.events(on: selected, calendar: cal, excluding: ownIDs).sorted { $0.startDate < $1.startDate }
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
@@ -96,7 +97,7 @@ struct CalendarScreen: View {
         let isToday = cal.isDateInToday(day)
         let isSelected = cal.isDate(day, inSameDayAs: selected)
         let hasItem = open.contains { cal.isDate($0.dueDate!, inSameDayAs: day) }
-        let hasEvent = !(events.byDay[cal.startOfDay(for: day)] ?? []).isEmpty
+        let hasEvent = !events.events(on: day, calendar: cal, excluding: Set(open.compactMap(\.eventID))).isEmpty
         return Button { selected = day } label: {
             VStack(spacing: 2) {
                 Text("\(cal.component(.day, from: day))")
