@@ -13,7 +13,7 @@ enum DemoRender {
         let groups = sortedOpenItems(model.store.openItems(), now: now, calendar: model.calendar)
         let view = VStack(alignment: .leading, spacing: 6) {
             HStack {
-                Text("Write a new task…").foregroundStyle(.secondary).font(.system(size: 13))
+                Text(LocalizedStringKey("Yeni iş yaz…")).foregroundStyle(.secondary).font(.system(size: 13))
                 Spacer()
             }
             .padding(.horizontal, 10).padding(.vertical, 6)
@@ -27,7 +27,7 @@ enum DemoRender {
                 }
             }
             HStack(spacing: 12) {
-                Text("\(model.store.openItems().count) open tasks")
+                Text(LocalizedStringKey("\(model.store.openItems().count) açık iş"))
                 Spacer()
                 Image(systemName: "scope"); Image(systemName: "calendar"); Image(systemName: "archivebox")
                 Image(systemName: "gearshape"); Image(systemName: "power")
@@ -40,7 +40,7 @@ enum DemoRender {
         .overlay(RoundedRectangle(cornerRadius: 22).strokeBorder(Color.primary.opacity(0.12)))
         .padding(30)
         .environment(\.colorScheme, dark ? .dark : .light)
-        .environment(\.locale, Locale(identifier: "en"))
+        .environment(\.locale, Locale(identifier: Bundle.main.preferredLocalizations.first ?? "en"))
 
         let renderer = ImageRenderer(content: view)
         renderer.scale = 2

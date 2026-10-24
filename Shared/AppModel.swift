@@ -185,6 +185,7 @@ final class AppModel {
             }
             FileHandle.standardError.write(Data((lines.joined(separator: "\n") + "\n").utf8))
         }
+        if ProcessInfo.processInfo.arguments.contains("-demoStore") { settingsStore.categories = TodoCategory.defaults() }
         if ProcessInfo.processInfo.arguments.contains("-seedDemo"), store.allItems().isEmpty {
             let turkish = Bundle.main.preferredLocalizations.first == "tr"
             let samples = turkish
