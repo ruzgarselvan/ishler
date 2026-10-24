@@ -6,7 +6,12 @@ public final class TodoStore {
     public let container: ModelContainer
     private var context: ModelContext { container.mainContext }
 
+    /// macOS uses a team-prefixed group; iOS uses a "group." one. Each platform's store is synced by iCloud, not shared.
+    #if os(macOS)
+    public static let appGroupID = "HK34NNSZ5W.com.ruzgar.ishler"
+    #else
     public static let appGroupID = "group.com.ruzgar.ishler"
+    #endif
     public static let cloudContainerID = "iCloud.com.ruzgar.ishler"
 
     /// In memory for tests. Otherwise the store lives in the shared App Group container (so widgets and extensions can

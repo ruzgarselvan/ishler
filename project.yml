@@ -31,7 +31,7 @@ targets:
         com.apple.security.app-sandbox: true
         com.apple.security.personal-information.calendars: true
         com.apple.security.network.client: true
-        com.apple.security.application-groups: [group.com.ruzgar.ishler]
+        com.apple.security.application-groups: [HK34NNSZ5W.com.ruzgar.ishler]
         com.apple.developer.icloud-container-identifiers: [iCloud.com.ruzgar.ishler]
         com.apple.developer.icloud-services: [CloudKit]
         com.apple.developer.aps-environment: development
