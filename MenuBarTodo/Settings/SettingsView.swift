@@ -38,6 +38,15 @@ struct SettingsView: View {
                         .pickerStyle(.segmented).labelsHidden().controlSize(.small)
                     }
 
+                    section("Uygulama", footnote: "Dock'ta normal uygulama olarak ya da yalnızca menü bar'da kullanabilirsin.") {
+                        Picker("", selection: $store.appMode) {
+                            Text("Menü bar").tag(AppMode.menuBar)
+                            Text("Dock").tag(AppMode.dock)
+                            Text("İkisi").tag(AppMode.both)
+                        }
+                        .pickerStyle(.segmented).labelsHidden().controlSize(.small)
+                    }
+
                     section("Menü bar", footnote: nil) {
                         Picker("", selection: $store.menuBarStyle) {
                             Text("Sayı").tag(MenuBarStyle.count)
@@ -87,6 +96,7 @@ struct SettingsView: View {
         .onAppear { launchAtLogin = model.launchAtLogin; exportURL = model.makeExport() }
         .onChange(of: launchAtLogin) { model.launchAtLogin = launchAtLogin }
         .onChange(of: store.menuBarStyle) { model.refreshBadge() }
+        .onChange(of: store.appMode) { model.applyAppMode() }
         .onChange(of: store.quickAddHotkey) { QuickAdd.shared.setEnabled(store.quickAddHotkey) }
         .onChange(of: store.writeToCalendar) { Task { await model.reschedule() } }
         .onChange(of: store.templates) { }

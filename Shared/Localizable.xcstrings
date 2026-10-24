@@ -2080,6 +2080,70 @@
           }
         }
       }
+    },
+    "Uygulama": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Uygulama"
+          }
+        }
+      }
+    },
+    "Dock'ta normal uygulama olarak ya da yalnızca menü bar'da kullanabilirsin.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use it as a normal app in the Dock, or only from the menu bar."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock'ta normal uygulama olarak ya da yalnızca menü bar'da kullanabilirsin."
+          }
+        }
+      }
+    },
+    "Dock": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dock"
+          }
+        }
+      }
+    },
+    "İkisi": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Both"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İkisi"
+          }
+        }
+      }
     }
   },
   "version": "1.0"

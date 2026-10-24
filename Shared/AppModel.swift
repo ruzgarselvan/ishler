@@ -61,6 +61,12 @@ final class AppModel {
         case .dark: NSAppearance(named: .darkAqua)
         }
     }
+
+    /// Dock icon on or off for the chosen mode; the window itself is a SwiftUI scene.
+    func applyAppMode() {
+        NSApp.setActivationPolicy(settingsStore.appMode.showsDockIcon ? .regular : .accessory)
+        if settingsStore.appMode.showsDockIcon { NSApp.activate(ignoringOtherApps: true) }
+    }
     #endif
 
     var colorScheme: ColorScheme? {

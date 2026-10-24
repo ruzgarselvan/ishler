@@ -16,13 +16,14 @@ struct MenuBarTodoApp: App {
                 DemoWindow.show(model: model)
             }
             #endif
+            model.applyAppMode()
             QuickAdd.shared.setEnabled(model.settingsStore.quickAddHotkey)
             await model.start()
         }
     }
 
     var body: some Scene {
-        MenuBarExtra {
+        MenuBarExtra(isInserted: Binding(get: { model.settingsStore.appMode.showsMenuBarIcon }, set: { _ in })) {
             PanelView()
                 .environment(model)
                 .modelContainer(model.store.container)
@@ -37,5 +38,18 @@ struct MenuBarTodoApp: App {
             }
         }
         .menuBarExtraStyle(.window)
+
+        // The normal-app window, used when the app is set to live in the Dock.
+        Window("ishler", id: "main") {
+            PanelView()
+                .environment(model)
+                .modelContainer(model.store.container)
+                .onAppear { if !model.settingsStore.appMode.showsDockIcon { closeMainWindow() } }
+        }
+        .windowResizability(.contentSize)
+    }
+
+    private func closeMainWindow() {
+        DispatchQueue.main.async { NSApp.windows.first { $0.title == "ishler" }?.close() }
     }
 }
