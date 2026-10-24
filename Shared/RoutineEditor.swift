@@ -12,38 +12,40 @@ struct RoutineEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? 12 : 16) {
-            ForEach($store.templates) { $routine in
+            ForEach(store.templates) { current in
+                let routineBinding = binding(for: current.id)
+                let routine = current
                 VStack(alignment: .leading, spacing: 6) {
                     HStack {
-                        TextField("İş adı", text: $routine.name).textFieldStyle(.plain).fontWeight(.semibold)
+                        TextField("İş adı", text: routineBinding.name).textFieldStyle(.plain).fontWeight(.semibold)
                         Button { store.templates.removeAll { $0.id == routine.id } } label: {
                             Image(systemName: "minus.circle.fill").foregroundStyle(.secondary)
                         }
                         .buttonStyle(.plain)
                     }
-                    Picker("Tekrar", selection: kind(for: $routine)) {
+                    Picker("Tekrar", selection: kind(for: routineBinding)) {
                         Text("Yok").tag(Kind.none)
                         Text("Her gün").tag(Kind.daily)
                         Text("Her hafta").tag(Kind.weekly)
                         Text("Her ay").tag(Kind.monthly)
                     }
                     if routine.schedule?.hasPrefix("weekly") == true {
-                        Picker("Haftanın günü", selection: weekday(for: $routine)) {
+                        Picker("Haftanın günü", selection: weekday(for: routineBinding)) {
                             ForEach(weekdayOrder, id: \.self) { Text(model.calendar.weekdaySymbols[$0 - 1]).tag($0) }
                         }
                     }
                     if routine.schedule?.hasPrefix("monthly") == true {
-                        Stepper("Ayın günü: \(dayOfMonth(routine.schedule))", value: dayBinding(for: $routine), in: 1...31)
+                        Stepper("Ayın günü: \(dayOfMonth(routine.schedule))", value: dayBinding(for: routineBinding), in: 1...31)
                     }
                     TextField("Adımlar, virgülle ayır", text: Binding(
                         get: { routine.steps.joined(separator: ", ") },
-                        set: { routine.steps = $0.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty } }
+                        set: { routineBinding.wrappedValue.steps = $0.split(separator: ",").map { $0.trimmingCharacters(in: .whitespaces) }.filter { !$0.isEmpty } }
                     ), axis: .vertical)
                     .textFieldStyle(.plain)
                     .foregroundStyle(.secondary)
                     .font(.system(size: compact ? 11 : 14))
                     if !store.categories.isEmpty {
-                        CategoryMenu(categories: store.categories, selection: $routine.categoryID)
+                        CategoryMenu(categories: store.categories, selection: routineBinding.categoryID)
                     }
                 }
             }
@@ -55,6 +57,14 @@ struct RoutineEditor: View {
                 .font(.system(size: compact ? 11 : 13)).foregroundStyle(.secondary)
         }
         .font(.system(size: compact ? 12 : 17))
+    }
+
+    /// Looks the routine up by id on every read and write, so deleting one never leaves a binding pointing past the end of the array.
+    private func binding(for id: UUID) -> Binding<ChecklistTemplate> {
+        Binding(
+            get: { store.templates.first { $0.id == id } ?? ChecklistTemplate(id: id, name: "", steps: []) },
+            set: { new in if let i = store.templates.firstIndex(where: { $0.id == id }) { store.templates[i] = new } }
+        )
     }
 
     /// Weekday numbers in the calendar's week order.

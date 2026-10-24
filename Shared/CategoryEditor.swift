@@ -12,7 +12,9 @@ struct CategoryEditor: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? 8 : 12) {
-            ForEach($store.categories) { $category in
+            ForEach(store.categories) { current in
+                let categoryBinding = binding(for: current.id)
+                let category = current
                 VStack(alignment: .leading, spacing: 8) {
                     HStack(spacing: 8) {
                         Button {
@@ -23,15 +25,15 @@ struct CategoryEditor: View {
                         }
                         .buttonStyle(.plain)
                         .help("Renk seç")
-                        TextField("Ad", text: $category.name).textFieldStyle(.plain)
-                        TextField("x", text: $category.shortcut)
+                        TextField("Ad", text: categoryBinding.name).textFieldStyle(.plain)
+                        TextField("x", text: categoryBinding.shortcut)
                             .textFieldStyle(.plain)
                             .multilineTextAlignment(.center)
                             .frame(width: 34)
                             .padding(.vertical, 3)
                             .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
-                            .onChange(of: category.shortcut) { category.shortcut = String(category.shortcut.prefix(3)) }
-                        Button { category.remind.toggle() } label: {
+                            .onChange(of: category.shortcut) { categoryBinding.wrappedValue.shortcut = String(categoryBinding.wrappedValue.shortcut.prefix(3)) }
+                        Button { categoryBinding.wrappedValue.remind.toggle() } label: {
                             Image(systemName: category.remind ? "bell.fill" : "bell.slash")
                                 .foregroundStyle(category.remind ? Color.accentColor : Color.secondary)
                         }
@@ -46,7 +48,7 @@ struct CategoryEditor: View {
                         HStack(spacing: compact ? 8 : 12) {
                             ForEach(palette, id: \.self) { hex in
                                 Button {
-                                    category.colorHex = hex
+                                    categoryBinding.wrappedValue.colorHex = hex
                                     expanded = nil
                                 } label: {
                                     Circle().fill(Color(hex: hex)).frame(width: compact ? 20 : 28, height: compact ? 20 : 28)
@@ -75,6 +77,14 @@ struct CategoryEditor: View {
             }
         }
         .font(.system(size: compact ? 12 : 17))
+    }
+
+    /// Looks the category up by id on every read and write, so deleting one never leaves a binding pointing past the end of the array.
+    private func binding(for id: UUID) -> Binding<TodoCategory> {
+        Binding(
+            get: { store.categories.first { $0.id == id } ?? TodoCategory(id: id, name: "", shortcut: "", colorHex: "#8E8E93") },
+            set: { new in if let i = store.categories.firstIndex(where: { $0.id == id }) { store.categories[i] = new } }
+        )
     }
 
     private func addCategory() {
