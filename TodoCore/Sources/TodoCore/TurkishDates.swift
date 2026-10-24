@@ -20,6 +20,13 @@ private func matchIndex(_ stem: String, in names: [String]) -> Int? {
 private let weekdays = ["pazar", "pazartesi", "salı", "çarşamba", "perşembe", "cuma", "cumartesi"] // index+1 = Calendar weekday
 private let months = ["ocak", "şubat", "mart", "nisan", "mayıs", "haziran", "temmuz", "ağustos", "eylül", "ekim", "kasım", "aralık"]
 
+private let numberWords: [String: Int] = [
+    "bir": 1, "iki": 2, "üç": 3, "dört": 4, "beş": 5, "altı": 6, "yedi": 7, "sekiz": 8, "dokuz": 9,
+    "on": 10, "onbeş": 15, "yirmi": 20, "otuz": 30,
+]
+
+private func number(_ stem: String) -> Int? { Int(stem) ?? numberWords[stem] }
+
 struct DateMatch {
     let date: Date
     let tokenRange: Range<Int>
@@ -55,7 +62,7 @@ func resolveTurkishDate(tokens: [String], now: Date, calendar: Calendar) -> Date
             let wd = calendar.component(.weekday, from: today)
             return DateMatch(date: add(days: (w + 1 - wd + 7) % 7), tokenRange: i..<trailing(i + 1))
         }
-        if let n = Int(s), i + 1 < stems.count {
+        if let n = number(s), i + 1 < stems.count {
             if let m = matchIndex(stems[i + 1], in: months), (1...31).contains(n) {
                 var comps = calendar.dateComponents([.year], from: today)
                 comps.month = m + 1
@@ -64,8 +71,16 @@ func resolveTurkishDate(tokens: [String], now: Date, calendar: Calendar) -> Date
                 if d < today { d = calendar.date(byAdding: .year, value: 1, to: d)! }
                 return DateMatch(date: d, tokenRange: i..<trailing(i + 2))
             }
-            if stems[i + 1] == "gün", i + 2 < stems.count, stems[i + 2] == "sonra" {
-                return DateMatch(date: add(days: n), tokenRange: i..<(i + 3))
+            if i + 2 < stems.count, stems[i + 2] == "sonra" {
+                let unit: Calendar.Component? = switch stems[i + 1] {
+                case "gün": .day
+                case "hafta": .weekOfYear
+                case "ay": .month
+                default: nil
+                }
+                if let unit, let d = calendar.date(byAdding: unit, value: n, to: today) {
+                    return DateMatch(date: d, tokenRange: i..<(i + 3))
+                }
             }
         }
     }

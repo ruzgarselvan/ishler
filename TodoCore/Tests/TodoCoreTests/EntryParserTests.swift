@@ -61,4 +61,15 @@ import Foundation
     @Test func emptyInput() {
         #expect(parse("   ").action == "")
     }
+    @Test func numberWordDaysLater() {
+        let e = parse("üç gün sonra ahmete git")
+        #expect(e.dueDate == date(2026, 10, 27))
+        #expect(e.action == "ahmete git")
+        #expect(e.dateText == "üç gün sonra")
+    }
+    @Test func weeksAndMonthsLater() {
+        #expect(parse("2 hafta sonra Mert ara").dueDate == date(2026, 11, 7))
+        #expect(parse("bir hafta sonra Mert ara").dueDate == date(2026, 10, 31))
+        #expect(parse("iki ay sonra Mert ara").dueDate == date(2026, 12, 24))
+    }
 }
