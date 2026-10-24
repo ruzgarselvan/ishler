@@ -6,17 +6,30 @@ public final class TodoStore {
     public let container: ModelContainer
     private var context: ModelContext { container.mainContext }
 
+    public static let appGroupID = "group.com.ruzgar.ishler"
+    public static let cloudContainerID = "iCloud.com.ruzgar.ishler"
+
+    /// In memory for tests. Otherwise the store lives in the shared App Group container (so widgets and extensions can
+    /// read it) and syncs through the user's private iCloud database; without iCloud it quietly stays local.
     public init(inMemory: Bool = false) throws {
         let schema = Schema([TodoItem.self])
-        let config: ModelConfiguration
         if inMemory {
-            config = ModelConfiguration(isStoredInMemoryOnly: true)
-        } else {
-            let dir = URL.applicationSupportDirectory.appending(path: "MenuBarTodo", directoryHint: .isDirectory)
-            try FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
-            config = ModelConfiguration(schema: schema, url: dir.appending(path: "todo.store"))
+            container = try ModelContainer(for: schema, configurations: ModelConfiguration(isStoredInMemoryOnly: true))
+            return
         }
-        container = try ModelContainer(for: schema, configurations: config)
+        let fm = FileManager.default
+        let support = URL.applicationSupportDirectory.appending(path: "MenuBarTodo", directoryHint: .isDirectory)
+        let dir = fm.containerURL(forSecurityApplicationGroupIdentifier: Self.appGroupID) ?? support
+        try fm.createDirectory(at: dir, withIntermediateDirectories: true)
+        let url = dir.appending(path: "ishler.store")
+        migrateStore(from: support.appending(path: "todo.store"), to: url)
+        do {
+            container = try ModelContainer(for: schema, configurations:
+                ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .private(Self.cloudContainerID)))
+        } catch {
+            container = try ModelContainer(for: schema, configurations:
+                ModelConfiguration(schema: schema, url: url, cloudKitDatabase: .none))
+        }
     }
 
     @discardableResult
@@ -99,4 +112,16 @@ public final class TodoStore {
     private func all() -> [TodoItem] {
         (try? context.fetch(FetchDescriptor<TodoItem>())) ?? []
     }
+}
+
+/// Copies an old store (with its -wal/-shm files) to a new location, once. Returns whether anything was copied.
+@discardableResult
+public func migrateStore(from old: URL, to new: URL) -> Bool {
+    let fm = FileManager.default
+    guard fm.fileExists(atPath: old.path), !fm.fileExists(atPath: new.path) else { return false }
+    for suffix in ["", "-wal", "-shm"] {
+        let from = URL(filePath: old.path + suffix), to = URL(filePath: new.path + suffix)
+        if fm.fileExists(atPath: from.path) { try? fm.copyItem(at: from, to: to) }
+    }
+    return true
 }
