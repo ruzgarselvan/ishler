@@ -11,10 +11,11 @@ struct DueLabel {
         let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: now), to: calendar.startOfDay(for: due)).day ?? 0
         isOverdue = days < 0
         switch days {
-        case ..<0: text = "\(-days) gün"
+        case ..<(-1): text = "\(-days) gün önce"
+        case -1: text = "Dün"
         case 0: text = "Bugün"
-        case 1...7: text = due.formatted(.dateTime.weekday(.abbreviated).locale(Locale(identifier: "tr_TR")))
-        default: text = due.formatted(.dateTime.day().month(.abbreviated).locale(Locale(identifier: "tr_TR")))
+        case 1: text = "Yarın"
+        default: text = due.formatted(.dateTime.day().month(.wide).locale(Locale(identifier: "tr_TR")))
         }
     }
 }
