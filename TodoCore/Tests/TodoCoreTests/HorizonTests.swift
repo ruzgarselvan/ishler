@@ -85,4 +85,11 @@ import Foundation
         a.appearance = .dark
         #expect(SettingsStore(defaults: suite).appearance == .dark)
     }
+    @Test func appModeDefaultsToMenuBarAndPersists() {
+        let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
+        let a = SettingsStore(defaults: suite)
+        #expect(a.appMode == .menuBar)
+        a.appMode = .both
+        #expect(SettingsStore(defaults: suite).appMode == .both)
+    }
 }

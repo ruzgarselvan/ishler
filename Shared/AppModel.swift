@@ -14,7 +14,13 @@ import TodoCore
 @Observable @MainActor
 final class AppModel {
     /// One model per process, so App Intents (Siri, Shortcuts) write to the same store as the UI.
-    static let shared = AppModel(store: try! TodoStore())
+    static let shared: AppModel = {
+        #if DEBUG
+        // `-demoStore`: throwaway in-memory data (for screenshots) so real data is never touched.
+        if ProcessInfo.processInfo.arguments.contains("-demoStore") { return AppModel(store: try! TodoStore(inMemory: true)) }
+        #endif
+        return AppModel(store: try! TodoStore())
+    }()
 
     let store: TodoStore
     let settingsStore: SettingsStore
@@ -161,7 +167,7 @@ final class AppModel {
                          "çekim sonrası Deniz Cuma", "tuğba hocaya yaz 24 kasim", "Call Mert tomorrow 9:30am", "Pay invoice by Friday 1",
                          "Ayşe'ye mail at (o)"] { add(text) }
             store.add(ParsedEntry(person: "Ayşe", action: "faturayı gönder", dueDate: calendar.date(byAdding: .day, value: -2, to: calendar.startOfDay(for: Date()))))
-            if !settingsStore.categories.isEmpty { settingsStore.categories[0].remind = true }
+            if !settingsStore.categories.isEmpty && !ProcessInfo.processInfo.arguments.contains("-demoStore") { settingsStore.categories[0].remind = true }
         }
         // Debug aid: `-seedCloudKit` adds one item so CloudKit creates its record type in the Development schema.
         if ProcessInfo.processInfo.arguments.contains("-seedCloudKit"), !store.allItems().contains(where: { $0.action == "iCloud test" }) {

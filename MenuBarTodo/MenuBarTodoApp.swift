@@ -9,6 +9,13 @@ struct MenuBarTodoApp: App {
     init() {
         let model = AppModel.shared
         Task {
+            #if DEBUG
+            if ProcessInfo.processInfo.arguments.contains("-demoWindow") {
+                if ProcessInfo.processInfo.arguments.contains("-demoDark") { NSApp.appearance = NSAppearance(named: .darkAqua) }
+                else { NSApp.appearance = NSAppearance(named: .aqua) }
+                DemoWindow.show(model: model)
+            }
+            #endif
             QuickAdd.shared.setEnabled(model.settingsStore.quickAddHotkey)
             await model.start()
         }

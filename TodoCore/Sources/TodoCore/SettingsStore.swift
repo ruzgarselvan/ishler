@@ -14,11 +14,13 @@ public final class SettingsStore {
         static let templates = "templates"
         static let calendarWrite = "writeToCalendar"
         static let quickAdd = "quickAddHotkey"
+        static let appMode = "appMode"
     }
     @ObservationIgnored private let defaults: UserDefaults
 
     public var appearance: Appearance { didSet { defaults.set(appearance.rawValue, forKey: Key.appearance) } }
     public var horizon: Horizon { didSet { defaults.set(horizon.rawValue, forKey: Key.horizon) } }
+    public var appMode: AppMode { didSet { defaults.set(appMode.rawValue, forKey: Key.appMode) } }
     public var menuBarStyle: MenuBarStyle { didSet { defaults.set(menuBarStyle.rawValue, forKey: Key.menuBar) } }
     /// Mirror dated items into Apple Calendar.
     public var writeToCalendar: Bool { didSet { defaults.set(writeToCalendar, forKey: Key.calendarWrite) } }
@@ -57,6 +59,7 @@ public final class SettingsStore {
         // The old on/off badge toggle maps to .count / .off.
         let legacyBadge = defaults.object(forKey: Key.badge) as? Bool ?? true
         self.menuBarStyle = defaults.string(forKey: Key.menuBar).flatMap(MenuBarStyle.init(rawValue:)) ?? (legacyBadge ? .count : .off)
+        self.appMode = defaults.string(forKey: Key.appMode).flatMap(AppMode.init(rawValue:)) ?? .menuBar
         self.writeToCalendar = defaults.object(forKey: Key.calendarWrite) as? Bool ?? true
         self.quickAddHotkey = defaults.object(forKey: Key.quickAdd) as? Bool ?? true
     }
