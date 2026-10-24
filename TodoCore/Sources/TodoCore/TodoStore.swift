@@ -76,6 +76,12 @@ public final class TodoStore {
         try? context.save()
     }
 
+    public func allItems() -> [TodoItem] { all() }
+
+    public func save() { try? context.save() }
+
+    public func item(id: UUID) -> TodoItem? { all().first { $0.id == id } }
+
     public func openItems() -> [TodoItem] {
         all().filter { !$0.isDone }
     }

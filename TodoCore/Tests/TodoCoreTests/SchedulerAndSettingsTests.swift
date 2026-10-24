@@ -4,7 +4,7 @@ import Foundation
 
 @MainActor final class FakeCenter: NotificationCenterProtocol {
     var log: [String] = []
-    func removeAllPending() { log.append("clear") }
+    func removeAllPending() async { log.append("clear") }
     func add(_ n: PlannedNotification, calendar: Calendar) async { log.append("add") }
 }
 

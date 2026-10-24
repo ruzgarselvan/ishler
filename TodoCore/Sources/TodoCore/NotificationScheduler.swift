@@ -2,15 +2,18 @@ import Foundation
 import UserNotifications
 
 @MainActor public protocol NotificationCenterProtocol {
-    func removeAllPending()
+    func removeAllPending() async
     func add(_ notification: PlannedNotification, calendar: Calendar) async
 }
 
 @MainActor public struct SystemNotificationCenter: NotificationCenterProtocol {
     public init() {}
 
-    public func removeAllPending() {
-        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+    /// Clears the planned notifications but keeps one-off snoozes ("snooze-…") the user asked for.
+    public func removeAllPending() async {
+        let center = UNUserNotificationCenter.current()
+        let ids = await center.pendingNotificationRequests().map(\.identifier).filter { !$0.hasPrefix("snooze-") }
+        center.removePendingNotificationRequests(withIdentifiers: ids)
     }
 
     public func add(_ n: PlannedNotification, calendar: Calendar) async {
@@ -41,7 +44,7 @@ public final class NotificationScheduler {
     }
 
     public func reschedule(items: [TodoItem], settings: NotificationSettings, now: Date, calendar: Calendar, reminderCategories: Set<UUID>, lastActivity: Date) async {
-        center.removeAllPending()
+        await center.removeAllPending()
         for n in planNotifications(items: items, settings: settings, now: now, calendar: calendar, reminderCategories: reminderCategories, lastActivity: lastActivity) {
             await center.add(n, calendar: calendar)
         }
