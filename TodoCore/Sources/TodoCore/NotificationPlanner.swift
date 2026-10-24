@@ -67,7 +67,8 @@ public func planNotifications(
             for k in 1...settings.eveningDaysBefore {
                 let day = calendar.date(byAdding: .day, value: -k, to: dueDay)!
                 let clock = item.dueMinutes.map { " " + timeString($0) } ?? ""
-                let when = k == 1 ? "Yarın\(clock)" : "\(longDate(dueDay, calendar: calendar))\(clock) · \(k) gün kaldı"
+                let when = k == 1 ? String(localized: "Yarın\(clock)")
+                                 : String(localized: "\(longDate(dueDay, calendar: calendar))\(clock) · \(k) gün kaldı")
                 out.append(PlannedNotification(
                     id: "item-\(item.id.uuidString)-evening-\(k)",
                     fireDate: at(day, settings.eveningTime),
@@ -78,12 +79,12 @@ public func planNotifications(
             out.append(PlannedNotification(
                 id: "item-\(item.id.uuidString)-time",
                 fireDate: at(dueDay, DateComponents(hour: minutes / 60, minute: minutes % 60)),
-                title: line(item), body: "Şimdi · \(timeString(minutes))", itemID: item.id))
+                title: line(item), body: String(localized: "Şimdi · \(timeString(minutes))"), itemID: item.id))
         } else {
             out.append(PlannedNotification(
                 id: "item-\(item.id.uuidString)-morning",
                 fireDate: at(dueDay, settings.morningTime),
-                title: line(item), body: "Bugün", itemID: item.id))
+                title: line(item), body: String(localized: "Bugün"), itemID: item.id))
         }
     }
 
@@ -99,7 +100,7 @@ public func planNotifications(
             out.append(PlannedNotification(
                 id: String(format: "digest-%04d-%02d-%02d", c.year!, c.month!, c.day!),
                 fireDate: at(day, settings.digestTime),
-                title: "Seni bekleyen işler var!", body: body))
+                title: String(localized: "Seni bekleyen işler var!"), body: body))
         }
     }
 

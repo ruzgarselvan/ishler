@@ -36,7 +36,7 @@ struct CategoryEditor: View {
                                 .foregroundStyle(category.remind ? Color.accentColor : Color.secondary)
                         }
                         .buttonStyle(.plain)
-                        .help(category.remind ? "Hatırlatma açık" : "Hatırlatma kapalı")
+                        .help(category.remind ? LocalizedStringKey("Hatırlatma açık") : LocalizedStringKey("Hatırlatma kapalı"))
                         Button {
                             store.categories.removeAll { $0.id == category.id }
                         } label: { Image(systemName: "minus.circle.fill").foregroundStyle(.secondary) }
@@ -81,7 +81,7 @@ struct CategoryEditor: View {
         let used = Set(store.categories.map { $0.shortcut.lowercased() })
         let shortcut = shortcutCandidates.first { !used.contains($0) } ?? ""
         let color = palette[store.categories.count % palette.count]
-        store.categories.append(TodoCategory(name: "Kategori", shortcut: shortcut, colorHex: color))
+        store.categories.append(TodoCategory(name: String(localized: "Kategori"), shortcut: shortcut, colorHex: color))
     }
 }
 

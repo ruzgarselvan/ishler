@@ -29,11 +29,7 @@ struct SettingsScreen: View {
                     }
                     .pickerStyle(.segmented)
                 } header: { Text("Hatırlatıcı") } footer: {
-                    Text(store.reminderCategoryIDs.isEmpty
-                         ? "Hatırlatma kapalı. Kategorilerden zili açarak başlat."
-                         : store.settings.eveningDaysBefore == 0
-                           ? "Zili açık kategorilerde teslim günü sabah bildirim gelir."
-                           : "Zili açık kategorilerde son \(store.settings.eveningDaysBefore) gün her akşam, teslim günü sabah bildirim gelir.")
+                    Text(footnote(store))
                 }
 
                 Section("Takvim ve yedek") {
@@ -58,5 +54,12 @@ struct SettingsScreen: View {
             .onChange(of: store.settings) { Task { await model.reschedule() } }
             .onChange(of: store.categories) { Task { await model.reschedule() } }
         }
+    }
+
+    private func footnote(_ store: SettingsStore) -> LocalizedStringKey {
+        if store.reminderCategoryIDs.isEmpty { return "Hatırlatma kapalı. Kategorilerden zili açarak başlat." }
+        let days = store.settings.eveningDaysBefore
+        return days == 0 ? "Zili açık kategorilerde teslim günü sabah bildirim gelir."
+                         : "Zili açık kategorilerde son \(days) gün her akşam, teslim günü sabah bildirim gelir."
     }
 }

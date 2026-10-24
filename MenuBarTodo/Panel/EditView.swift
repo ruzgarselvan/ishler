@@ -44,7 +44,7 @@ struct EditView: View {
                         if hasDate {
                             DatePicker("", selection: $date, displayedComponents: .date)
                                 .labelsHidden().datePickerStyle(.compact)
-                                .environment(\.locale, Locale(identifier: "tr_TR"))
+                                .environment(\.locale, appLocale)
                         }
                     }
                     if hasDate {

@@ -61,9 +61,9 @@ public enum NotificationActions {
 
     public static func register() {
         let actions = [
-            UNNotificationAction(identifier: done, title: "Yapıldı", options: []),
-            UNNotificationAction(identifier: snoozeHour, title: "1 saat sonra", options: []),
-            UNNotificationAction(identifier: snoozeTomorrow, title: "Yarın", options: []),
+            UNNotificationAction(identifier: done, title: String(localized: "Yapıldı"), options: []),
+            UNNotificationAction(identifier: snoozeHour, title: String(localized: "1 saat sonra"), options: []),
+            UNNotificationAction(identifier: snoozeTomorrow, title: String(localized: "Yarın"), options: []),
         ]
         UNUserNotificationCenter.current().setNotificationCategories([
             UNNotificationCategory(identifier: category, actions: actions, intentIdentifiers: [], options: [])

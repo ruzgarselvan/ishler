@@ -30,9 +30,9 @@ public struct TodoCategory: Codable, Identifiable, Equatable, Sendable {
 
     public static func defaults() -> [TodoCategory] {
         [
-            TodoCategory(name: "İş", shortcut: "x", colorHex: "#FF9500"),
-            TodoCategory(name: "Okul", shortcut: "o", colorHex: "#007AFF"),
-            TodoCategory(name: "Kişisel", shortcut: "k", colorHex: "#34C759"),
+            TodoCategory(name: String(localized: "category.work", defaultValue: "İş"), shortcut: String(localized: "shortcut.work", defaultValue: "x"), colorHex: "#FF9500"),
+            TodoCategory(name: String(localized: "category.school", defaultValue: "Okul"), shortcut: String(localized: "shortcut.school", defaultValue: "o"), colorHex: "#007AFF"),
+            TodoCategory(name: String(localized: "category.personal", defaultValue: "Kişisel"), shortcut: String(localized: "shortcut.personal", defaultValue: "k"), colorHex: "#34C759"),
         ]
     }
 }

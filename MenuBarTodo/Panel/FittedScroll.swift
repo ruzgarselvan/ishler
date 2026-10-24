@@ -22,7 +22,7 @@ struct FittedScroll<Content: View>: View {
 }
 
 struct PanelHeader: View {
-    let title: String
+    let title: LocalizedStringKey
     let onBack: () -> Void
 
     var body: some View {

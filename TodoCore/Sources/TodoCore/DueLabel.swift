@@ -4,19 +4,19 @@ import Foundation
 public func dueLabelText(due: Date, now: Date, calendar: Calendar) -> (text: String, isOverdue: Bool) {
     let days = calendar.dateComponents([.day], from: calendar.startOfDay(for: now), to: calendar.startOfDay(for: due)).day ?? 0
     switch days {
-    case ..<(-1): return ("\(-days) gün önce", true)
-    case -1: return ("Dün", true)
-    case 0: return ("Bugün", false)
-    case 1: return ("Yarın", false)
+    case ..<(-1): return (String(localized: "\(-days) gün önce"), true)
+    case -1: return (String(localized: "Dün"), true)
+    case 0: return (String(localized: "Bugün"), false)
+    case 1: return (String(localized: "Yarın"), false)
     default: return (longDate(due, calendar: calendar), false)
     }
 }
 
 func longDate(_ date: Date, calendar: Calendar) -> String {
     let f = DateFormatter()
-    f.locale = Locale(identifier: "tr_TR")
     f.calendar = calendar
     f.timeZone = calendar.timeZone
-    f.dateFormat = "d MMMM"
+    f.locale = calendar.locale ?? .current
+    f.setLocalizedDateFormatFromTemplate("dMMMM")
     return f.string(from: date)
 }

@@ -13,8 +13,7 @@ struct CalendarView: View {
     let onEdit: (TodoItem) -> Void
 
     private var cal: Calendar { model.calendar }
-    private let tr = Locale(identifier: "tr_TR")
-    private let weekdayInitials = ["P", "S", "Ç", "P", "C", "C", "P"]
+    private let tr = appLocale
 
     var body: some View {
         let open = items.filter { !$0.isDone && $0.dueDate != nil }
@@ -70,8 +69,8 @@ struct CalendarView: View {
         let days = monthDays(of: month, calendar: cal)
         return VStack(spacing: 2) {
             HStack(spacing: 0) {
-                ForEach(weekdayInitials.indices, id: \.self) { i in
-                    Text(weekdayInitials[i]).font(.system(size: 10)).foregroundStyle(.secondary).frame(maxWidth: .infinity)
+                ForEach(Array(weekdayInitials(cal).enumerated()), id: \.offset) { _, initial in
+                    Text(initial).font(.system(size: 10)).foregroundStyle(.secondary).frame(maxWidth: .infinity)
                 }
             }
             LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 0), count: 7), spacing: 2) {

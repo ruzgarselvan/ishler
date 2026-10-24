@@ -118,12 +118,18 @@ struct PhoneEntryField: View {
             if let p = e.person { chip(p) }
             if !e.action.isEmpty { chip(e.action.prefix(1).uppercased() + e.action.dropFirst()) }
             if let d = e.dueDate {
-                chip(d.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).locale(Locale(identifier: "tr_TR"))))
+                chip(d.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).locale(appLocale)))
             } else if !e.action.isEmpty {
-                chip("Tarih yok · Bugün'de bekler")
+                hint("Tarih yok · Bugün'de bekler")
             }
         }
         .padding(.horizontal, 6)
+    }
+
+    private func hint(_ key: LocalizedStringKey) -> some View {
+        Text(key).font(.footnote)
+            .padding(.horizontal, 10).padding(.vertical, 3)
+            .glassEffect(.regular, in: .capsule)
     }
 
     private func chip(_ s: String) -> some View {

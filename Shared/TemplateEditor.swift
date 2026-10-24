@@ -26,7 +26,7 @@ struct TemplateEditor: View {
                     .font(.system(size: compact ? 11 : 14))
                 }
             }
-            Button { store.templates.append(ChecklistTemplate(name: "Yeni şablon", steps: [])) } label: {
+            Button { store.templates.append(ChecklistTemplate(name: String(localized: "Yeni şablon"), steps: [])) } label: {
                 Label("Şablon ekle", systemImage: "plus.circle.fill")
             }
             .buttonStyle(.plain).foregroundStyle(Color.accentColor)

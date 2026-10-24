@@ -30,8 +30,7 @@ final class AppModel {
         self.store = store
         self.settingsStore = settingsStore
         var c = Calendar(identifier: .gregorian)
-        c.locale = Locale(identifier: "tr_TR")
-        c.firstWeekday = 2
+        c.locale = appLocale
         self.calendar = c
         notificationHandler.model = self
     }
@@ -194,7 +193,7 @@ final class AppModel {
     /// Writes all items to a temporary CSV file and returns its URL, for the share sheet.
     func makeExport() -> URL? {
         let csv = csvExport(items: store.allItems(), categories: settingsStore.categories, calendar: calendar)
-        let url = FileManager.default.temporaryDirectory.appending(path: "ishler-isler.csv")
+        let url = FileManager.default.temporaryDirectory.appending(path: "ishler-tasks.csv")
         return (try? csv.write(to: url, atomically: true, encoding: .utf8)) != nil ? url : nil
     }
 
@@ -216,7 +215,7 @@ final class AppModel {
         let items = store.openItems().map { item -> CSSearchableItem in
             let attributes = CSSearchableItemAttributeSet(contentType: .item)
             attributes.title = item.person.map { "\($0) · \(item.action)" } ?? item.action
-            attributes.contentDescription = item.dueDate.map { dueLabelText(due: $0, now: now, calendar: calendar).text } ?? "Bekliyor"
+            attributes.contentDescription = item.dueDate.map { dueLabelText(due: $0, now: now, calendar: calendar).text } ?? String(localized: "Bekliyor")
             return CSSearchableItem(uniqueIdentifier: item.id.uuidString, domainIdentifier: "ishler", attributeSet: attributes)
         }
         let index = CSSearchableIndex.default()

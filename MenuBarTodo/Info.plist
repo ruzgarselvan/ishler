@@ -25,10 +25,12 @@
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSUIElement</key>
 	<true/>
 	<key>NSCalendarsFullAccessUsageDescription</key>
-	<string>Takvimindeki etkinlikleri işlerinin yanında göstermek için.</string>
+	<string>ishler shows your calendar events next to your tasks and adds due dates to your calendar.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string></string>
 </dict>

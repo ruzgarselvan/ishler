@@ -40,7 +40,7 @@ struct EditSheet: View {
                     Toggle("Tarih", isOn: $hasDate)
                     if hasDate {
                         DatePicker("Gün", selection: $date, displayedComponents: .date)
-                            .environment(\.locale, Locale(identifier: "tr_TR"))
+                            .environment(\.locale, appLocale)
                         Toggle("Saat", isOn: $hasTime)
                         if hasTime { DatePicker("Saat", selection: $time, displayedComponents: .hourAndMinute) }
                     }

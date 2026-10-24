@@ -1,0 +1,22 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "NSCalendarsFullAccessUsageDescription": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ishler shows your calendar events next to your tasks and adds due dates to your calendar."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Takvimindeki etkinlikleri işlerinin yanında göstermek ve teslim tarihlerini takvimine eklemek için."
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

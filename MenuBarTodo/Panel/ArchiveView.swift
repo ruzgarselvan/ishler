@@ -34,7 +34,7 @@ struct ArchiveView: View {
                                 HStack {
                                     label(item).lineLimit(1)
                                     Spacer()
-                                    Text((item.doneAt ?? .now).formatted(.dateTime.day().month(.abbreviated).locale(Locale(identifier: "tr_TR"))))
+                                    Text((item.doneAt ?? .now).formatted(.dateTime.day().month(.abbreviated).locale(appLocale)))
                                         .foregroundStyle(.tertiary)
                                 }
                                 .font(.system(size: 12))

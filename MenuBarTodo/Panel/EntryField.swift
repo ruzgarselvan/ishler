@@ -38,12 +38,18 @@ struct EntryField: View {
             if let p = e.person { chip(p) }
             if !e.action.isEmpty { chip(e.action.prefix(1).uppercased() + e.action.dropFirst()) }
             if let d = e.dueDate {
-                chip(d.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).locale(Locale(identifier: "tr_TR"))))
+                chip(d.formatted(.dateTime.weekday(.abbreviated).day().month(.abbreviated).locale(appLocale)))
             } else if !e.action.isEmpty {
-                chip("Tarih yok · Bugün'de bekler")
+                hint("Tarih yok · Bugün'de bekler")
             }
         }
         .padding(.horizontal, 2)
+    }
+
+    private func hint(_ key: LocalizedStringKey) -> some View {
+        Text(key).font(.system(size: 11))
+            .padding(.horizontal, 8).padding(.vertical, 1)
+            .background(.quaternary, in: Capsule())
     }
 
     private func chip(_ s: String) -> some View {

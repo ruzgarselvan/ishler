@@ -14,7 +14,7 @@ struct ArchiveScreen: View {
                     HStack {
                         itemLabel(item).strikethrough().lineLimit(1)
                         Spacer()
-                        Text((item.doneAt ?? .now).formatted(.dateTime.day().month(.abbreviated).locale(Locale(identifier: "tr_TR"))))
+                        Text((item.doneAt ?? .now).formatted(.dateTime.day().month(.abbreviated).locale(appLocale)))
                             .font(.subheadline).foregroundStyle(.tertiary)
                     }
                     .foregroundStyle(.secondary)

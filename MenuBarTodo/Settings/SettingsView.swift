@@ -88,14 +88,14 @@ struct SettingsView: View {
         .onChange(of: store.categories) { Task { await model.reschedule() } }
     }
 
-    private func footnote(_ store: SettingsStore) -> String {
+    private func footnote(_ store: SettingsStore) -> LocalizedStringKey {
         if store.reminderCategoryIDs.isEmpty { return "Hatırlatma kapalı. Kategorilerden zili açarak başlat." }
         let days = store.settings.eveningDaysBefore
         return days == 0 ? "Zili açık kategorilerde teslim günü sabah bildirim gelir."
                          : "Zili açık kategorilerde son \(days) gün her akşam, teslim günü sabah bildirim gelir."
     }
 
-    private func section(_ title: String, footnote: String?, @ViewBuilder content: () -> some View) -> some View {
+    private func section(_ title: LocalizedStringKey, footnote: LocalizedStringKey?, @ViewBuilder content: () -> some View) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title).font(.system(size: 12, weight: .semibold))
             content()

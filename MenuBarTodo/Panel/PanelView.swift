@@ -59,7 +59,7 @@ struct PanelView: View {
                 }
             }
             HStack(spacing: 12) {
-                Text(groups.isEmpty ? "Açık iş yok" : "\(visible.filter { !$0.isDone }.count) açık iş")
+                Text(groups.isEmpty ? LocalizedStringKey("Açık iş yok") : LocalizedStringKey("\(visible.filter { !$0.isDone }.count) açık iş"))
                 Spacer()
                 Button { screen = .focus } label: { Image(systemName: "scope") }.help("Şimdi sadece bu")
                 Button { screen = .calendar } label: { Image(systemName: "calendar") }.help("Takvim")

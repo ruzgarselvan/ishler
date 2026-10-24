@@ -10,7 +10,7 @@ public func csvExport(items: [TodoItem], categories: [TodoCategory], calendar: C
     func field(_ text: String) -> String {
         text.contains(where: { $0 == "," || $0 == "\"" || $0 == "\n" }) ? "\"" + text.replacingOccurrences(of: "\"", with: "\"\"") + "\"" : text
     }
-    var lines = ["Kişi,İş,Tarih,Saat,Kategori,Durum,Tamamlandı,Tekrar"]
+    var lines = [String(localized: "Kişi,İş,Tarih,Saat,Kategori,Durum,Tamamlandı,Tekrar")]
     for item in items {
         let category = categories.first { $0.id == item.categoryID }?.name ?? ""
         let row = [
@@ -19,7 +19,7 @@ public func csvExport(items: [TodoItem], categories: [TodoCategory], calendar: C
             item.dueDate.map(day.string) ?? "",
             item.dueMinutes.map(timeString) ?? "",
             category,
-            item.isDone ? "Yapıldı" : "Açık",
+            item.isDone ? String(localized: "Yapıldı") : String(localized: "csv.open", defaultValue: "Açık"),
             item.doneAt.map(day.string) ?? "",
             item.repeatRule ?? "",
         ]
