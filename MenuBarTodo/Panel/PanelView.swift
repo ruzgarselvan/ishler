@@ -51,6 +51,7 @@ struct PanelView: View {
                 Spacer()
                 Button("Arşiv") { screen = .archive }
                 Button("Ayarlar") { screen = .settings }
+                Button("Çık") { NSApplication.shared.terminate(nil) }
             }
             .buttonStyle(.plain)
             .font(.system(size: 12))
