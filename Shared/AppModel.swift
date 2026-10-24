@@ -1,6 +1,8 @@
 import Foundation
 import Observation
+#if os(macOS)
 import ServiceManagement
+#endif
 import TodoCore
 
 @Observable @MainActor
@@ -22,12 +24,14 @@ final class AppModel {
     /// Open items that are overdue or due today (undated ones count as today).
     private(set) var badgeCount = 0
 
+    #if os(macOS)
     var launchAtLogin: Bool {
         get { SMAppService.mainApp.status == .enabled }
         set {
             if newValue { try? SMAppService.mainApp.register() } else { try? SMAppService.mainApp.unregister() }
         }
     }
+    #endif
 
     func refreshBadge() {
         let now = Date()

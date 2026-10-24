@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import TodoCore
 
 struct DueLabel {
@@ -25,4 +26,9 @@ func bucketTitle(_ b: Bucket) -> String {
     case .thisWeek: "Bu hafta"
     case .later: "Daha sonra"
     }
+}
+
+func itemLabel(_ item: TodoItem) -> Text {
+    guard let person = item.person else { return Text(item.action) }
+    return Text("\(Text(person).fontWeight(.semibold)) · \(item.action)")
 }

@@ -10,7 +10,7 @@ targets:
   MenuBarTodo:
     type: application
     platform: macOS
-    sources: [MenuBarTodo]
+    sources: [MenuBarTodo, Shared]
     dependencies:
       - package: TodoCore
     info:
@@ -28,6 +28,23 @@ targets:
         ENABLE_APP_SANDBOX: YES
         ENABLE_HARDENED_RUNTIME: YES
         GENERATE_INFOPLIST_FILE: NO
+  MenuBarTodoPhone:
+    type: application
+    platform: iOS
+    deploymentTarget: "26.0"
+    sources: [MenuBarTodoPhone, Shared]
+    dependencies:
+      - package: TodoCore
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.ruzgar.menubartodo.phone
+        SWIFT_VERSION: "6.0"
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: İşler
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
   MenuBarTodoTests:
     type: bundle.unit-test
     platform: macOS
