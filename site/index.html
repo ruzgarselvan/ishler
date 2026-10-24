@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ishler: cümle yaz, işin kendini hatırlatsın</title>
+<meta name="description" content="Menü bar'da ve telefonda küçük bir iş uygulaması. Bir cümle yaz, kişiyi, işi ve tarihi kendisi anlasın. Ücretsiz ve açık kaynak.">
+<link rel="icon" href="icon.png">
+<style>
+:root{--bg:#fff;--fg:#111113;--mut:#6b6b73;--card:#f4f4f7;--accent:#0a84ff;--line:#e4e4ea}
+@media (prefers-color-scheme:dark){:root{--bg:#0b0b0d;--fg:#f4f4f6;--mut:#9a9aa3;--card:#17171b;--line:#26262c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:17px/1.55 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased}
+main{max-width:760px;margin:0 auto;padding:64px 24px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:72px;font-size:15px}
+.top a{color:var(--mut);text-decoration:none;margin-left:20px}
+.top a:hover{color:var(--fg)}
+.logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:20px;letter-spacing:-.01em}
+.logo img{width:36px;height:36px;border-radius:9px}
+h1{font-size:clamp(34px,6vw,54px);line-height:1.08;letter-spacing:-.03em;margin:0 0 20px}
+h1 em{font-style:normal;color:var(--accent)}
+.lead{font-size:20px;color:var(--mut);max-width:34em;margin:0 0 32px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
+.btn{display:inline-block;padding:13px 22px;border-radius:999px;background:var(--accent);color:#fff;text-decoration:none;font-weight:600}
+.btn.alt{background:var(--card);color:var(--fg)}
+.demo{background:var(--card);border-radius:22px;padding:22px;margin-bottom:64px}
+.demo .in{background:var(--bg);border-radius:12px;padding:12px 14px;font-size:16px;border:1px solid var(--line)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:12px 2px 0}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:14px}
+.chip.c{border-color:#ff9500;color:#ff9500}
+h2{font-size:26px;letter-spacing:-.02em;margin:0 0 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:64px}
+.card{background:var(--card);border-radius:18px;padding:20px}
+.card h3{margin:0 0 6px;font-size:17px}
+.card p{margin:0;color:var(--mut);font-size:15px}
+footer{color:var(--mut);font-size:14px;border-top:1px solid var(--line);padding-top:24px}
+footer a{color:var(--mut)}
+.en{display:none}
+html[lang=en] .tr{display:none}
+html[lang=en] .en{display:revert}
+</style>
+</head>
+<body>
+<main>
+<div class="top">
+  <div class="logo"><img src="icon.png" alt=""> ishler</div>
+  <div><a href="https://github.com/ruzgarselvan/ishler">GitHub</a><a href="#" id="lang">EN</a></div>
+</div>
+
+<h1><span class="tr">Bir cümle yaz.<br><em>İşin kendini</em> hatırlatsın.</span><span class="en">Type a sentence.<br>Let it <em>remind you.</em></span></h1>
+<p class="lead tr">Menü bar'da ve telefonunda duran küçük bir iş uygulaması. Kişiyi, işi ve tarihi kendisi anlar; zamanı gelince sana ulaşır. Not, takvim ve on farklı liste arasında kaybolan işler için.</p>
+<p class="lead en">A tiny task app for your menu bar and your phone. It works out the person, the task and the date by itself, and reaches you when it's time. For tasks that get lost between notes, calendars and ten different lists.</p>
+
+<div class="cta">
+  <a class="btn" href="https://github.com/ruzgarselvan/ishler/releases/latest"><span class="tr">Mac için indir (.dmg)</span><span class="en">Download for Mac (.dmg)</span></a>
+  <a class="btn alt" href="https://github.com/ruzgarselvan/ishler"><span class="tr">Kaynak kodu</span><span class="en">Source code</span></a>
+</div>
+
+<div class="demo">
+  <div class="in">Cuma'ya kadar X müşterisine teklif at x</div>
+  <div class="chips"><span class="chip c">● İş</span><span class="chip">X</span><span class="chip">Teklif at</span><span class="chip">Cum 30 Eki</span></div>
+</div>
+
+<h2 class="tr">Ne yapar</h2><h2 class="en">What it does</h2>
+<div class="grid">
+  <div class="card"><h3><span class="tr">Formsuz ekleme</span><span class="en">No forms</span></h3><p><span class="tr">"Deniz'i ara 17:30", "her ayın 15'i fatura kes". Türkçe ve İngilizce, cihazın içinde, sunucusuz.</span><span class="en">"Call Deniz 5pm", "every Monday plan". Turkish and English, on-device, no server.</span></p></div>
+  <div class="card"><h3><span class="tr">Kategoriler</span><span class="en">Categories</span></h3><p><span class="tr">Notun sonuna <b>x</b> ya da <b>(x)</b> yaz, iş kendi rengiyle doğru yere gitsin.</span><span class="en">End a note with <b>x</b> or <b>(x)</b> and it lands in the right place, in its own colour.</span></p></div>
+  <div class="card"><h3><span class="tr">Sakin hatırlatma</span><span class="en">Calm reminders</span></h3><p><span class="tr">Teslimden önceki akşamlar, teslim sabahı, bir de uzun süre uğramazsan bir dürtme. Bildirimden Yapıldı ya da Ertele.</span><span class="en">Evenings before a deadline, the morning of, and a nudge only if you've been away. Done or snooze from the notification.</span></p></div>
+  <div class="card"><h3><span class="tr">Düzenli işler</span><span class="en">Recurring tasks</span></h3><p><span class="tr">Her ayın 15'inde fatura kes: zamanı gelince listene kendi düşer, adımlarıyla.</span><span class="en">"Send the invoice on the 15th": it lands on your list by itself, with its steps.</span></p></div>
+  <div class="card"><h3><span class="tr">Mac + iPhone</span><span class="en">Mac + iPhone</span></h3><p><span class="tr">Widget'lar, Siri, Spotlight, Apple Takvim. Eşitleme senin iCloud'unda, benim sunucumda değil.</span><span class="en">Widgets, Siri, Spotlight, Apple Calendar. Syncs through your own iCloud, not a server of mine.</span></p></div>
+  <div class="card"><h3><span class="tr">Ücretsiz, açık kaynak</span><span class="en">Free and open source</span></h3><p><span class="tr">Reklam yok, hesap yok, takip yok. MIT lisansı.</span><span class="en">No ads, no account, no tracking. MIT licensed.</span></p></div>
+</div>
+
+<footer><span class="tr">ADHD'li bir freelancer'ın kendi için yaptığı bir uygulama. Rüzgar Selvan</span><span class="en">Made by a freelancer with ADHD, for themselves. Rüzgar Selvan</span> · <a href="https://github.com/ruzgarselvan/ishler">GitHub</a></footer>
+</main>
+<script>
+(function(){var l=document.getElementById('lang'),h=document.documentElement;
+function set(x){h.lang=x;l.textContent=x==='tr'?'EN':'TR';try{localStorage.lang=x}catch(e){}}
+var s;try{s=localStorage.lang}catch(e){}
+set(s||((navigator.language||'').toLowerCase().startsWith('tr')?'tr':'en'));
+l.onclick=function(e){e.preventDefault();set(h.lang==='tr'?'en':'tr')}})();
+</script>
+</body>
+</html>
