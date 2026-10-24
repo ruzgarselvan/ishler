@@ -78,7 +78,7 @@ struct CalendarScreen: View {
     }
 
     private func grid(_ open: [TodoItem]) -> some View {
-        let days = monthDays()
+        let days = monthDays(of: month, calendar: cal)
         return VStack(spacing: 6) {
             HStack {
                 ForEach(weekdayInitials.indices, id: \.self) { i in
@@ -113,14 +113,5 @@ struct CalendarScreen: View {
             .frame(maxWidth: .infinity)
         }
         .buttonStyle(.plain)
-    }
-
-    /// Days of `month` padded with leading nils so the first day lands on its weekday column.
-    private func monthDays() -> [Date?] {
-        guard let interval = cal.dateInterval(of: .month, for: month) else { return [] }
-        let first = interval.start
-        let offset = (cal.component(.weekday, from: first) - cal.firstWeekday + 7) % 7
-        let count = cal.range(of: .day, in: .month, for: first)?.count ?? 30
-        return Array(repeating: nil, count: offset) + (0..<count).map { cal.date(byAdding: .day, value: $0, to: first) }
     }
 }

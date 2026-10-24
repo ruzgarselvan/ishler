@@ -16,10 +16,16 @@ targets:
     info:
       path: MenuBarTodo/Info.plist
       properties:
-        CFBundleName: İşler
-        CFBundleDisplayName: İşler
+        CFBundleName: ishler
+        CFBundleDisplayName: ishler
         LSUIElement: true
         NSHumanReadableCopyright: ""
+        NSCalendarsFullAccessUsageDescription: Takvimindeki etkinlikleri işlerinin yanında göstermek için.
+    entitlements:
+      path: MenuBarTodo/MenuBarTodo.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.personal-information.calendars: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.ruzgar.menubartodo
@@ -41,7 +47,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.ruzgar.menubartodo.phone
         SWIFT_VERSION: "6.0"
         GENERATE_INFOPLIST_FILE: YES
-        INFOPLIST_KEY_CFBundleDisplayName: İşler
+        INFOPLIST_KEY_CFBundleDisplayName: ishler
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription: "Takvimindeki etkinlikleri işlerinin yanında göstermek için."
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait

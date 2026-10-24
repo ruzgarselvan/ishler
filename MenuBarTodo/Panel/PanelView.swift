@@ -7,13 +7,14 @@ struct PanelView: View {
     @Query private var items: [TodoItem]
     @State private var screen: Screen = .list
 
-    enum Screen { case list, archive, settings, edit(TodoItem) }
+    enum Screen { case list, archive, settings, calendar, edit(TodoItem) }
 
     var body: some View {
         Group {
             switch screen {
             case .list: list
             case .archive: ArchiveView { screen = .list }
+            case .calendar: CalendarView(onBack: { screen = .list }, onEdit: { screen = .edit($0) })
             case .settings: SettingsView { screen = .list }
             case .edit(let item): EditView(item: item) { screen = .list }
             }
@@ -49,6 +50,7 @@ struct PanelView: View {
             HStack(spacing: 12) {
                 Text(groups.isEmpty ? "Açık iş yok" : "\(visible.filter { !$0.isDone }.count) açık iş")
                 Spacer()
+                Button { screen = .calendar } label: { Image(systemName: "calendar") }.help("Takvim")
                 Button { screen = .archive } label: { Image(systemName: "archivebox") }.help("Arşiv")
                 Button { screen = .settings } label: { Image(systemName: "gearshape") }.help("Ayarlar")
                 Button { NSApplication.shared.terminate(nil) } label: { Image(systemName: "power") }.help("Çık")
