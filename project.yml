@@ -16,7 +16,8 @@ targets:
     info:
       path: MenuBarTodo/Info.plist
       properties:
-        CFBundleName: Menü Bar İşler
+        CFBundleName: İşler
+        CFBundleDisplayName: İşler
         LSUIElement: true
         NSHumanReadableCopyright: ""
     settings:
@@ -42,6 +43,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: İşler
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription: "Takvimindeki etkinlikleri işlerinin yanında göstermek için."
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
