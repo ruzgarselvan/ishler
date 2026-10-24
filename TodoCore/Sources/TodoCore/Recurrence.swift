@@ -26,3 +26,9 @@ public func nextOccurrence(after date: Date, rule: String, calendar: Calendar) -
     default: return nil
     }
 }
+
+/// First date on or after `today` that matches `rule` ("weekly:2", "monthly:15"); generic rules start today.
+public func firstOccurrence(of rule: String, from today: Date, calendar: Calendar) -> Date? {
+    guard rule.contains(":"), let before = calendar.date(byAdding: .day, value: -1, to: today) else { return today }
+    return nextOccurrence(after: before, rule: rule, calendar: calendar)
+}

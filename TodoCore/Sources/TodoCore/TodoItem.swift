@@ -16,6 +16,8 @@ public final class TodoItem {
     public var checklistData: Data? = nil
     /// EventKit identifier of the Apple Calendar event mirroring this item.
     public var eventID: String? = nil
+    /// The scheduled routine ("Düzenli iş") that produced this item, so there is never more than one open copy.
+    public var routineID: UUID? = nil
 
     public var isDone: Bool { doneAt != nil }
 

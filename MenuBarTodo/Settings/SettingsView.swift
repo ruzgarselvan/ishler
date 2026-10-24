@@ -26,8 +26,8 @@ struct SettingsView: View {
                         CategoryEditor(store: store, compact: true)
                     }
 
-                    section("Şablonlar", footnote: nil) {
-                        TemplateEditor(store: store, compact: true)
+                    section("Düzenli işler", footnote: nil) {
+                        RoutineEditor(store: store, compact: true)
                     }
 
                     section("Hatırlatıcı", footnote: footnote(store)) {

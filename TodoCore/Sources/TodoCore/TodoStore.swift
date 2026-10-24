@@ -63,6 +63,7 @@ public final class TodoStore {
                 copy.categoryID = item.categoryID
                 copy.dueMinutes = item.dueMinutes
                 copy.repeatRule = rule
+                copy.routineID = item.routineID
                 copy.checklist = item.checklist.map { ChecklistEntry(title: $0.title) }
                 context.insert(copy)
             }
@@ -92,6 +93,23 @@ public final class TodoStore {
 
     public func delete(_ item: TodoItem) {
         context.delete(item)
+        try? context.save()
+    }
+
+    /// Puts each scheduled routine on the list once: a routine with no open item gets its next occurrence.
+    public func ensureRoutines(_ routines: [ChecklistTemplate], now: Date, calendar: Calendar) {
+        let open = openItems()
+        let today = calendar.startOfDay(for: now)
+        for routine in routines {
+            guard let rule = routine.schedule, !open.contains(where: { $0.routineID == routine.id }),
+                  let due = firstOccurrence(of: rule, from: today, calendar: calendar) else { continue }
+            let item = TodoItem(person: nil, action: routine.name, dueDate: due)
+            item.categoryID = routine.categoryID
+            item.repeatRule = rule
+            item.routineID = routine.id
+            item.checklist = routine.steps.map { ChecklistEntry(title: $0) }
+            context.insert(item)
+        }
         try? context.save()
     }
 

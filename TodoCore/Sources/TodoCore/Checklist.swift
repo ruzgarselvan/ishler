@@ -12,16 +12,31 @@ public struct ChecklistEntry: Codable, Equatable, Identifiable, Sendable {
     }
 }
 
-/// A named set of steps; typing its name at the start of a note adds the steps as a checklist.
+/// A named routine ("Düzenli iş"): steps typed after its name at the start of a note, and optionally a schedule
+/// ("monthly:15", "weekly:2", "daily") that makes the app put the task on the list by itself.
 public struct ChecklistTemplate: Codable, Equatable, Identifiable, Sendable {
     public var id: UUID
     public var name: String
     public var steps: [String]
+    public var schedule: String?
+    public var categoryID: UUID?
 
-    public init(id: UUID = UUID(), name: String, steps: [String]) {
+    public init(id: UUID = UUID(), name: String, steps: [String], schedule: String? = nil, categoryID: UUID? = nil) {
         self.id = id
         self.name = name
         self.steps = steps
+        self.schedule = schedule
+        self.categoryID = categoryID
+    }
+
+    /// Routines saved before schedules existed decode as unscheduled.
+    public init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(UUID.self, forKey: .id)
+        name = try c.decode(String.self, forKey: .name)
+        steps = try c.decode([String].self, forKey: .steps)
+        schedule = try c.decodeIfPresent(String.self, forKey: .schedule)
+        categoryID = try c.decodeIfPresent(UUID.self, forKey: .categoryID)
     }
 }
 

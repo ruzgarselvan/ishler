@@ -20,7 +20,7 @@ struct SettingsScreen: View {
 
                 Section("Kategoriler") { CategoryEditor(store: store) }
 
-                Section("Şablonlar") { TemplateEditor(store: store) }
+                Section("Düzenli işler") { RoutineEditor(store: store) }
 
                 Section {
                     Picker("Gün", selection: $store.settings.eveningDaysBefore) {

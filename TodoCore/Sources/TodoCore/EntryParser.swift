@@ -76,7 +76,7 @@ public struct EntryParser: Sendable {
 
         if dueDate == nil {
             if let rule = repeatRule {
-                dueDate = firstOccurrence(of: rule, from: startOfToday)
+                dueDate = TodoCore.firstOccurrence(of: rule, from: startOfToday, calendar: calendar)
             }
             if let minutes = dueMinutes, dueDate == nil || dueDate == startOfToday {
                 let nowMinutes = calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now)
@@ -200,11 +200,6 @@ public struct EntryParser: Sendable {
             }
         }
         return nil
-    }
-
-    private func firstOccurrence(of rule: String, from today: Date) -> Date? {
-        guard rule.contains(":"), let before = calendar.date(byAdding: .day, value: -1, to: today) else { return today }
-        return nextOccurrence(after: before, rule: rule, calendar: calendar)
     }
 
     private func detectDate(in text: String, now: Date) -> (date: Date, text: String)? {

@@ -200,6 +200,7 @@ final class AppModel {
     // MARK: Rescheduling and mirrors
 
     func reschedule() async {
+        store.ensureRoutines(settingsStore.templates, now: Date(), calendar: calendar)
         refreshBadge()
         await scheduler.reschedule(items: store.openItems(), settings: settingsStore.settings, now: Date(), calendar: calendar,
                                   reminderCategories: settingsStore.reminderCategoryIDs, lastActivity: lastActivity)

@@ -801,22 +801,6 @@
         }
       }
     },
-    "Şablonlar": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Templates"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şablonlar"
-          }
-        }
-      }
-    },
     "Hatırlatıcı": {
       "localizations": {
         "en": {
@@ -1649,22 +1633,6 @@
         }
       }
     },
-    "Şablon adı": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Template name"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şablon adı"
-          }
-        }
-      }
-    },
     "Adımlar, virgülle ayır": {
       "localizations": {
         "en": {
@@ -1677,54 +1645,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Adımlar, virgülle ayır"
-          }
-        }
-      }
-    },
-    "Yeni şablon": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "New template"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yeni şablon"
-          }
-        }
-      }
-    },
-    "Şablon ekle": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add template"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Şablon ekle"
-          }
-        }
-      }
-    },
-    "Notun başına şablon adını yaz: \"çekim sonrası Deniz Cuma\"": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start a note with the template name: \"after shoot Deniz Friday\""
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notun başına şablon adını yaz: \"çekim sonrası Deniz Cuma\""
           }
         }
       }
@@ -1869,6 +1789,182 @@
           "stringUnit": {
             "state": "translated",
             "value": "Açık"
+          }
+        }
+      }
+    },
+    "Düzenli işler": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recurring tasks"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Düzenli işler"
+          }
+        }
+      }
+    },
+    "İş adı": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Task name"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "İş adı"
+          }
+        }
+      }
+    },
+    "Yeni düzenli iş": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New recurring task"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yeni düzenli iş"
+          }
+        }
+      }
+    },
+    "Düzenli iş ekle": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add recurring task"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Düzenli iş ekle"
+          }
+        }
+      }
+    },
+    "Tekrar": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Repeat"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tekrar"
+          }
+        }
+      }
+    },
+    "Her gün": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every day"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her gün"
+          }
+        }
+      }
+    },
+    "Her hafta": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every week"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her hafta"
+          }
+        }
+      }
+    },
+    "Her ay": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Every month"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Her ay"
+          }
+        }
+      }
+    },
+    "Haftanın günü": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day of the week"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Haftanın günü"
+          }
+        }
+      }
+    },
+    "Ayın günü: %lld": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Day of the month: %lld"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ayın günü: %lld"
+          }
+        }
+      }
+    },
+    "Fatura kes gibi sabit işleri zamanlayabilirsin: zamanı gelince kendiliğinden listene düşer. Adını notun başına yazarak adımlarını da ekleyebilirsin.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schedule fixed tasks like “Send the invoice”: they show up on your list by themselves when it's time. Typing the name at the start of a note also adds its steps."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fatura kes gibi sabit işleri zamanlayabilirsin: zamanı gelince kendiliğinden listene düşer. Adını notun başına yazarak adımlarını da ekleyebilirsin."
           }
         }
       }
