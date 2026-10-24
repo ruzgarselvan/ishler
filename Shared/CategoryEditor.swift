@@ -1,35 +1,60 @@
 import SwiftUI
 import TodoCore
 
-private let palette = ["#FF9500", "#34C759", "#007AFF", "#AF52DE", "#FF2D55", "#30B0C7"]
+private let palette = ["#FF9500", "#34C759", "#007AFF", "#AF52DE", "#FF2D55", "#30B0C7", "#FFCC00"]
 private let shortcutCandidates = ["x", "1", "2", "3", "4", "5"]
 
 /// Category list plus the shortcut-spelling toggles; shared by the Mac and iPhone settings.
 struct CategoryEditor: View {
     @Bindable var store: SettingsStore
     var compact = false
+    @State private var expanded: UUID?
 
     var body: some View {
         VStack(alignment: .leading, spacing: compact ? 8 : 12) {
             ForEach($store.categories) { $category in
-                HStack(spacing: 8) {
-                    ColorPicker("", selection: Binding(
-                        get: { Color(hex: category.colorHex) },
-                        set: { category.colorHex = $0.hexString }
-                    ), supportsOpacity: false)
-                    .labelsHidden()
-                    TextField("Ad", text: $category.name).textFieldStyle(.plain)
-                    TextField("x", text: $category.shortcut)
-                        .textFieldStyle(.plain)
-                        .multilineTextAlignment(.center)
-                        .frame(width: 34)
-                        .padding(.vertical, 3)
-                        .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
-                        .onChange(of: category.shortcut) { category.shortcut = String(category.shortcut.prefix(3)) }
-                    Button {
-                        store.categories.removeAll { $0.id == category.id }
-                    } label: { Image(systemName: "minus.circle.fill").foregroundStyle(.secondary) }
-                    .buttonStyle(.plain)
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(spacing: 8) {
+                        Button {
+                            expanded = expanded == category.id ? nil : category.id
+                        } label: {
+                            Circle().fill(Color(hex: category.colorHex)).frame(width: 18, height: 18)
+                                .overlay(Circle().strokeBorder(.primary.opacity(0.15), lineWidth: 1))
+                        }
+                        .buttonStyle(.plain)
+                        .help("Renk seç")
+                        TextField("Ad", text: $category.name).textFieldStyle(.plain)
+                        TextField("x", text: $category.shortcut)
+                            .textFieldStyle(.plain)
+                            .multilineTextAlignment(.center)
+                            .frame(width: 34)
+                            .padding(.vertical, 3)
+                            .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
+                            .onChange(of: category.shortcut) { category.shortcut = String(category.shortcut.prefix(3)) }
+                        Button {
+                            store.categories.removeAll { $0.id == category.id }
+                        } label: { Image(systemName: "minus.circle.fill").foregroundStyle(.secondary) }
+                        .buttonStyle(.plain)
+                    }
+                    if expanded == category.id {
+                        HStack(spacing: compact ? 8 : 12) {
+                            ForEach(palette, id: \.self) { hex in
+                                Button {
+                                    category.colorHex = hex
+                                    expanded = nil
+                                } label: {
+                                    Circle().fill(Color(hex: hex)).frame(width: compact ? 20 : 28, height: compact ? 20 : 28)
+                                        .overlay {
+                                            if category.colorHex.uppercased() == hex {
+                                                Image(systemName: "checkmark").font(.system(size: compact ? 9 : 12, weight: .bold)).foregroundStyle(.white)
+                                            }
+                                        }
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
+                        .padding(.leading, 26)
+                    }
                 }
             }
             Button { addCategory() } label: { Label("Kategori ekle", systemImage: "plus.circle.fill") }
