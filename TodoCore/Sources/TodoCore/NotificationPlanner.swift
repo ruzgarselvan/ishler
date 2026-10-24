@@ -26,6 +26,16 @@ public struct PlannedNotification: Equatable, Sendable {
     public let fireDate: Date
     public let title: String
     public let body: String
+    /// Set for notifications about one item, so actions ("Yapıldı", "Ertele") know which one.
+    public let itemID: UUID?
+
+    public init(id: String, fireDate: Date, title: String, body: String, itemID: UUID? = nil) {
+        self.id = id
+        self.fireDate = fireDate
+        self.title = title
+        self.body = body
+        self.itemID = itemID
+    }
 }
 
 private let maxPending = 60
@@ -56,17 +66,25 @@ public func planNotifications(
         if settings.eveningDaysBefore >= 1 {
             for k in 1...settings.eveningDaysBefore {
                 let day = calendar.date(byAdding: .day, value: -k, to: dueDay)!
-                let when = k == 1 ? "Yarın" : "\(longDate(dueDay, calendar: calendar)) · \(k) gün kaldı"
+                let clock = item.dueMinutes.map { " " + timeString($0) } ?? ""
+                let when = k == 1 ? "Yarın\(clock)" : "\(longDate(dueDay, calendar: calendar))\(clock) · \(k) gün kaldı"
                 out.append(PlannedNotification(
                     id: "item-\(item.id.uuidString)-evening-\(k)",
                     fireDate: at(day, settings.eveningTime),
-                    title: line(item), body: when))
+                    title: line(item), body: when, itemID: item.id))
             }
         }
-        out.append(PlannedNotification(
-            id: "item-\(item.id.uuidString)-morning",
-            fireDate: at(dueDay, settings.morningTime),
-            title: line(item), body: "Bugün"))
+        if let minutes = item.dueMinutes {
+            out.append(PlannedNotification(
+                id: "item-\(item.id.uuidString)-time",
+                fireDate: at(dueDay, DateComponents(hour: minutes / 60, minute: minutes % 60)),
+                title: line(item), body: "Şimdi · \(timeString(minutes))", itemID: item.id))
+        } else {
+            out.append(PlannedNotification(
+                id: "item-\(item.id.uuidString)-morning",
+                fireDate: at(dueDay, settings.morningTime),
+                title: line(item), body: "Bugün", itemID: item.id))
+        }
     }
 
     if !digestItems.isEmpty {
@@ -87,3 +105,5 @@ public func planNotifications(
 
     return Array(out.filter { $0.fireDate > now }.sorted { $0.fireDate < $1.fireDate }.prefix(maxPending))
 }
+
+func timeString(_ minutes: Int) -> String { String(format: "%02d:%02d", minutes / 60, minutes % 60) }

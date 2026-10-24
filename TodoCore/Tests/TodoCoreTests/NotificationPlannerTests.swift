@@ -73,4 +73,18 @@ import Foundation
         #expect(p.count == 4)
         #expect(p.allSatisfy { $0.title == "X · teklif at" })
     }
+    @Test func timedItemNotifiesAtItsTimeInsteadOfMorning() {
+        let item = make("Deniz", "ara", date(2026, 10, 30))
+        item.dueMinutes = 14 * 60
+        let p = plan([item])
+        #expect(p.map(\.fireDate) == [date(2026, 10, 27, 20), date(2026, 10, 28, 20), date(2026, 10, 29, 20), date(2026, 10, 30, 14)])
+        #expect(p.map(\.body) == ["30 Ekim 14:00 · 3 gün kaldı", "30 Ekim 14:00 · 2 gün kaldı", "Yarın 14:00", "Şimdi · 14:00"])
+    }
+    @Test func itemNotificationsCarryItemIDButDigestDoesNot() {
+        let item = teklif()
+        let undated = make("Deniz", "ara", nil)
+        let p = plan([item, undated])
+        #expect(p.filter { $0.id.hasPrefix("item-") }.allSatisfy { $0.itemID == item.id })
+        #expect(p.filter { $0.id.hasPrefix("digest") }.allSatisfy { $0.itemID == nil })
+    }
 }

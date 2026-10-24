@@ -30,12 +30,25 @@ import Foundation
         a.horizon = .week
         #expect(SettingsStore(defaults: suite).horizon == .week)
     }
-    @Test func badgeSettingDefaultsOnAndPersists() {
+    @Test func menuBarStyleDefaultsToCountAndPersists() {
         let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
         let a = SettingsStore(defaults: suite)
-        #expect(a.showBadge)
-        a.showBadge = false
-        #expect(!SettingsStore(defaults: suite).showBadge)
+        #expect(a.menuBarStyle == .count)
+        a.menuBarStyle = .title
+        #expect(SettingsStore(defaults: suite).menuBarStyle == .title)
+    }
+    @Test func legacyBadgeOffBecomesMenuBarOff() {
+        let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
+        suite.set(false, forKey: "showBadge")
+        #expect(SettingsStore(defaults: suite).menuBarStyle == .off)
+    }
+    @Test func newTogglesDefaultOnAndTemplateSeeded() {
+        let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
+        let a = SettingsStore(defaults: suite)
+        #expect(a.writeToCalendar && a.quickAddHotkey)
+        #expect(a.templates.map(\.name) == ["Çekim sonrası"])
+        a.templates.removeAll()
+        #expect(SettingsStore(defaults: suite).templates.isEmpty)
     }
     @Test func categoriesAndShortcutsPersist() {
         let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!

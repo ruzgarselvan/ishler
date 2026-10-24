@@ -3,24 +3,32 @@ import Observation
 
 @Observable @MainActor
 public final class SettingsStore {
-    private static let key = "notificationSettings"
-    private static let horizonKey = "listHorizon"
-    private static let badgeKey = "showBadge"
-    private static let appearanceKey = "appearance"
-    private static let categoriesKey = "categories"
-    private static let shortcutsKey = "shortcutOptions"
+    private enum Key {
+        static let notifications = "notificationSettings"
+        static let horizon = "listHorizon"
+        static let badge = "showBadge"
+        static let menuBar = "menuBarStyle"
+        static let appearance = "appearance"
+        static let categories = "categories"
+        static let shortcuts = "shortcutOptions"
+        static let templates = "templates"
+        static let calendarWrite = "writeToCalendar"
+        static let quickAdd = "quickAddHotkey"
+    }
     @ObservationIgnored private let defaults: UserDefaults
 
-    public var appearance: Appearance {
-        didSet { defaults.set(appearance.rawValue, forKey: Self.appearanceKey) }
-    }
+    public var appearance: Appearance { didSet { defaults.set(appearance.rawValue, forKey: Key.appearance) } }
+    public var horizon: Horizon { didSet { defaults.set(horizon.rawValue, forKey: Key.horizon) } }
+    public var menuBarStyle: MenuBarStyle { didSet { defaults.set(menuBarStyle.rawValue, forKey: Key.menuBar) } }
+    /// Mirror dated items into Apple Calendar.
+    public var writeToCalendar: Bool { didSet { defaults.set(writeToCalendar, forKey: Key.calendarWrite) } }
+    /// Mac only: global shortcut that opens the quick-add window.
+    public var quickAddHotkey: Bool { didSet { defaults.set(quickAddHotkey, forKey: Key.quickAdd) } }
 
-    public var categories: [TodoCategory] {
-        didSet { if let data = try? JSONEncoder().encode(categories) { defaults.set(data, forKey: Self.categoriesKey) } }
-    }
-    public var shortcuts: ShortcutOptions {
-        didSet { if let data = try? JSONEncoder().encode(shortcuts) { defaults.set(data, forKey: Self.shortcutsKey) } }
-    }
+    public var categories: [TodoCategory] { didSet { save(categories, Key.categories) } }
+    public var shortcuts: ShortcutOptions { didSet { save(shortcuts, Key.shortcuts) } }
+    public var templates: [ChecklistTemplate] { didSet { save(templates, Key.templates) } }
+    public var settings: NotificationSettings { didSet { save(settings, Key.notifications) } }
 
     public var reminderCategoryIDs: Set<UUID> { Set(categories.filter(\.remind).map(\.id)) }
 
@@ -29,35 +37,31 @@ public final class SettingsStore {
         return categories.first { $0.id == id }
     }
 
-    public var showBadge: Bool {
-        didSet { defaults.set(showBadge, forKey: Self.badgeKey) }
-    }
-
-    public var horizon: Horizon {
-        didSet { defaults.set(horizon.rawValue, forKey: Self.horizonKey) }
-    }
-
-    public var settings: NotificationSettings {
-        didSet {
-            if let data = try? JSONEncoder().encode(settings) { defaults.set(data, forKey: Self.key) }
-        }
-    }
-
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
-        if let data = defaults.data(forKey: Self.categoriesKey), let saved = try? JSONDecoder().decode([TodoCategory].self, from: data) {
-            self.categories = saved
-        } else {
-            // First launch: seed the defaults and save them now, so their ids stay stable.
-            let seeded = TodoCategory.defaults()
-            self.categories = seeded
-            if let data = try? JSONEncoder().encode(seeded) { defaults.set(data, forKey: Self.categoriesKey) }
+        func load<T: Decodable>(_ type: T.Type, _ key: String) -> T? {
+            defaults.data(forKey: key).flatMap { try? JSONDecoder().decode(T.self, from: $0) }
         }
-        self.shortcuts = defaults.data(forKey: Self.shortcutsKey).flatMap { try? JSONDecoder().decode(ShortcutOptions.self, from: $0) } ?? ShortcutOptions()
-        self.appearance = defaults.string(forKey: Self.appearanceKey).flatMap(Appearance.init(rawValue:)) ?? .system
-        self.showBadge = defaults.object(forKey: Self.badgeKey) as? Bool ?? true
-        self.horizon = defaults.string(forKey: Self.horizonKey).flatMap(Horizon.init(rawValue:)) ?? .month
-        self.settings = defaults.data(forKey: Self.key)
-            .flatMap { try? JSONDecoder().decode(NotificationSettings.self, from: $0) } ?? .default
+        // First launch: seed the defaults and save them right away so their ids stay stable.
+        func seeded<T: Codable>(_ key: String, _ value: [T]) -> [T] {
+            if let saved = load([T].self, key) { return saved }
+            if let data = try? JSONEncoder().encode(value) { defaults.set(data, forKey: key) }
+            return value
+        }
+        self.categories = seeded(Key.categories, TodoCategory.defaults())
+        self.templates = seeded(Key.templates, [ChecklistTemplate.example])
+        self.shortcuts = load(ShortcutOptions.self, Key.shortcuts) ?? ShortcutOptions()
+        self.settings = load(NotificationSettings.self, Key.notifications) ?? .default
+        self.appearance = defaults.string(forKey: Key.appearance).flatMap(Appearance.init(rawValue:)) ?? .system
+        self.horizon = defaults.string(forKey: Key.horizon).flatMap(Horizon.init(rawValue:)) ?? .month
+        // The old on/off badge toggle maps to .count / .off.
+        let legacyBadge = defaults.object(forKey: Key.badge) as? Bool ?? true
+        self.menuBarStyle = defaults.string(forKey: Key.menuBar).flatMap(MenuBarStyle.init(rawValue:)) ?? (legacyBadge ? .count : .off)
+        self.writeToCalendar = defaults.object(forKey: Key.calendarWrite) as? Bool ?? true
+        self.quickAddHotkey = defaults.object(forKey: Key.quickAdd) as? Bool ?? true
+    }
+
+    private func save<T: Encodable>(_ value: T, _ key: String) {
+        if let data = try? JSONEncoder().encode(value) { defaults.set(data, forKey: key) }
     }
 }
