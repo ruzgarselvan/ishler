@@ -35,6 +35,8 @@ public final class TodoStore {
         if ProcessInfo.processInfo.arguments.contains("-wipeLocalStore"),
            let names = try? fm.contentsOfDirectory(atPath: dir.path) {
             for name in names where name.hasPrefix("ishler.store") || name.hasPrefix(".ishler") { try? fm.removeItem(at: dir.appending(path: name)) }
+            // Quit right away so CloudKit can't pull the old records straight back in.
+            if ProcessInfo.processInfo.arguments.contains("-wipeAndQuit") { exit(0) }
         }
         #endif
         migrateStore(from: support.appending(path: "todo.store"), to: url)

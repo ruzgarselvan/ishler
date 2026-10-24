@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ishler: cümle yaz, işin kendini hatırlatsın</title>
-<meta name="description" content="Menü bar'da ve telefonda küçük bir iş uygulaması. Bir cümle yaz, kişiyi, işi ve tarihi kendisi anlasın. Ücretsiz ve açık kaynak.">
+<title>ishler: bir cümle yazın, işiniz kendini hatırlatsın</title>
+<meta name="description" content="Menü bar'da ve telefonda küçük bir iş uygulaması. Bir cümle yazın, kişiyi, işi ve tarihi kendisi anlasın. Ücretsiz ve açık kaynak.">
 <link rel="icon" href="icon.png">
 <style>
 :root{--bg:#fff;--fg:#111113;--mut:#6b6b73;--card:#f4f4f7;--accent:#0a84ff;--line:#e4e4ea;--shadow:0 30px 60px -20px rgba(20,30,70,.28),0 10px 24px -12px rgba(20,30,70,.2)}
@@ -36,6 +36,7 @@ h1 em{font-style:normal;background:linear-gradient(90deg,#0a84ff,#8a63ff);-webki
 .chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 2px 2px;min-height:34px}
 .chip{background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:3px 13px;font-size:14px;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
 .chip.c{border-color:#ff9500;color:#ff9500}
+.chip.g{border-color:#34c759;color:#34c759}
 @keyframes pop{from{opacity:0;transform:scale(.6) translateY(6px)}to{opacity:1;transform:none}}
 .done{display:flex;align-items:center;gap:10px;margin-top:16px;font-size:15px;color:var(--mut);min-height:24px}
 .ring{width:22px;height:22px;border-radius:50%;border:2px solid var(--mut);position:relative;transition:all .4s}
@@ -89,8 +90,8 @@ html[lang=en] img.tr{display:none}
 
 <div class="hero">
   <div>
-    <h1><span class="tr">Bir cümle yaz.<br><em>İşin kendini</em> hatırlatsın.</span><span class="en">Type a sentence.<br>Let it <em>remind you.</em></span></h1>
-    <p class="lead tr">Menü bar'da ve telefonunda duran küçük bir iş uygulaması. Kişiyi, işi ve tarihi kendisi anlar; zamanı gelince sana ulaşır. Not, takvim ve on farklı liste arasında kaybolan işler için.</p>
+    <h1><span class="tr">Bir cümle yazın.<br><em>İşiniz kendini</em> hatırlatsın.</span><span class="en">Type a sentence.<br>Let it <em>remind you.</em></span></h1>
+    <p class="lead tr">Menü bar'da ve telefonunuzda duran küçük bir iş uygulaması. Kişiyi, işi ve tarihi kendisi anlar; zamanı gelince size ulaşır. Not, takvim ve onlarca liste arasında kaybolan işler için.</p>
     <p class="lead en">A tiny task app for your menu bar and your phone. It works out the person, the task and the date by itself, and reaches you when it's time. For tasks that get lost between notes, calendars and ten different lists.</p>
     <div class="cta">
       <a class="btn" href="https://github.com/ruzgarselvan/ishler/releases/latest"><span class="tr">Mac için indir (.dmg)</span><span class="en">Download for Mac (.dmg)</span></a>
@@ -106,24 +107,24 @@ html[lang=en] img.tr{display:none}
 
 <section class="reveal">
   <h2 class="tr">Menü bar'da, hep elinin altında</h2><h2 class="en">In your menu bar, always at hand</h2>
-  <p class="sub tr">Tek bir küçük panel. Yaz, listele, daireye bas, bitti. Açık ve koyu modda kendini sistemine uydurur.</p>
-  <p class="sub en">One small panel. Type, scan, tap the circle, done. Follows your system's light and dark mode.</p>
+  <p class="sub tr">Tek bir küçük panel. Yazın, listeye göz atın, daireye basın, bitti.</p>
+  <p class="sub en">One small panel. Type, scan the list, tap the circle, done.</p>
   <div class="mac">
     <div><img class="light tr" src="img/mac-tr-light.png" alt=""><img class="light en" src="img/mac-en-light.png" alt=""><img class="dark tr" src="img/mac-tr-dark.png" alt=""><img class="dark en" src="img/mac-en-dark.png" alt=""></div>
     <div class="reveal d1">
-      <div class="card"><h3><span class="tr">Menü bar ya da Dock</span><span class="en">Menu bar or Dock</span></h3><p><span class="tr">İstersen sadece menü bar'da, istersen normal bir uygulama olarak Dock'ta kullan. Hızlı ekleme için her yerden ⌃⌥N.</span><span class="en">Live only in the menu bar, or run it as a regular Dock app. Press ⌃⌥N anywhere for quick add.</span></p></div>
+      <div class="card"><h3><span class="tr">Menü bar ya da Dock</span><span class="en">Menu bar or Dock</span></h3><p><span class="tr">İsterseniz yalnızca menü bar'da, isterseniz normal bir uygulama olarak Dock'ta kullanın. Hızlı ekleme için her yerden ⌃⌥N.</span><span class="en">Live only in the menu bar, or run it as a regular Dock app. Press ⌃⌥N anywhere for quick add.</span></p></div>
     </div>
   </div>
 </section>
 
 <section>
-  <h2 class="reveal tr">Telefonunda da aynısı</h2><h2 class="reveal en">The same on your phone</h2>
-  <p class="sub reveal tr">Mac ile iPhone arasında iCloud'unla eşitlenir. Benim sunucum yok, senin işlerin sende kalır.</p>
-  <p class="sub reveal en">Syncs between Mac and iPhone through your own iCloud. There is no server of mine, your tasks stay yours.</p>
+  <h2 class="reveal tr">Telefonunuzda da aynısı</h2><h2 class="reveal en">The same on your phone</h2>
+  <p class="sub reveal tr">Mac ile iPhone arasında iCloud ile eşitlenir. Aracı bir sunucu yok, işleriniz yalnızca sizde kalır.</p>
+  <p class="sub reveal en">Syncs between Mac and iPhone through your own iCloud. There is no middleman server; your tasks stay with you.</p>
   <div class="shots">
     <figure class="reveal"><div class="phone"><img class="tr" src="img/ph-tr-list.jpg" alt=""><img class="en" src="img/ph-en-list.jpg" alt=""></div><figcaption class="tr">Tarihe göre sıralı liste, kategori renkleri, saat ve tekrar.</figcaption><figcaption class="en">A date-sorted list with category colours, times and repeats.</figcaption></figure>
-    <figure class="reveal d1"><div class="phone"><img class="tr" src="img/ph-tr-focus.jpg" alt=""><img class="en" src="img/ph-en-focus.jpg" alt=""></div><figcaption class="tr">"Şimdi sadece bu": kalabalıkta tek bir işe odaklan.</figcaption><figcaption class="en">"Just this, now": focus on one task in the crowd.</figcaption></figure>
-    <figure class="reveal d2"><div class="phone"><img src="img/ph-en-settings.jpg" alt=""></div><figcaption class="tr">Kategoriler, kısayollar ve düzenli işler senin kurallarınla.</figcaption><figcaption class="en">Categories, shortcuts and recurring tasks, on your rules.</figcaption></figure>
+    <figure class="reveal d1"><div class="phone"><img class="tr" src="img/ph-tr-focus.jpg" alt=""><img class="en" src="img/ph-en-focus.jpg" alt=""></div><figcaption class="tr">"Şimdi sadece bu": kalabalıkta tek bir işe odaklanın.</figcaption><figcaption class="en">"Just this, now": focus on one task in the crowd.</figcaption></figure>
+    <figure class="reveal d2"><div class="phone"><img src="img/ph-en-settings.jpg" alt=""></div><figcaption class="tr">Kategoriler, kısayollar ve düzenli işler kendi kurallarınızla.</figcaption><figcaption class="en">Categories, shortcuts and recurring tasks, on your rules.</figcaption></figure>
   </div>
 </section>
 
@@ -138,15 +139,15 @@ html[lang=en] img.tr{display:none}
   <h2 class="reveal tr">Ne yapar</h2><h2 class="reveal en">What it does</h2>
   <div class="grid">
     <div class="card reveal"><h3><span class="tr">Formsuz ekleme</span><span class="en">No forms</span></h3><p><span class="tr">"Deniz'i ara 17:30", "her ayın 15'i fatura kes". Türkçe ve İngilizce, cihazın içinde, sunucusuz.</span><span class="en">"Call Deniz 5pm", "every Monday plan". Turkish and English, on-device, no server.</span></p></div>
-    <div class="card reveal d1"><h3><span class="tr">Kategoriler</span><span class="en">Categories</span></h3><p><span class="tr">Notun sonuna <b>x</b> ya da <b>(x)</b> yaz, iş kendi rengiyle doğru yere gitsin.</span><span class="en">End a note with <b>x</b> or <b>(x)</b> and it lands in the right place, in its own colour.</span></p></div>
-    <div class="card reveal d2"><h3><span class="tr">Sakin hatırlatma</span><span class="en">Calm reminders</span></h3><p><span class="tr">Teslimden önceki akşamlar, teslim sabahı, bir de uzun süre uğramazsan bir dürtme. Bildirimden Yapıldı ya da Ertele.</span><span class="en">Evenings before a deadline, the morning of, and a nudge only if you've been away. Done or snooze from the notification.</span></p></div>
-    <div class="card reveal"><h3><span class="tr">Düzenli işler</span><span class="en">Recurring tasks</span></h3><p><span class="tr">Her ayın 15'inde fatura kes: zamanı gelince listene kendi düşer, adımlarıyla.</span><span class="en">"Send the invoice on the 15th": it lands on your list by itself, with its steps.</span></p></div>
+    <div class="card reveal d1"><h3><span class="tr">Kategoriler</span><span class="en">Categories</span></h3><p><span class="tr">Notun sonuna <b>x</b> ya da <b>(x)</b> yazın, iş kendi rengiyle doğru yere gitsin.</span><span class="en">End a note with <b>x</b> or <b>(x)</b> and it lands in the right place, in its own colour.</span></p></div>
+    <div class="card reveal d2"><h3><span class="tr">Sakin hatırlatma</span><span class="en">Calm reminders</span></h3><p><span class="tr">Teslimden önceki akşamlar, teslim sabahı, bir de uzun süre uğramazsanız bir dürtme. Bildirimden Yapıldı ya da Ertele.</span><span class="en">Evenings before a deadline, the morning of, and a nudge only if you've been away. Done or snooze from the notification.</span></p></div>
+    <div class="card reveal"><h3><span class="tr">Düzenli işler</span><span class="en">Recurring tasks</span></h3><p><span class="tr">Her ayın 15'inde fatura kes: zamanı gelince listenize kendiliğinden düşer, adımlarıyla.</span><span class="en">"Send the invoice on the 15th": it lands on your list by itself, with its steps.</span></p></div>
     <div class="card reveal d1"><h3><span class="tr">Apple ile bütünleşik</span><span class="en">Plays well with Apple</span></h3><p><span class="tr">Apple Takvim, Siri, Spotlight, Kısayollar ve CSV dışa aktarma.</span><span class="en">Apple Calendar, Siri, Spotlight, Shortcuts and CSV export.</span></p></div>
     <div class="card reveal d2"><h3><span class="tr">Ücretsiz, açık kaynak</span><span class="en">Free and open source</span></h3><p><span class="tr">Reklam yok, hesap yok, takip yok. MIT lisansı.</span><span class="en">No ads, no account, no tracking. MIT licensed.</span></p></div>
   </div>
 </section>
 
-<footer><span class="tr">ADHD'li bir freelancer'ın kendi için yaptığı bir uygulama. Rüzgar Selvan</span><span class="en">Made by a freelancer with ADHD, for themselves. Rüzgar Selvan</span> · <a href="https://github.com/ruzgarselvan/ishler">GitHub</a></footer>
+<footer>ishler · Rüzgar Selvan · <span class="tr">MIT lisansı</span><span class="en">MIT licensed</span> · <a href="https://github.com/ruzgarselvan/ishler">GitHub</a></footer>
 </main>
 <script>
 (function(){
@@ -159,10 +160,10 @@ l.onclick=function(e){e.preventDefault();set(h.lang==='tr'?'en':'tr')};
 var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 var examples={
  tr:[{t:"Cuma'ya kadar Acme müşterisine teklif at x",c:[["● İş","c"],["Acme"],["Teklif at"],["Cum 30 Eki"]],d:"Teklif at · Acme"},
-     {t:"Deniz'i ara yarın 17:30",c:[["Deniz"],["Ara"],["Yarın 17:30"]],d:"Ara · Deniz"},
+     {t:"Deniz'i ara yarın 17:30 k",c:[["● Kişisel","g"],["Deniz"],["Ara"],["Yarın 17:30"]],d:"Ara · Deniz"},
      {t:"her ayın 15'i fatura kes",c:[["Fatura kes"],["↻ Her ay, 15'i"],["15 Kas"]],d:"Fatura kes"}],
  en:[{t:"Send the proposal to Acme by Friday x",c:[["● Work","c"],["Acme"],["Send the proposal"],["Fri Oct 30"]],d:"Send the proposal · Acme"},
-     {t:"Call Deniz tomorrow 5:30pm",c:[["Deniz"],["Call"],["Tomorrow 17:30"]],d:"Call · Deniz"},
+     {t:"Call Deniz tomorrow 5:30pm p",c:[["● Personal","g"],["Deniz"],["Call"],["Tomorrow 17:30"]],d:"Call · Deniz"},
      {t:"every monday weekly plan",c:[["Weekly plan"],["↻ Every Monday"],["Mon Oct 26"]],d:"Weekly plan"}]
 };
 var typed=document.getElementById('typed'),chips=document.getElementById('chips'),ring=document.getElementById('ring'),doneText=document.getElementById('doneText');
