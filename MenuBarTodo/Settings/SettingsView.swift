@@ -12,7 +12,7 @@ struct SettingsView: View {
             PanelHeader(title: "Ayarlar", onBack: onBack)
             FittedScroll(maxHeight: 440) {
                 VStack(alignment: .leading, spacing: 16) {
-                    section("Listede göster", footnote: "Gecikmiş ve tarihsiz işler her zaman görünür.") {
+                    section("Liste", footnote: "Gecikmiş ve tarihsiz işler her zaman görünür.") {
                         Picker("", selection: $store.horizon) {
                             Text("1 hafta").tag(Horizon.week)
                             Text("1 ay").tag(Horizon.month)
@@ -21,7 +21,7 @@ struct SettingsView: View {
                         .pickerStyle(.segmented).labelsHidden().controlSize(.small)
                     }
 
-                    section("Teslimden kaç gün önce hatırlat", footnote: footnote(store)) {
+                    section("Hatırlatıcı", footnote: footnote(store)) {
                         Picker("", selection: $store.settings.eveningDaysBefore) {
                             Text("Yok").tag(0)
                             ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }

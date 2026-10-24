@@ -9,13 +9,13 @@ struct SettingsScreen: View {
         NavigationStack {
             Form {
                 Section {
-                    Picker("Listede göster", selection: $store.horizon) {
+                    Picker("Liste", selection: $store.horizon) {
                         Text("1 hafta").tag(Horizon.week)
                         Text("1 ay").tag(Horizon.month)
                         Text("Hepsi").tag(Horizon.all)
                     }
                     .pickerStyle(.segmented)
-                } header: { Text("Listede göster") } footer: { Text("Gecikmiş ve tarihsiz işler her zaman görünür.") }
+                } header: { Text("Liste") } footer: { Text("Gecikmiş ve tarihsiz işler her zaman görünür.") }
 
                 Section {
                     Picker("Gün", selection: $store.settings.eveningDaysBefore) {
@@ -23,7 +23,7 @@ struct SettingsScreen: View {
                         ForEach([1, 2, 3, 5, 7], id: \.self) { Text("\($0)").tag($0) }
                     }
                     .pickerStyle(.segmented)
-                } header: { Text("Teslimden kaç gün önce hatırlat") } footer: {
+                } header: { Text("Hatırlatıcı") } footer: {
                     Text(store.reminderCategoryIDs.isEmpty
                          ? "Hatırlatma kapalı. Kategorilerden zili açarak başlat."
                          : store.settings.eveningDaysBefore == 0
