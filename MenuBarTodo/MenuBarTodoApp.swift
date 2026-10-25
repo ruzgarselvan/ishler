@@ -58,6 +58,7 @@ struct MenuBarTodoApp: App {
                 .onAppear { if !model.settingsStore.appMode.showsDockIcon { closeMainWindow() } }
         }
         .windowResizability(.contentSize)
+        .defaultLaunchBehavior(model.settingsStore.appMode.showsDockIcon ? .presented : .suppressed)
     }
 
     private func closeMainWindow() {
