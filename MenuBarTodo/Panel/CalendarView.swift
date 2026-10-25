@@ -26,11 +26,11 @@ struct CalendarView: View {
                 Text(month.formatted(.dateTime.month(.wide).year().locale(tr)))
                     .font(.system(size: 13, weight: .semibold))
                 Spacer()
-                Button { shift(-1) } label: { Image(systemName: "chevron.left") }
-                Button("Bugün") { month = Date(); selected = Date() }
-                Button { shift(1) } label: { Image(systemName: "chevron.right") }
+                Button { shift(-1) } label: { Image(systemName: "chevron.left").fontWeight(.semibold) }.buttonStyle(IconButtonStyle())
+                Button("Bugün") { month = Date(); selected = Date() }.buttonStyle(.plain).padding(.vertical, 6).contentShape(Rectangle())
+                Button { shift(1) } label: { Image(systemName: "chevron.right").fontWeight(.semibold) }.buttonStyle(IconButtonStyle())
             }
-            .buttonStyle(.plain).font(.system(size: 12)).foregroundStyle(Color.accentColor)
+            .font(.system(size: 13)).foregroundStyle(Color.accentColor)
 
             grid(open)
 
@@ -92,7 +92,7 @@ struct CalendarView: View {
                 Text("\(cal.component(.day, from: day))")
                     .font(.system(size: 12, weight: isToday || isSelected ? .semibold : .regular))
                     .foregroundStyle(isSelected ? Color.white : (isToday ? Color.accentColor : Color.primary))
-                    .frame(width: 22, height: 22)
+                    .frame(width: 30, height: 30)
                     .background(isSelected ? Color.accentColor : Color.clear, in: Circle())
                 HStack(spacing: 2) {
                     Circle().fill(hasItem ? Color.accentColor : .clear).frame(width: 4, height: 4)

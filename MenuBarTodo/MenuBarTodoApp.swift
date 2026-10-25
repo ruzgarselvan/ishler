@@ -2,8 +2,14 @@ import SwiftUI
 import SwiftData
 import TodoCore
 
+/// A menu bar app has no windows most of the time; closing the last one must not quit it.
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
+}
+
 @main
 struct MenuBarTodoApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @State private var model = AppModel.shared
 
     init() {

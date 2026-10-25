@@ -89,7 +89,7 @@ struct SettingsView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.horizontal, 4)
+                .padding(.horizontal, 2).padding(.bottom, 14)
             }
         }
         .padding(.bottom, 4)
@@ -117,7 +117,7 @@ struct SettingsView: View {
             Text(title).font(.system(size: 12, weight: .semibold))
             content()
             if let footnote {
-                Text(footnote).font(.system(size: 11)).foregroundStyle(.secondary)
+                Text(footnote).font(.system(size: 12)).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
             }
         }

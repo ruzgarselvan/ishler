@@ -21,7 +21,7 @@ struct RoutineEditor: View {
                         Button { store.templates.removeAll { $0.id == routine.id } } label: {
                             Image(systemName: "minus.circle.fill").foregroundStyle(.secondary)
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(IconButtonStyle())
                     }
                     Picker("Tekrar", selection: kind(for: routineBinding)) {
                         Text("Yok").tag(Kind.none)

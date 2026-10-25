@@ -20,10 +20,10 @@ struct CategoryEditor: View {
                         Button {
                             expanded = expanded == category.id ? nil : category.id
                         } label: {
-                            Circle().fill(Color(hex: category.colorHex)).frame(width: 18, height: 18)
+                            Circle().fill(Color(hex: category.colorHex)).frame(width: 20, height: 20)
                                 .overlay(Circle().strokeBorder(.primary.opacity(0.15), lineWidth: 1))
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(IconButtonStyle())
                         .help("Renk seç")
                         TextField("Ad", text: categoryBinding.name).textFieldStyle(.plain)
                         TextField("x", text: categoryBinding.shortcut)
@@ -37,12 +37,12 @@ struct CategoryEditor: View {
                             Image(systemName: category.remind ? "bell.fill" : "bell.slash")
                                 .foregroundStyle(category.remind ? Color.accentColor : Color.secondary)
                         }
-                        .buttonStyle(.plain)
+                        .buttonStyle(IconButtonStyle())
                         .help(category.remind ? LocalizedStringKey("Hatırlatma açık") : LocalizedStringKey("Hatırlatma kapalı"))
                         Button {
                             store.categories.removeAll { $0.id == category.id }
                         } label: { Image(systemName: "minus.circle.fill").foregroundStyle(.secondary) }
-                        .buttonStyle(.plain)
+                        .buttonStyle(IconButtonStyle())
                     }
                     if expanded == category.id {
                         HStack(spacing: compact ? 8 : 12) {
@@ -51,7 +51,7 @@ struct CategoryEditor: View {
                                     categoryBinding.wrappedValue.colorHex = hex
                                     expanded = nil
                                 } label: {
-                                    Circle().fill(Color(hex: hex)).frame(width: compact ? 20 : 28, height: compact ? 20 : 28)
+                                    Circle().fill(Color(hex: hex)).frame(width: compact ? 24 : 28, height: compact ? 24 : 28)
                                         .overlay {
                                             if category.colorHex.uppercased() == hex {
                                                 Image(systemName: "checkmark").font(.system(size: compact ? 9 : 12, weight: .bold)).foregroundStyle(.white)
@@ -61,18 +61,20 @@ struct CategoryEditor: View {
                                 .buttonStyle(.plain)
                             }
                         }
-                        .padding(.leading, 26)
+                        .padding(.leading, 30)
                     }
                 }
             }
-            Button { addCategory() } label: { Label("Kategori ekle", systemImage: "plus.circle.fill") }
+            Button { addCategory() } label: { Label("Kategori ekle", systemImage: "plus.circle.fill").padding(.vertical, 4).contentShape(Rectangle()) }
                 .buttonStyle(.plain).foregroundStyle(Color.accentColor)
 
             if !store.categories.isEmpty {
                 Text("Zil açık olan kategorilerin işleri için teslim hatırlatması gelir.")
-                    .font(.system(size: compact ? 11 : 13)).foregroundStyle(.secondary)
+                    .font(.system(size: compact ? 12 : 13)).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 Text("Notun sonuna kısayolu yaz: \"logo teslimi x\" ya da, Parantez açıksa, \"logo teslimi (x)\". Kısayol harf ya da rakam olabilir.")
-                    .font(.system(size: compact ? 11 : 13)).foregroundStyle(.secondary)
+                    .font(.system(size: compact ? 12 : 13)).foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 Toggle("Parantez", isOn: $store.shortcuts.parentheses)
             }
         }

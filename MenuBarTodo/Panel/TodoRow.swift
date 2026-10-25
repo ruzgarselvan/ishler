@@ -21,12 +21,14 @@ struct TodoRow: View {
                     Circle().strokeBorder(ring.opacity(completing ? 1 : 0.65), lineWidth: 1.5)
                     if completing || hovering {
                         Image(systemName: "checkmark")
-                            .font(.system(size: 8, weight: .bold))
+                            .font(.system(size: 10, weight: .bold))
                             .foregroundStyle(ring.opacity(completing ? 1 : 0.5))
                     }
                 }
-                .frame(width: 16, height: 16)
+                .frame(width: 20, height: 20)
                 .background(completing ? ring.opacity(0.18) : .clear, in: Circle())
+                .frame(width: 28, height: 28)
+                .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
             .help("Yapıldı")
@@ -52,7 +54,7 @@ struct TodoRow: View {
             .onTapGesture(perform: onEdit)
             .help("Düzenle")
         }
-        .padding(.vertical, 4).padding(.horizontal, 6)
+        .padding(.vertical, 3).padding(.horizontal, 6)
         .background(hovering ? Color.primary.opacity(0.06) : .clear, in: RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal, -6)
         .opacity(completing ? 0.5 : 1)

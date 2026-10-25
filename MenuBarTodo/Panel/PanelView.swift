@@ -20,8 +20,8 @@ struct PanelView: View {
             case .edit(let item): EditView(item: item) { screen = .list }
             }
         }
-        .padding(10)
-        .frame(width: 300)
+        .padding(.horizontal, 14).padding(.top, 12).padding(.bottom, 10)
+        .frame(width: 320)
         .onAppear { model.refreshBadge(); model.touch() }
         .onDisappear { screen = .list }
     }
@@ -34,6 +34,12 @@ struct PanelView: View {
             PanelHeader(title: "Odak", onBack: { screen = .list })
             FocusCard(items: ordered).padding(.horizontal, 4)
         }
+    }
+
+    private func footerButton(_ symbol: String, help: LocalizedStringKey, action: @escaping () -> Void) -> some View {
+        Button(action: action) { Image(systemName: symbol).font(.system(size: 14, weight: .medium)) }
+            .buttonStyle(IconButtonStyle(size: 30))
+            .help(help)
     }
 
     private var list: some View {
@@ -58,19 +64,25 @@ struct PanelView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
-            HStack(spacing: 12) {
+            HStack(spacing: 2) {
                 Text(groups.isEmpty ? LocalizedStringKey("Açık iş yok") : LocalizedStringKey("\(visible.filter { !$0.isDone }.count) açık iş"))
+                    .font(.system(size: 12))
                 Spacer()
-                Button { screen = .focus } label: { Image(systemName: "scope") }.help("Şimdi sadece bu")
-                Button { screen = .calendar } label: { Image(systemName: "calendar") }.help("Takvim")
-                Button { screen = .archive } label: { Image(systemName: "archivebox") }.help("Arşiv")
-                Button { screen = .settings } label: { Image(systemName: "gearshape") }.help("Ayarlar")
-                Button { NSApplication.shared.terminate(nil) } label: { Image(systemName: "power") }.help("Çık")
+                footerButton("scope", help: "Şimdi sadece bu") { screen = .focus }
+                footerButton("calendar", help: "Takvim") { screen = .calendar }
+                footerButton("archivebox", help: "Arşiv") { screen = .archive }
+                footerButton("gearshape", help: "Ayarlar") { screen = .settings }
+                Menu {
+                    Button("ishler'dan çık") { NSApplication.shared.terminate(nil) }
+                } label: {
+                    Image(systemName: "power").font(.system(size: 14, weight: .medium)).frame(width: 30, height: 30).contentShape(Rectangle())
+                }
+                .menuStyle(.borderlessButton).menuIndicator(.hidden)
+                .fixedSize()
+                .help("Çık")
             }
-            .buttonStyle(.plain)
-            .font(.system(size: 11))
             .foregroundStyle(.secondary)
-            .padding(.top, 4)
+            .padding(.top, 6)
         }
     }
 }

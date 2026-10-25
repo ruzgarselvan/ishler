@@ -17,6 +17,13 @@ struct FittedScroll<Content: View>: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .frame(height: min(height, maxHeight))
+        .mask {
+            // Soft fade at the bottom edge when the content scrolls, so nothing is cut hard at the rounded corners.
+            VStack(spacing: 0) {
+                Color.black
+                if height > maxHeight { LinearGradient(colors: [.black, .clear], startPoint: .top, endPoint: .bottom).frame(height: 14) }
+            }
+        }
         .onPreferenceChange(HeightKey.self) { height = $0 }
     }
 }
