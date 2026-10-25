@@ -30,7 +30,7 @@ struct EditView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             PanelHeader(title: "İşi düzenle", onBack: onClose)
-            FittedScroll(maxHeight: 400) {
+            FittedScroll(maxHeight: 380) {
                 VStack(alignment: .leading, spacing: 10) {
                     field("Kişi", text: $person)
                     field("İş", text: $action)

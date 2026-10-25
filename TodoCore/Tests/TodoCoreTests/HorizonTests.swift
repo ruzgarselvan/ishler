@@ -46,7 +46,7 @@ import Foundation
         let suite = UserDefaults(suiteName: "test-\(UUID().uuidString)")!
         let a = SettingsStore(defaults: suite)
         #expect(a.writeToCalendar && a.quickAddHotkey)
-        #expect(a.templates.map(\.name) == ["Çekim sonrası"])
+        #expect(a.templates.isEmpty)
         a.templates.removeAll()
         #expect(SettingsStore(defaults: suite).templates.isEmpty)
     }

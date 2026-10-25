@@ -2144,6 +2144,136 @@
           }
         }
       }
+    },
+    "ishler'dan çık": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quit ishler"
+          }
+        }
+      }
+    },
+    "Liste ve hatırlatıcı": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "List and reminders"
+          }
+        }
+      }
+    },
+    "Veri": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Data"
+          }
+        }
+      }
+    },
+    "Hatırlatıcı (gün)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminder (days before)"
+          }
+        }
+      }
+    },
+    "Yer": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Where it lives"
+          }
+        }
+      }
+    },
+    "Arşivi sıfırla": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset archive"
+          }
+        }
+      }
+    },
+    "Arşivi sıfırla (%lld)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reset archive (%lld)"
+          }
+        }
+      }
+    },
+    "Arşivdeki tüm işler silinsin mi?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete everything in the archive?"
+          }
+        }
+      }
+    },
+    "Bu işlem geri alınamaz.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This can't be undone."
+          }
+        }
+      }
+    },
+    "Tüm işleri sil (%lld)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete all tasks (%lld)"
+          }
+        }
+      }
+    },
+    "Tüm işler silinsin mi?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete all tasks?"
+          }
+        }
+      }
+    },
+    "Tüm işleri sil": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete all tasks"
+          }
+        }
+      }
+    },
+    "Açık ve arşivdeki tüm işler ile Takvim'e yazılan etkinlikleri siler. Bu işlem geri alınamaz.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deletes every open and archived task and the events written to Calendar. This can't be undone."
+          }
+        }
+      }
     }
   },
   "version": "1.0"

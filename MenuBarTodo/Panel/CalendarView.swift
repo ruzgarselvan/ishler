@@ -40,7 +40,7 @@ struct CalendarView: View {
             if dayItems.isEmpty && dayEvents.isEmpty {
                 Text("Bu gün için bir şey yok").font(.system(size: 12)).foregroundStyle(.tertiary)
             } else {
-                FittedScroll(maxHeight: 200) {
+                FittedScroll(maxHeight: 100) {
                     VStack(alignment: .leading, spacing: 0) {
                         ForEach(dayItems) { item in
                             TodoRow(item: item, now: Date(), calendar: cal, tint: model.color(for: item),

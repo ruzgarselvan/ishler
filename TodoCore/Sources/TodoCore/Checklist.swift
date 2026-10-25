@@ -41,7 +41,7 @@ public struct ChecklistTemplate: Codable, Equatable, Identifiable, Sendable {
 }
 
 extension ChecklistTemplate {
-    /// Shipped so the feature is discoverable; users can edit or delete it.
+    /// The sample routine older versions shipped; kept only so it can be recognised and removed.
     public static let example = ChecklistTemplate(
         name: String(localized: "Çekim sonrası"),
         steps: [String(localized: "Dosyaları yedekle"), String(localized: "Seçimi yap"), String(localized: "Düzenlemeye başla"),

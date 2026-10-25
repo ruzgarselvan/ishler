@@ -51,7 +51,11 @@ public final class SettingsStore {
             return value
         }
         self.categories = seeded(Key.categories, TodoCategory.defaults())
-        self.templates = seeded(Key.templates, [ChecklistTemplate.example])
+        let savedTemplates = seeded(Key.templates, [ChecklistTemplate]())
+        // The old built-in sample routine is gone; drop the copy earlier versions saved unless the user changed it.
+        let cleaned = savedTemplates.filter { !($0.name == ChecklistTemplate.example.name && $0.steps == ChecklistTemplate.example.steps && $0.schedule == nil) }
+        self.templates = cleaned
+        if cleaned.count != savedTemplates.count, let data = try? JSONEncoder().encode(cleaned) { defaults.set(data, forKey: Key.templates) }
         self.shortcuts = load(ShortcutOptions.self, Key.shortcuts) ?? ShortcutOptions()
         self.settings = load(NotificationSettings.self, Key.notifications) ?? .default
         self.appearance = defaults.string(forKey: Key.appearance).flatMap(Appearance.init(rawValue:)) ?? .system

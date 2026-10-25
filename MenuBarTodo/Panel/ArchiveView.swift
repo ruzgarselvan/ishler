@@ -27,7 +27,7 @@ struct ArchiveView: View {
                 Text("Arşiv boş").font(.system(size: 12)).foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity).padding(.vertical, 12)
             } else {
-                FittedScroll(maxHeight: 460) {
+                FittedScroll(maxHeight: 360) {
                     LazyVStack(alignment: .leading, spacing: 0) {
                         ForEach(shown) { item in
                             Button { model.reopen(item) } label: {

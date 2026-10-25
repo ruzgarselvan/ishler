@@ -242,6 +242,14 @@ final class AppModel {
         touch()
     }
 
+    /// Bulk delete: one reschedule at the end instead of one per task.
+    func delete(_ items: [TodoItem]) {
+        let eventIDs = items.compactMap(\.eventID)
+        items.forEach { store.delete($0) }
+        Task { for id in eventIDs { await calendarSync.remove(eventID: id) } }
+        touch()
+    }
+
     func reopen(_ item: TodoItem) {
         store.reopen(item)
         touch()
