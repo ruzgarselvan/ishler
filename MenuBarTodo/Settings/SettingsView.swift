@@ -86,17 +86,13 @@ struct SettingsView: View {
                                 .buttonStyle(.plain).foregroundStyle(Color.accentColor)
                             Divider()
                         }
-                        Button(role: .destructive) { confirmClear = true } label: {
-                            Label("Arşivi sıfırla (\(archived.count))", systemImage: "trash")
+                        deleteRow("Arşivi sıfırla (\(archived.count))", "Arşivdeki tüm işler silinsin mi?", symbol: "trash", count: archived.count, armed: $confirmClear) {
+                            model.delete(archived)
                         }
-                        .buttonStyle(.plain).foregroundStyle(archived.isEmpty ? Color.secondary : Color.red)
-                        .disabled(archived.isEmpty)
                         Divider()
-                        Button(role: .destructive) { confirmClearAll = true } label: {
-                            Label("Tüm işleri sil (\(allItems.count))", systemImage: "trash.fill")
+                        deleteRow("Tüm işleri sil (\(allItems.count))", "Açık ve arşivdeki tüm işler ve Takvim etkinlikleri silinsin mi?", symbol: "trash.fill", count: allItems.count, armed: $confirmClearAll) {
+                            model.delete(allItems)
                         }
-                        .buttonStyle(.plain).foregroundStyle(allItems.isEmpty ? Color.secondary : Color.red)
-                        .disabled(allItems.isEmpty)
                         Divider()
                         HStack { Text("iCloud"); Spacer(); Text(model.iCloudStatus).foregroundStyle(.secondary) }
                     }
@@ -113,12 +109,6 @@ struct SettingsView: View {
             }
         }
         .padding(.bottom, 4)
-        .confirmationDialog("Arşivdeki tüm işler silinsin mi?", isPresented: $confirmClear) {
-            Button("Arşivi sıfırla", role: .destructive) { model.delete(archived) }
-        } message: { Text("Bu işlem geri alınamaz.") }
-        .confirmationDialog("Tüm işler silinsin mi?", isPresented: $confirmClearAll) {
-            Button("Tüm işleri sil", role: .destructive) { model.delete(allItems) }
-        } message: { Text("Açık ve arşivdeki tüm işler ile Takvim'e yazılan etkinlikleri siler. Bu işlem geri alınamaz.") }
         .onAppear { launchAtLogin = model.launchAtLogin; exportURL = model.makeExport() }
         .onChange(of: launchAtLogin) { model.launchAtLogin = launchAtLogin }
         .onChange(of: store.menuBarStyle) { model.refreshBadge() }
@@ -147,6 +137,27 @@ struct SettingsView: View {
                 .padding(10)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.primary.opacity(0.05), in: RoundedRectangle(cornerRadius: 10))
+        }
+    }
+
+    /// Two-step delete shown inline; system dialogs don't present reliably from a menu bar panel.
+    private func deleteRow(_ title: LocalizedStringKey, _ question: LocalizedStringKey, symbol: String, count: Int, armed: Binding<Bool>, action: @escaping () -> Void) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if armed.wrappedValue {
+                Text(question).fixedSize(horizontal: false, vertical: true)
+                Text("Bu işlem geri alınamaz.").font(.system(size: 11)).foregroundStyle(.secondary)
+                HStack {
+                    Button("Vazgeç") { armed.wrappedValue = false }.buttonStyle(.bordered)
+                    Button("Sil", role: .destructive) { action(); armed.wrappedValue = false }.buttonStyle(.borderedProminent).tint(.red)
+                }
+                .controlSize(.regular)
+            } else {
+                Button { armed.wrappedValue = true } label: {
+                    Label(title, systemImage: symbol).frame(maxWidth: .infinity, alignment: .leading).contentShape(Rectangle())
+                }
+                .buttonStyle(.plain).foregroundStyle(count == 0 ? Color.secondary : Color.red)
+                .disabled(count == 0)
+            }
         }
     }
 

@@ -2274,6 +2274,26 @@
           }
         }
       }
+    },
+    "Açık ve arşivdeki tüm işler ve Takvim etkinlikleri silinsin mi?": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete all open and archived tasks and Calendar events?"
+          }
+        }
+      }
+    },
+    "Vazgeç": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
     }
   },
   "version": "1.0"
